@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidade 2 - ALGORITMOLAB</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-profile">
+            <div class="avatar" id="user-avatar">A</div>
+            <div>
+                <strong id="user-name">Aluno</strong>
+                <div class="streak-badge">
+                    <i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span>
+                </div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-outline" onclick="abrirConfiguracoes()" style="background: transparent; color: var(--primary-blue); box-shadow: none; border: 2px solid var(--primary-blue);">
+                <i class="fas fa-cog"></i>
+            </button>
+            <button class="btn btn-outline" onclick="handleLogout()" style="background: transparent; color: var(--primary-blue); box-shadow: none; border: 2px solid var(--primary-blue);">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2 style="margin-bottom: 30px; color: var(--primary-blue);">
+            <i class="fas fa-code-branch"></i> Unidade 2 - Condicionais (IF/ELSE)
+        </h2>
+        
+        <div class="opcoes-grid">
+            
+            <a href="material-estudo2.html" class="opcao-card bg-teal" id="card-conteudo2">
+                <div class="checkbox-container">
+                    <i class="far fa-square check-icon" id="check-conteudo2"></i>
+                </div>
+                <i class="fas fa-book-open icone-grande"></i>
+                <h3>1. Material de Estudo</h3>
+                <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.8;">(Clique para acessar)</p>
+            </a>
+
+            <a href="exercicios2.html" class="opcao-card bg-sand locked" id="card-exercicios2">
+                <div class="checkbox-container">
+                    <i class="far fa-square check-icon" id="check-exercicios2"></i>
+                </div>
+                <i class="fas fa-dumbbell icone-grande"></i>
+                <h3>2. Trilha de Exercícios</h3>
+                <p style="font-size: 0.8rem; margin-top: 10px; opacity: 0.8;" id="txt-exercicios2">(Requer Material)</p>
+            </a>
+
+            <a href="forum.html" class="opcao-card bg-dark">
+                <i class="fas fa-comments icone-grande" style="margin-bottom: 25px;"></i>
+                <h3>Fórum de Discussão</h3>
+            </a>
+
+        </div>
+
+        <a href="avaliacao2.html" class="opcao-card bg-dark full-width locked" id="card-avaliacao2" style="margin-top: 25px;">
+            <div class="checkbox-container" style="top: 15px; left: 15px;">
+                <i class="far fa-square check-icon" id="check-avaliacao2"></i>
+            </div>
+            <i class="fas fa-star icone-grande"></i>
+            <div>
+                <h3>3. Avaliação Final da Unidade 2</h3>
+                <p style="font-size: 0.9rem; margin-top: 5px; opacity: 0.8;" id="txt-avaliacao2">(Requer Exercícios concluídos. Nota mínima: 80%)</p>
+            </div>
+        </a>
+
+    </main>
+
+    <div class="floating-actions">
+        <a href="unidades.html" class="btn"><i class="fas fa-arrow-left"></i> Voltar</a>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Uma nova função no script.js que criaremos para gerenciar a Unidade 2
+        document.addEventListener('DOMContentLoaded', verificarProgressoInternoU2);
+    </script>
+</body>
+</html>

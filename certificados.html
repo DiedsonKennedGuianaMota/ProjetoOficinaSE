@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALGORITMOLAB - Certificados</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================
+           1. ESTILOS BASE (IDENTIDADE VISUAL)
+           ========================================== */
+        :root {
+            --primary-blue: #1c3d5a;
+            --accent-teal: #2b6cb0;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --fire-color: #ff9f43;
+            --gold: #d4af37;
+            --font-scale: 100%;
+        }
+
+        .high-contrast {
+            --primary-blue: #00ebff;
+            --accent-teal: #ffff00;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+            --border-color: #4a5568;
+            --fire-color: #ff3f34;
+            --gold: #ffff00;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: all 0.3s ease; }
+        html { font-size: var(--font-scale); }
+        body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 60px; }
+
+        @keyframes fadeInUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        /* ==========================================
+           2. NAVBAR (PADRÃO ALGORITMOLAB)
+           ========================================== */
+        .navbar { 
+            background: var(--card-bg); padding: 15px 5%; display: flex; 
+            justify-content: space-between; align-items: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 1px solid var(--border-color);
+        }
+        .nav-profile { display: flex; align-items: center; gap: 15px; text-decoration: none; color: inherit; cursor: pointer; }
+        .avatar { 
+            width: 50px; height: 50px; background: var(--accent-teal); color: white; 
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; 
+            font-weight: 700; border: 2px solid var(--border-color); overflow: hidden;
+        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .streak-badge { 
+            display: inline-flex; align-items: center; gap: 5px; 
+            background: rgba(255, 159, 67, 0.1); color: var(--fire-color); 
+            padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;
+        }
+
+        /* ==========================================
+           3. CONTEÚDO PRINCIPAL
+           ========================================== */
+        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+        
+        .header-page { margin-bottom: 40px; text-align: center; }
+        .header-page h2 { color: var(--primary-blue); font-size: 2.2rem; margin-top: 10px; }
+        .header-page p { color: var(--text-muted); }
+
+        /* Grade de Certificados */
+        .cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+
+        .cert-card {
+            background: var(--card-bg); border-radius: 20px; padding: 30px;
+            border: 2px solid var(--border-color); position: relative;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            animation: fadeInUp 0.6s ease-out backwards;
+        }
+        .cert-card.locked { opacity: 0.7; filter: grayscale(1); }
+        .cert-card i.main-icon { font-size: 4rem; color: var(--gold); margin-bottom: 20px; }
+        .cert-card h3 { color: var(--primary-blue); margin-bottom: 10px; }
+        .cert-card .status-tag { 
+            padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; 
+            margin-bottom: 20px; background: #e2e8f0; color: #4a5568;
+        }
+        .cert-card.unlocked .status-tag { background: #c6f6d5; color: #22543d; }
+
+        /* Botão */
+        .btn { padding: 12px 25px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; font-size: 1rem; width: 100%; }
+        .btn-primary { background: var(--accent-teal); color: white; }
+        .btn-locked { background: #cbd5e0; color: #718096; cursor: not-allowed; }
+        .btn-logout { background: transparent; color: var(--text-muted); border: 2px solid var(--border-color); width: auto; }
+
+        /* ==========================================
+           4. MODAL DO CERTIFICADO (O DOCUMENTO)
+           ========================================== */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
+            display: none; justify-content: center; align-items: center; z-index: 1000;
+        }
+        .cert-document {
+            background: white; width: 90%; max-width: 800px; padding: 50px;
+            border: 15px solid var(--primary-blue); position: relative;
+            color: #333; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            background-image: radial-gradient(#f0f0f0 1px, transparent 1px); background-size: 20px 20px;
+        }
+        .cert-document h1 { font-family: 'Times New Roman', serif; font-size: 3rem; color: var(--primary-blue); }
+        .cert-document .user-name { font-size: 2.5rem; font-weight: 700; color: var(--accent-teal); margin: 20px 0; border-bottom: 2px solid #ddd; display: inline-block; padding: 0 30px; }
+        .cert-document .date { margin-top: 40px; font-style: italic; }
+        .cert-document .seal { width: 100px; margin-top: 30px; }
+
+        /* ==========================================
+           5. ACESSIBILIDADE
+           ========================================== */
+        .floating-actions { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 10px; z-index: 99; }
+        .btn-floating { width: 50px; height: 50px; border-radius: 50%; background: var(--primary-blue); color: white; border: none; cursor: pointer; }
+        .menu-acessibilidade {
+            position: absolute; bottom: 60px; right: 0; background: var(--card-bg); border: 1px solid var(--border-color);
+            padding: 15px; border-radius: 15px; display: none; flex-direction: column; gap: 10px; width: 180px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-profile" onclick="window.location.href='home.html'">
+            <div class="avatar" id="user-avatar">A</div>
+            <div>
+                <strong id="user-name">Carregando...</strong>
+                <div><div class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></div></div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-logout" onclick="alert('Configurações em breve!')"><i class="fas fa-cog"></i></button>
+            <button class="btn btn-logout" onclick="fazerLogout()">Sair</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="header-page">
+            <i class="fas fa-award" style="font-size: 3rem; color: var(--gold);"></i>
+            <h2>Minhas Conquistas</h2>
+            <p>Conclua os módulos para desbloquear seus certificados oficiais.</p>
+        </div>
+
+        <div class="cert-grid">
+            <div class="cert-card unlocked" style="animation-delay: 0.1s;">
+                <i class="fas fa-certificate main-icon"></i>
+                <div class="status-tag">DISPONÍVEL</div>
+                <h3>Fundamentos de C</h3>
+                <p class="text-muted" style="margin-bottom: 20px;">Concluído em: 25/05/2026</p>
+                <button class="btn btn-primary" onclick="abrirCertificado('Fundamentos de Programação em C')">Visualizar Certificado</button>
+            </div>
+
+            <div class="cert-card locked" style="animation-delay: 0.2s;">
+                <i class="fas fa-lock main-icon"></i>
+                <div class="status-tag">BLOQUEADO</div>
+                <h3>Estruturas de Decisão</h3>
+                <p class="text-muted" style="margin-bottom: 20px;">Complete o Módulo 2 para liberar.</p>
+                <button class="btn btn-locked">Bloqueado</button>
+            </div>
+
+            <div class="cert-card locked" style="animation-delay: 0.3s;">
+                <i class="fas fa-graduation-cap main-icon"></i>
+                <div class="status-tag">BLOQUEADO</div>
+                <h3>Mestre em Algoritmos</h3>
+                <p class="text-muted" style="margin-bottom: 20px;">Complete todos os módulos da trilha.</p>
+                <button class="btn btn-locked">Bloqueado</button>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="cert-modal" onclick="fecharCertificado()">
+        <div class="cert-document" onclick="event.stopPropagation()">
+            <button onclick="fecharCertificado()" style="position: absolute; top: 10px; right: 10px; border: none; background: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            <p style="text-transform: uppercase; letter-spacing: 2px;">Certificado de Conclusão</p>
+            <h1>ALGORITMOLAB</h1>
+            <p style="margin-top: 30px;">Certificamos que o(a) estudante</p>
+            <div class="user-name" id="cert-user-name">NOME DO ALUNO</div>
+            <p style="margin-top: 20px;">concluiu com êxito o módulo de</p>
+            <h2 id="cert-module-name" style="color: var(--primary-blue); margin: 10px 0;">NOME DO MÓDULO</h2>
+            <p>com carga horária de 20 horas e aproveitamento superior a 80%.</p>
+            
+            <div class="date">Emitido em: <span id="cert-date">--/--/----</span></div>
+            <img src="https://cdn-icons-png.flaticon.com/512/625/625393.png" class="seal" alt="Selo de Qualidade">
+            <p style="margin-top: 10px; font-size: 0.8rem; opacity: 0.6;">Código de Autenticidade: ALGO-7782-X9</p>
+        </div>
+    </div>
+
+    <div class="floating-actions">
+        <div class="menu-acessibilidade" id="menu-acess">
+            <button class="btn btn-primary" onclick="toggleAltoContraste()"><i class="fas fa-adjust"></i> Contraste</button>
+            <button class="btn btn-logout" onclick="mudarFonte(2)" style="width: 100%;"><i class="fas fa-plus"></i> Texto</button>
+            <button class="btn btn-logout" onclick="mudarFonte(-2)" style="width: 100%;"><i class="fas fa-minus"></i> Texto</button>
+        </div>
+        <button class="btn btn-floating" onclick="toggleMenuAcessibilidade()">
+            <i class="fas fa-universal-access"></i>
+        </button>
+    </div>
+
+    <script>
+        let usuarioAtivo = null;
+
+        function checkAuth() {
+            if (localStorage.getItem('userLogado') !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+            const nomeLogado = localStorage.getItem('userName');
+            const usuarios = JSON.parse(localStorage.getItem('algoritmolab_usuarios')) || [];
+            usuarioAtivo = usuarios.find(u => u.nome === nomeLogado);
+            if (usuarioAtivo) renderizarNav();
+        }
+
+        function renderizarNav() {
+            document.getElementById('user-name').innerText = usuarioAtivo.nome;
+            document.getElementById('user-streak').innerText = `${usuarioAtivo.streak || 0} Dias`;
+            const avatarDiv = document.getElementById('user-avatar');
+            if (usuarioAtivo.foto) {
+                avatarDiv.innerHTML = `<img src="${usuarioAtivo.foto}">`;
+            } else {
+                avatarDiv.innerText = usuarioAtivo.nome.charAt(0).toUpperCase();
+            }
+        }
+
+        /* LÓGICA DO CERTIFICADO */
+        function abrirCertificado(modulo) {
+            document.getElementById('cert-user-name').innerText = usuarioAtivo.nome;
+            document.getElementById('cert-module-name').innerText = modulo;
+            document.getElementById('cert-date').innerText = new Date().toLocaleDateString();
+            document.getElementById('cert-modal').style.display = 'flex';
+        }
+
+        function fecharCertificado() {
+            document.getElementById('cert-modal').style.display = 'none';
+        }
+
+        /* ACESSIBILIDADE E LOGOUT */
+        function toggleMenuAcessibilidade() {
+            const menu = document.getElementById('menu-acess');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function toggleAltoContraste() {
+            document.body.classList.toggle('high-contrast');
+            localStorage.setItem('acess_alto_contraste', document.body.classList.contains('high-contrast'));
+        }
+
+        let currentScale = 100;
+        function mudarFonte(delta) {
+            currentScale += delta;
+            document.documentElement.style.setProperty('--font-scale', `${currentScale}%`);
+        }
+
+        function fazerLogout() {
+            localStorage.setItem('userLogado', 'false');
+            window.location.href = 'index.html';
+        }
+
+        window.onload = () => {
+            checkAuth();
+            if (localStorage.getItem('acess_alto_contraste') === 'true') document.body.classList.add('high-contrast');
+        };
+    </script>
+</body>
+</html>

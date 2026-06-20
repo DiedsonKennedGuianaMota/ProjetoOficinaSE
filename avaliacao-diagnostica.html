@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação Diagnóstica - ALGORITMOLAB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #1c3d5a; --accent-teal: #2b6cb0; --bg-color: #f4f7f6;
+            --card-bg: #ffffff; --text-main: #333333; --text-muted: #718096;
+            --border-color: #e2e8f0; --fire-color: #ff9f43; --success-green: #48bb78;
+            --font-scale: 100%;
+        }
+
+        .high-contrast {
+            --primary-blue: #00ebff; --accent-teal: #ffff00; --bg-color: #121212;
+            --card-bg: #1e1e1e; --text-main: #ffffff; --border-color: #4a5568;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background 0.3s, color 0.3s; }
+        html { font-size: var(--font-scale); }
+        body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; }
+
+        .navbar { 
+            background: var(--card-bg); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 1px solid var(--border-color);
+        }
+        .nav-profile { display: flex; align-items: center; gap: 15px; }
+        .avatar { width: 45px; height: 45px; background: var(--accent-teal); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; font-weight: 700; border: 2px solid var(--border-color); overflow: hidden; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .streak-badge { display: inline-flex; align-items: center; gap: 5px; color: var(--fire-color); font-weight: 700; font-size: 0.85rem; }
+
+        .container { max-width: 800px; margin: 50px auto; padding: 0 20px; text-align: center; }
+        .intro-card { background: var(--card-bg); padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .timer-display { font-size: 2rem; font-weight: 800; color: var(--accent-teal); margin: 20px 0; }
+        
+        .btn { padding: 12px 25px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 10px; font-size: 1rem; text-decoration: none; }
+        .btn-primary { background: var(--accent-teal); color: white; }
+        .btn-outline { background: transparent; color: var(--primary-blue); border: 2px solid var(--primary-blue); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(8px); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .question-card { background: var(--card-bg); width: 90%; max-width: 600px; padding: 40px; border-radius: 25px; position: relative; }
+        
+        .progress-bar { width: 100%; height: 8px; background: var(--border-color); border-radius: 10px; margin-bottom: 25px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--accent-teal); width: 0%; transition: 0.4s; }
+
+        .question-text { font-size: 1.2rem; font-weight: 600; margin-bottom: 25px; color: var(--primary-blue); }
+        .options-list { display: flex; flex-direction: column; gap: 12px; }
+        .option-item { padding: 15px; border: 2px solid var(--border-color); border-radius: 12px; cursor: pointer; font-weight: 500; }
+        .option-item:hover { border-color: var(--accent-teal); background: #f0f7ff; }
+        .option-item.selected { background: var(--accent-teal); color: white; border-color: var(--accent-teal); }
+
+        .floating-actions { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 10px; z-index: 99; }
+        .btn-floating { width: 50px; height: 50px; border-radius: 50%; background: var(--primary-blue); color: white; border: none; cursor: pointer; font-size: 1.2rem; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .menu-acessibilidade { position: absolute; bottom: 60px; right: 0; background: var(--card-bg); border: 1px solid var(--border-color); padding: 10px; border-radius: 12px; display: none; flex-direction: column; gap: 8px; width: 180px; }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-profile">
+            <div class="avatar" id="user-avatar">...</div>
+            <div>
+                <strong id="user-name">Carregando...</strong>
+                <div class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></div>
+            </div>
+        </div>
+        <a href="modulos.html" class="btn-outline" style="padding: 5px 15px; font-size: 0.8rem;"><i class="fas fa-arrow-left"></i> Sair</a>
+    </header>
+
+    <main class="container" id="intro-screen">
+        <div class="intro-card">
+            <i class="fas fa-clipboard-list" style="font-size: 3rem; color: var(--accent-teal); margin-bottom: 15px;"></i>
+            <h2>Avaliação Diagnóstica</h2>
+            <p style="margin: 15px 0; color: var(--text-muted);">Esta avaliação possui 10 questões e servirá para nivelar seu conhecimento em lógica.</p>
+            
+            <div class="timer-display"><i class="fas fa-clock"></i> 01:00:00</div>
+            
+            <div style="background: #fff5f5; color: #c53030; padding: 10px; border-radius: 8px; margin-bottom: 25px; font-size: 0.9rem;">
+                <i class="fas fa-exclamation-triangle"></i> Atenção: Uma vez iniciada, o cronômetro não para e não é possível refazer a prova!
+            </div>
+
+            <button class="btn btn-primary" onclick="iniciarProva()"><i class="fas fa-play"></i> Iniciar Avaliação Agora</button>
+        </div>
+    </main>
+
+    <main class="container" id="blocked-screen" style="display: none;">
+        <div class="intro-card">
+            <i class="fas fa-check-circle" style="font-size: 4rem; color: var(--success-green); margin-bottom: 15px;"></i>
+            <h2>Avaliação Já Concluída!</h2>
+            <p style="margin: 15px 0; color: var(--text-muted);">Você já realizou esta prova e sua nota está gravada no sistema. Prossiga com sua trilha de aprendizado.</p>
+            <p id="saved-score-text" style="font-size: 1.3rem; font-weight: 700; color: var(--accent-teal); margin-bottom: 25px;"></p>
+            
+            <a href="modulos.html" class="btn btn-primary"><i class="fas fa-map"></i> Ir para os Módulos</a>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="quiz-modal">
+        <div class="question-card">
+            <div class="progress-bar"><div class="progress-fill" id="progresso"></div></div>
+            <div id="quiz-timer" style="text-align: right; font-weight: 700; color: var(--accent-teal); margin-bottom: 10px;">60:00</div>
+            
+            <p id="question-counter" style="font-size: 0.8rem; font-weight: 700; color: var(--text-muted);">QUESTÃO 1 DE 10</p>
+            <div class="question-text" id="pergunta">Carregando pergunta...</div>
+            
+            <div class="options-list" id="opcoes"></div>
+
+            <div style="margin-top: 30px; display: flex; justify-content: flex-end;">
+                <button class="btn btn-primary" id="btn-proxima" onclick="proximaQuestao()" disabled>Próxima <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <main class="container" id="result-screen" style="display: none;">
+        <div class="intro-card">
+            <i class="fas fa-trophy" style="font-size: 4rem; color: #ffd700;"></i>
+            <h2 style="margin-top: 15px;">Avaliação Concluída!</h2>
+            <p id="score-text" style="font-size: 1.5rem; margin: 20px 0; font-weight: 700;">Sua Nota: 0/10</p>
+            <p style="color: var(--success-green); font-weight: 600; margin-bottom: 30px;"><i class="fas fa-unlock"></i> O Módulo 1: Lógica de Programação foi liberado!</p>
+            <a href="modulos.html" class="btn btn-primary">Ir para os Módulos</a>
+        </div>
+    </main>
+
+    <div class="floating-actions">
+        <div class="menu-acessibilidade" id="menu-acess">
+            <button class="btn-primary" style="padding:5px; width:100%; font-size:0.8rem; border-radius: 6px; border:none; cursor: pointer;" onclick="toggleAltoContraste()">Alto Contraste</button>
+            <button class="btn-outline" style="padding:5px; width:100%; font-size:0.8rem; border-radius: 6px; cursor: pointer; background: var(--card-bg);" onclick="mudarFonte(2)">Aumentar Texto</button>
+        </div>
+        <button class="btn-floating" onclick="toggleMenuAcessibilidade()"><i class="fas fa-universal-access"></i></button>
+    </div>
+
+    <script>
+        const questoes = [
+            { q: "O que é um Algoritmo?", o: ["Um tipo de computador", "Uma sequência de passos finitos para resolver um problema", "Um código secreto de hackers", "Um erro no sistema"], a: 1 },
+            { q: "Qual o símbolo usado para representar o início/fim em um fluxograma?", o: ["Quadrado", "Círculo/Oval", "Losango", "Triângulo"], a: 1 },
+            { q: "O que significa 'Compilar' um código?", o: ["Apagar o código", "Traduzir o código para linguagem de máquina", "Enviar por e-mail", "Mudar as cores da tela"], a: 1 },
+            { q: "Qual desses NÃO é um operador lógico?", o: ["AND (E)", "OR (OU)", "IF (SE)", "NOT (NÃO)"], a: 2 },
+            { q: "Em lógica, o que é uma variável?", o: ["Um valor que nunca muda", "Um espaço na memória para guardar dados", "O nome do monitor", "Uma tecla do teclado"], a: 1 },
+            { q: "O que faz a estrutura 'Enquanto' (While)?", o: ["Finaliza o programa", "Executa um bloco de código apenas uma vez", "Repete um bloco enquanto uma condição for verdadeira", "Faz o computador dormir"], a: 2 },
+            { q: "Qual é a base do sistema numérico binário?", o: ["Base 10", "Base 16", "Base 2", "Base 8"], a: 2 },
+            { q: "O que é um erro de sintaxe?", o: ["Falta de internet", "Escrita incorreta das regras da linguagem", "Monitor quebrado", "Vírus no computador"], a: 1 },
+            { q: "Qual a função do operador '%' (Módulo) na maioria das linguagens?", o: ["Calcular porcentagem", "Dividir por 100", "Retornar o resto de uma divisão", "Multiplicar valores"], a: 2 },
+            { q: "O que é Pseudocódigo?", o: ["Uma linguagem para robôs", "Forma de escrever lógica usando linguagem humana", "Um código falso que estraga o PC", "Um sistema operacional"], a: 1 }
+        ];
+
+        let perguntaAtual = 0;
+        let acertos = 0;
+        let tempoRestante = 3600; 
+        let timerInterval;
+        let opcaoSelecionada = null;
+        let userData = null;
+
+        function carregarPerfil() {
+            if (localStorage.getItem('userLogado') !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            userData = JSON.parse(localStorage.getItem('userData'));
+            if (userData) {
+                document.getElementById('user-name').innerText = userData.nome || "Usuário";
+                document.getElementById('user-streak').innerText = `${userData.streak || 0} Dias`;
+                
+                const avatarDiv = document.getElementById('user-avatar');
+                if(userData.foto) {
+                    avatarDiv.innerHTML = `<img src="${userData.foto}">`;
+                } else if (userData.nome) {
+                    avatarDiv.innerText = userData.nome.charAt(0).toUpperCase();
+                } else {
+                    avatarDiv.innerText = "U";
+                }
+
+                // Verifica pelo nota_diagnostica
+                if (userData.nota_diagnostica !== null && userData.nota_diagnostica !== undefined) {
+                    document.getElementById('intro-screen').style.display = 'none';
+                    document.getElementById('blocked-screen').style.display = 'block';
+                    document.getElementById('saved-score-text').innerText = `Nota Registrada: ${userData.nota_diagnostica}/10`;
+                } else {
+                    document.getElementById('intro-screen').style.display = 'block';
+                    document.getElementById('blocked-screen').style.display = 'none';
+                }
+            }
+        }
+
+        function iniciarProva() {
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('quiz-modal').style.display = 'flex';
+            carregarQuestao();
+            startTimer();
+        }
+
+        function carregarQuestao() {
+            opcaoSelecionada = null;
+            document.getElementById('btn-proxima').disabled = true;
+            const q = questoes[perguntaAtual];
+            document.getElementById('question-counter').innerText = `QUESTÃO ${perguntaAtual + 1} DE 10`;
+            document.getElementById('pergunta').innerText = q.q;
+            
+            const areaOpcoes = document.getElementById('opcoes');
+            areaOpcoes.innerHTML = '';
+            q.o.forEach((opt, index) => {
+                const div = document.createElement('div');
+                div.className = 'option-item';
+                div.innerText = opt;
+                div.onclick = () => selecionarOpcao(index, div);
+                areaOpcoes.appendChild(div);
+            });
+
+            const progresso = ((perguntaAtual) / 10) * 100;
+            document.getElementById('progresso').style.width = progresso + "%";
+        }
+
+        function selecionarOpcao(idx, el) {
+            opcaoSelecionada = idx;
+            document.querySelectorAll('.option-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+            document.getElementById('btn-proxima').disabled = false;
+        }
+
+        function proximaQuestao() {
+            if(opcaoSelecionada === questoes[perguntaAtual].a) acertos++;
+            
+            perguntaAtual++;
+            if(perguntaAtual < questoes.length) {
+                carregarQuestao();
+            } else {
+                finalizarProva();
+            }
+        }
+
+        function finalizarProva() {
+            clearInterval(timerInterval);
+            document.getElementById('quiz-modal').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('score-text').innerText = `Sua Nota: ${acertos}/10`;
+            
+            if (userData) {
+                // Atualiza localmente para a sessão atual
+                userData.nota_diagnostica = acertos;
+                userData.avaliacao_concluida = true; 
+                localStorage.setItem('userData', JSON.stringify(userData));
+                
+                // CORREÇÃO: Voltando para a rota e nome de variável corretos que seu backend espera!
+                const API_URL = 'https://algoritmolab.onrender.com';
+                
+                fetch(`${API_URL}/api/salvar-nota`, { 
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: userData.email, 
+                        nota: acertos // Retornado para 'nota', exatamente como você tinha no início
+                    })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Falha na resposta da API');
+                    }
+                    return response.json();
+                })
+                .then(data => console.log('Nota salva com sucesso no banco de dados:', data))
+                .catch(error => console.error('Erro ao sincronizar com o banco Railway:', error));
+            }
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                tempoRestante--;
+                let m = Math.floor(tempoRestante / 60);
+                let s = tempoRestante % 60;
+                let display = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                document.getElementById('quiz-timer').innerText = display;
+                if(tempoRestante <= 0) finalizarProva();
+            }, 1000);
+        }
+
+        function toggleMenuAcessibilidade() {
+            const m = document.getElementById('menu-acess');
+            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+        }
+        function toggleAltoContraste() { 
+            document.body.classList.toggle('high-contrast'); 
+            localStorage.setItem('acess_alto', document.body.classList.contains('high-contrast'));
+        }
+        let scale = 100;
+        function mudarFonte(d) {
+            scale += d;
+            document.documentElement.style.setProperty('--font-scale', `${scale}%`);
+        }
+
+        window.onload = () => {
+            carregarPerfil();
+            if(localStorage.getItem('acess_alto') === 'true') document.body.classList.add('high-contrast');
+        };
+    </script>
+</body>
+</html>

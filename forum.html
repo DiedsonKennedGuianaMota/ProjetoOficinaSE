@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fórum de Discussão - ALGORITMOLAB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #1c3d5a;
+            --accent-teal: #2b6cb0;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --fire-color: #ff9f43;
+            --font-scale: 100%;
+        }
+
+        .high-contrast {
+            --primary-blue: #00ebff; --bg-color: #121212; --card-bg: #1e1e1e; 
+            --text-main: #ffffff; --text-muted: #aaaaaa; --border-color: #333333;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background-color 0.3s, color 0.3s; }
+        html { font-size: var(--font-scale); }
+        body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+
+        .navbar { 
+            background: var(--card-bg); padding: 15px 5%; display: flex; justify-content: space-between; 
+            align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
+        }
+        .nav-profile { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 45px; height: 45px; background: var(--accent-teal); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; border: 2px solid var(--border-color); overflow: hidden; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .streak-badge { color: var(--fire-color); font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 5px; }
+
+        .nav-actions { display: flex; gap: 10px; }
+        .btn-icon { background: transparent; border: 2px solid var(--primary-blue); color: var(--primary-blue); border-radius: 10px; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; }
+        .btn-icon:hover { background: var(--primary-blue); color: white; transform: translateY(-2px); }
+
+        .container { max-width: 800px; margin: 40px auto; padding: 0 20px; padding-bottom: 100px; }
+        
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px; }
+        .page-title { color: var(--primary-blue); font-size: 1.8rem; display: flex; align-items: center; gap: 10px; }
+
+        .btn { padding: 12px 25px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; justify-content: center; transition: 0.3s; }
+        .btn-teal { background: var(--accent-teal); color: white; }
+        .btn-teal:hover { filter: brightness(1.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(43, 108, 176, 0.3); }
+        .btn-outline { background: transparent; color: var(--primary-blue); border: 2px solid var(--border-color); }
+
+        .post-card { background: var(--card-bg); border-radius: 15px; padding: 25px; margin-bottom: 25px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); animation: slideUp 0.4s ease-out forwards; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .post-header { display: flex; align-items: center; gap: 15px; margin-bottom: 15px; }
+        .post-author-info { display: flex; flex-direction: column; }
+        .post-author-name { font-weight: 700; color: var(--primary-blue); }
+        .post-time { font-size: 0.8rem; color: var(--text-muted); }
+        
+        .post-content { line-height: 1.6; margin-bottom: 20px; font-size: 0.95rem; white-space: pre-wrap; }
+        
+        .post-actions { display: flex; gap: 15px; border-top: 1px solid var(--border-color); padding-top: 15px; margin-bottom: 15px; }
+        .action-btn { background: transparent; border: none; color: var(--text-muted); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 0.9rem; transition: 0.2s; }
+        .action-btn:hover { color: var(--accent-teal); }
+
+        .comments-section { background: var(--bg-color); border-radius: 10px; padding: 15px; margin-top: 10px; }
+        .comment-item { display: flex; gap: 10px; margin-bottom: 12px; font-size: 0.85rem; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .comment-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .comment-content { background: var(--card-bg); padding: 10px; border-radius: 10px; width: 100%; }
+        
+        .comment-input-area { display: flex; gap: 10px; margin-top: 15px; }
+        .comment-input { flex: 1; padding: 10px 15px; border-radius: 20px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-main); outline: none; }
+        .comment-input:focus { border-color: var(--accent-teal); }
+
+        .floating-actions { position: fixed; bottom: 25px; right: 25px; z-index: 50; }
+        .floating-actions .btn { background: var(--card-bg); color: var(--text-main); box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid var(--border-color); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 200; opacity: 0; pointer-events: none; transition: 0.3s; backdrop-filter: blur(5px); }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        .modal-content { background: var(--card-bg); width: 90%; max-width: 500px; border-radius: 20px; padding: 30px; transform: scale(0.9); transition: 0.3s; }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; color: var(--primary-blue); }
+        .btn-close { background: transparent; border: none; font-size: 1.5rem; color: var(--text-muted); cursor: pointer; }
+        
+        .form-input { width: 100%; height: 120px; padding: 15px; border-radius: 12px; border: 2px solid var(--border-color); background: var(--bg-color); color: var(--text-main); resize: none; outline: none; margin-bottom: 15px; font-family: inherit; }
+        .form-input:focus { border-color: var(--accent-teal); }
+        
+        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; align-items: center; }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-profile">
+            <div class="avatar" id="user-avatar">...</div>
+            <div>
+                <strong id="user-name">Carregando...</strong>
+                <div class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></div>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <button type="button" class="btn-icon" onclick="toggleAcessibilidade()" title="Acessibilidade">
+                <i class="fas fa-universal-access"></i>
+            </button>
+            <button type="button" class="btn-icon" onclick="abrirModalConfig()" title="Configurações">
+                <i class="fas fa-cog"></i>
+            </button>
+            <button type="button" class="btn-icon" onclick="handleLogout()" title="Sair">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="page-header">
+            <h2 class="page-title"><i class="fas fa-comments"></i> Fórum da Comunidade</h2>
+            <button type="button" class="btn btn-teal" onclick="abrirModalPost()">
+                <i class="fas fa-pen"></i> Nova Publicação
+            </button>
+        </div>
+
+        <div id="forum-feed"></div>
+    </main>
+
+    <div class="floating-actions">
+        <button type="button" class="btn" onclick="location.href='opcoes-unidade.html'">
+            <i class="fas fa-arrow-left"></i> Voltar
+        </button>
+    </div>
+
+    <div id="modal-post" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit"></i> Criar Publicação</h3>
+                <button type="button" class="btn-close" onclick="fecharModalPost()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <textarea id="novo-post-texto" placeholder="Tem alguma dúvida, dica ou código para compartilhar com a turma? Escreva aqui..." class="form-input"></textarea>
+                
+                <div style="margin-bottom: 20px;">
+                    <input type="file" id="novo-post-foto" accept="image/*" style="display: none;" onchange="previewImagem(event)">
+                    <button type="button" class="btn btn-outline" style="width: 100%;" onclick="document.getElementById('novo-post-foto').click()">
+                        <i class="fas fa-camera"></i> Adicionar Foto
+                    </button>
+                    <div id="preview-container" style="display: none; margin-top: 15px; text-align: center;">
+                        <img id="preview-img" style="max-width: 100%; max-height: 200px; border-radius: 10px; border: 1px solid var(--border-color);">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-main);" onclick="fecharModalPost()">Cancelar</button>
+                <button type="button" class="btn btn-teal" onclick="criarPost()">
+                    <i class="fas fa-paper-plane"></i> Publicar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-config" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-cog"></i> Configurações & Acessibilidade</h3>
+                <button type="button" class="btn-close" onclick="fecharModalConfig()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="display: flex; flex-direction: column; gap: 20px;">
+                <div>
+                    <label style="font-weight: 600; font-size: 0.9rem; color: var(--text-main);">Seu Nome:</label>
+                    <input type="text" id="edit-nome" class="comment-input" style="width: 100%; border-radius: 10px; margin-top: 5px;">
+                </div>
+                
+                <div style="border-top: 1px solid var(--border-color); padding-top: 15px; display: flex; flex-direction: column; gap: 12px;">
+                    <span style="font-weight: 600; font-size: 0.9rem;">Acessibilidade Avançada</span>
+                    
+                    <button type="button" class="btn btn-outline" style="width: 100%; justify-content: flex-start; color: var(--text-main);" onclick="toggleAcessibilidade()">
+                        <i class="fas fa-adjust"></i> Alternar Alto Contraste
+                    </button>
+                    
+                    <div style="display: flex; gap: 10px;">
+                        <button type="button" class="btn btn-outline" style="flex: 1; color: var(--text-main);" onclick="mudarFonte(2)">
+                            <i class="fas fa-text-height"></i> Aumentar Fonte
+                        </button>
+                        <button type="button" class="btn btn-outline" style="flex: 1; color: var(--text-main);" onclick="mudarFonte(-2)">
+                            <i class="fas fa-text-width"></i> Diminuir Fonte
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="margin-top: 10px;">
+                <button type="button" class="btn" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-main);" onclick="fecharModalConfig()">Cancelar</button>
+                <button type="button" class="btn btn-teal" onclick="salvarConfiguracoes()">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let usuarioAtual = null;
+        let postsDoForum = [];
+        let imagemPublicacaoBase64 = "";
+
+        function inicializarForum() {
+            if (localStorage.getItem('userLogado') !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            usuarioAtual = JSON.parse(localStorage.getItem('userData'));
+
+            if (usuarioAtual) {
+                document.getElementById('user-name').innerText = usuarioAtual.nome;
+                document.getElementById('user-streak').innerText = `${usuarioAtual.streak || 0} Dias`;
+                
+                const avatarDiv = document.getElementById('user-avatar');
+                if(usuarioAtual.foto) {
+                    avatarDiv.innerHTML = `<img src="${usuarioAtual.foto}">`;
+                } else {
+                    avatarDiv.innerText = usuarioAtual.nome.charAt(0).toUpperCase();
+                }
+            }
+
+            if(localStorage.getItem('acess_alto') === 'true') {
+                document.body.classList.add('high-contrast');
+            }
+            if(localStorage.getItem('acess_fonte')) {
+                document.documentElement.style.setProperty('--font-scale', localStorage.getItem('acess_fonte'));
+            }
+
+            carregarPostsDoDB();
+            renderizarPosts();
+        }
+
+        function carregarPostsDoDB() {
+            const dbPosts = localStorage.getItem('algoritmolab_forum_posts');
+            if (dbPosts) {
+                postsDoForum = JSON.parse(dbPosts);
+            } else {
+                postsDoForum = [{
+                    id: Date.now(),
+                    autorNome: "Prof. AlgoritmoLab",
+                    autorFoto: null,
+                    conteudo: "Bem-vindos ao fórum oficial! Usem este espaço para tirar dúvidas, compartilhar soluções de exercícios e ajudar uns aos outros.",
+                    postFoto: null,
+                    data: new Date().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }),
+                    likes: 5,
+                    comentarios: []
+                }];
+                salvarPostsNoDB();
+            }
+        }
+
+        function salvarPostsNoDB() {
+            localStorage.setItem('algoritmolab_forum_posts', JSON.stringify(postsDoForum));
+        }
+
+        function renderizarPosts() {
+            const feed = document.getElementById('forum-feed');
+            feed.innerHTML = '';
+
+            if (postsDoForum.length === 0) {
+                feed.innerHTML = `<p style="text-align:center; color: var(--text-muted); margin-top: 50px;">Nenhuma publicação ainda. Seja o primeiro a postar!</p>`;
+                return;
+            }
+
+            postsDoForum.forEach(post => {
+                let avatarAutor = post.autorFoto 
+                    ? `<img src="${post.autorFoto}">` 
+                    : post.autorNome.charAt(0).toUpperCase();
+
+                let fotoPublicadaHTML = post.postFoto 
+                    ? `<div style="margin-top: 15px; text-align: center;"><img src="${post.postFoto}" style="max-width: 100%; max-height: 350px; border-radius: 12px; border: 1px solid var(--border-color);"></div>` 
+                    : '';
+
+                let comentariosHTML = post.comentarios.map(com => `
+                    <div class="comment-item">
+                        <div class="avatar" style="width: 30px; height: 30px; font-size: 0.8rem;">
+                            ${com.autorFoto ? `<img src="${com.autorFoto}">` : com.autorNome.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="comment-content">
+                            <strong>${com.autorNome}</strong> <span style="color: var(--text-muted); font-size: 0.7rem;">${com.data}</span>
+                            <p style="margin-top: 3px;">${com.texto}</p>
+                        </div>
+                    </div>
+                `).join('');
+
+                const postHTML = `
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="avatar">${avatarAutor}</div>
+                            <div class="post-author-info">
+                                <span class="post-author-name">${post.autorNome}</span>
+                                <span class="post-time">${post.data}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="post-content">${post.conteudo}</div>
+                        ${fotoPublicadaHTML}
+                        
+                        <div class="post-actions">
+                            <button type="button" class="action-btn" onclick="darLike(${post.id})">
+                                <i class="fas fa-heart" style="color: #e53e3e;"></i> Curtir (${post.likes})
+                            </button>
+                            <button type="button" class="action-btn" onclick="focarComentario(${post.id})">
+                                <i class="fas fa-comment"></i> Comentar (${post.comentarios.length})
+                            </button>
+                        </div>
+
+                        <div class="comments-section">
+                            ${comentariosHTML}
+                            <div class="comment-input-area">
+                                <input type="text" id="input-comentario-${post.id}" class="comment-input" placeholder="Escreva um comentário...">
+                                <button type="button" class="btn btn-teal" style="padding: 10px 15px;" onclick="adicionarComentario(${post.id})">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                feed.innerHTML += postHTML;
+            });
+        }
+
+        function abrirModalPost() {
+            document.getElementById('modal-post').classList.add('active');
+            document.getElementById('novo-post-texto').focus();
+        }
+
+        function fecharModalPost() {
+            document.getElementById('modal-post').classList.remove('active');
+            document.getElementById('novo-post-texto').value = '';
+            document.getElementById('novo-post-foto').value = '';
+            document.getElementById('preview-container').style.display = 'none';
+            document.getElementById('preview-img').src = '';
+            imagemPublicacaoBase64 = "";
+        }
+
+        function previewImagem(event) {
+            const f = event.target.files[0];
+            if (f) {
+                const r = new FileReader();
+                r.onload = function(e) {
+                    imagemPublicacaoBase64 = e.target.result;
+                    document.getElementById('preview-img').src = imagemPublicacaoBase64;
+                    document.getElementById('preview-container').style.display = 'block';
+                };
+                r.readAsDataURL(f);
+            }
+        }
+
+        function criarPost() {
+            const texto = document.getElementById('novo-post-texto').value.trim();
+            if (!texto && !imagemPublicacaoBase64) {
+                alert('Escreva algo ou adicione uma foto antes de publicar!');
+                return;
+            }
+
+            const novoPost = {
+                id: Date.now(),
+                autorNome: usuarioAtual.nome,
+                autorFoto: usuarioAtual.foto,
+                conteudo: texto,
+                postFoto: imagemPublicacaoBase64,
+                data: new Date().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' }),
+                likes: 0,
+                comentarios: []
+            };
+
+            postsDoForum.unshift(novoPost);
+            salvarPostsNoDB();
+            renderizarPosts();
+            fecharModalPost();
+        }
+
+        function darLike(postId) {
+            const post = postsDoForum.find(p => p.id === postId);
+            if (post) {
+                post.likes += 1;
+                salvarPostsNoDB();
+                renderizarPosts();
+            }
+        }
+
+        function focarComentario(postId) {
+            document.getElementById(`input-comentario-${postId}`).focus();
+        }
+
+        function adicionarComentario(postId) {
+            const input = document.getElementById(`input-comentario-${postId}`);
+            const texto = input.value.trim();
+            
+            if (!texto) return;
+
+            const post = postsDoForum.find(p => p.id === postId);
+            if (post) {
+                post.comentarios.push({
+                    autorNome: usuarioAtual.nome,
+                    autorFoto: usuarioAtual.foto,
+                    texto: texto,
+                    data: new Date().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })
+                });
+                salvarPostsNoDB();
+                renderizarPosts();
+            }
+        }
+
+        function abrirModalConfig() {
+            document.getElementById('edit-nome').value = usuarioAtual ? usuarioAtual.nome : '';
+            document.getElementById('modal-config').classList.add('active');
+        }
+
+        function fecharModalConfig() {
+            document.getElementById('modal-config').classList.remove('active');
+        }
+
+        function salvarConfiguracoes() {
+            const novoNome = document.getElementById('edit-nome').value.trim();
+            if (novoNome) {
+                usuarioAtual.nome = novoNome;
+                localStorage.setItem('userData', JSON.stringify(usuarioAtual));
+            }
+            fecharModalConfig();
+            location.reload();
+        }
+
+        function toggleAcessibilidade() {
+            document.body.classList.toggle('high-contrast');
+            localStorage.setItem('acess_alto', document.body.classList.contains('high-contrast'));
+        }
+
+        function mudarFonte(d) {
+            let s = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--font-scale')) || 100;
+            let novaEscala = (s + d) + '%';
+            document.documentElement.style.setProperty('--font-scale', novaEscala);
+            localStorage.setItem('acess_fonte', novaEscala);
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('userLogado');
+            window.location.href = 'index.html';
+        }
+
+        window.onload = inicializarForum;
+    </script>
+</body>
+</html>

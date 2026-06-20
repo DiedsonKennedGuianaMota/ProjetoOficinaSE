@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opções da Unidade - ALGORITMOLAB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #1c3d5a;
+            --accent-teal: #2b6cb0;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --fire-color: #ff9f43;
+            --success-green: #48bb78;
+            --teal-card: #319795;
+            --sand-card: #d69e2e;
+            --dark-card: #2d3748;
+            --font-scale: 100%;
+        }
+
+        .high-contrast {
+            --primary-blue: #00ebff; --accent-teal: #ffff00; --bg-color: #121212;
+            --card-bg: #1e1e1e; --text-main: #ffffff; --border-color: #4a5568;
+            --teal-card: #008080; --sand-card: #b8860b; --dark-card: #000000;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+        html { font-size: var(--font-scale); }
+        body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 80px; }
+
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .navbar { 
+            background: var(--card-bg); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 10;
+        }
+        .nav-profile { display: flex; align-items: center; gap: 15px; }
+        .avatar { width: 45px; height: 45px; background: var(--accent-teal); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; border: 2px solid var(--border-color); overflow: hidden; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .streak-badge { display: inline-flex; align-items: center; gap: 5px; color: var(--fire-color); font-weight: 700; font-size: 0.9rem; }
+
+        .btn { padding: 8px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem; text-decoration: none; }
+        .btn-outline { background: transparent; color: var(--primary-blue); border: 2px solid var(--primary-blue); }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+        
+        .opcoes-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px;
+        }
+
+        .opcao-card {
+            position: relative; border-radius: 20px; padding: 40px 20px; color: white;
+            text-decoration: none; text-align: center; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.5s ease backwards; overflow: hidden;
+        }
+        
+        .opcao-card:hover:not(.locked) { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.15); }
+        .opcao-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%); opacity: 0; transition: 0.5s; }
+        .opcao-card:hover::before { opacity: 1; }
+
+        .bg-teal { background: var(--teal-card); }
+        .bg-sand { background: var(--sand-card); }
+        .bg-dark { background: var(--dark-card); }
+
+        .opcao-card.locked {
+            filter: grayscale(1); opacity: 0.5; cursor: not-allowed; pointer-events: none;
+        }
+
+        .icone-grande { font-size: 3.5rem; margin-bottom: 20px; }
+        
+        .full-width { grid-column: 1 / -1; flex-direction: row; gap: 30px; text-align: left; padding: 30px; }
+        .full-width .icone-grande { margin-bottom: 0; }
+
+        .checkbox-container { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; color: rgba(255,255,255,0.7); }
+        .check-icon.checked { color: #fff; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+
+        .floating-actions { position: fixed; bottom: 25px; right: 25px; display: flex; align-items: center; gap: 15px; z-index: 99; }
+        .btn-floating { width: 55px; height: 55px; border-radius: 50%; background: var(--primary-blue); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .menu-acessibilidade { position: absolute; bottom: 65px; right: 0; background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 15px; display: none; flex-direction: column; gap: 10px; width: 200px; box-shadow: 0 5px 25px rgba(0,0,0,0.15); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 100; }
+        .modal-card { background: var(--card-bg); padding: 30px; border-radius: 20px; width: 90%; max-width: 450px; }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-profile">
+            <div class="avatar" id="user-avatar">...</div>
+            <div>
+                <strong id="user-name">Carregando...</strong>
+                <div class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-outline" onclick="abrirConfiguracoes()"><i class="fas fa-cog"></i></button>
+            <button class="btn btn-outline" onclick="sair()"><i class="fas fa-sign-out-alt"></i></button>
+        </div>
+    </header>
+
+    <main class="container">
+        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 30px;">
+            <h2 style="color: var(--primary-blue);"><i class="fas fa-bookmark"></i> Unidade 1: Introdução</h2>
+        </div>
+        
+        <div class="opcoes-grid">
+            
+            <a href="material-estudo.html" class="opcao-card bg-teal" id="card-conteudo" style="animation-delay: 0.1s;">
+                <div class="checkbox-container">
+                    <i class="far fa-square check-icon" id="check-conteudo"></i>
+                </div>
+                <i class="fas fa-book-open icone-grande"></i>
+                <h3>1. Material de Estudo</h3>
+                <p style="font-size: 0.85rem; margin-top: 10px; opacity: 0.8;">(Clique para acessar)</p>
+            </a>
+
+            <a href="exercicios.html" class="opcao-card bg-sand locked" id="card-exercicios" style="animation-delay: 0.2s;">
+                <div class="checkbox-container">
+                    <i class="far fa-square check-icon" id="check-exercicios"></i>
+                </div>
+                <i class="fas fa-dumbbell icone-grande"></i>
+                <h3>2. Trilha de Exercícios</h3>
+                <p style="font-size: 0.85rem; margin-top: 10px; opacity: 0.8;" id="txt-exercicios">(Requer Material)</p>
+            </a>
+
+            <a href="forum.html" class="opcao-card bg-dark" style="animation-delay: 0.3s;">
+                <i class="fas fa-comments icone-grande" style="margin-bottom: 25px;"></i>
+                <h3>Fórum de Discussão</h3>
+                <p style="font-size: 0.85rem; margin-top: 10px; opacity: 0.8;">(Tire suas dúvidas)</p>
+            </a>
+
+        </div>
+
+        <a href="avaliacao-unidade.html" class="opcao-card bg-dark full-width locked" id="card-avaliacao" style="margin-top: 25px; animation-delay: 0.4s;">
+            <div class="checkbox-container" style="top: 20px; right: 20px;">
+                <i class="far fa-square check-icon" id="check-avaliacao"></i>
+            </div>
+            <i class="fas fa-star icone-grande" style="color: #ffd700;"></i>
+            <div>
+                <h3>3. Avaliação Final da Unidade</h3>
+                <p style="font-size: 0.9rem; margin-top: 5px; opacity: 0.8;" id="txt-avaliacao">(Requer Exercícios concluídos. Nota mínima: 80%)</p>
+            </div>
+        </a>
+
+    </main>
+
+    <div class="floating-actions">
+        <a href="unidades.html" class="btn" style="background: white; color: var(--primary-blue); box-shadow: 0 4px 10px rgba(0,0,0,0.1);"><i class="fas fa-arrow-left"></i> Voltar</a>
+        <div style="position: relative;">
+            <div class="menu-acessibilidade" id="menu-acess">
+                <button class="btn btn-outline" style="background:var(--card-bg)" onclick="toggleAltoContraste()">Alto Contraste</button>
+                <button class="btn btn-outline" style="background:var(--card-bg)" onclick="mudarFonte(2)">Aumentar Texto</button>
+                <button class="btn btn-outline" style="background:var(--card-bg)" onclick="mudarFonte(-2)">Diminuir Texto</button>
+            </div>
+            <button class="btn-floating" onclick="toggleMenuAcessibilidade()"><i class="fas fa-universal-access"></i></button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="config-modal">
+        <div class="modal-card">
+            <h3 style="margin-bottom:15px; color: var(--primary-blue);"><i class="fas fa-cog"></i> Configurações</h3>
+            <label style="font-size:0.8rem; color:var(--text-muted)">Seu Nome:</label>
+            <input type="text" id="edit-nome" style="width:100%; padding:10px; margin-bottom:20px; border:1px solid var(--border-color); border-radius:8px;">
+            
+            <div style="background: #edf2f7; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+                <p style="font-size: 0.85rem; font-weight: bold; margin-bottom: 10px; color: var(--primary-blue);"><i class="fas fa-vial"></i> Painel de Testes (Simular Progresso)</p>
+                <button class="btn" style="background: var(--teal-card); color: white; width: 100%; margin-bottom: 5px; font-size: 0.8rem;" onclick="simular('material')">1. Concluir Material</button>
+                <button class="btn" style="background: var(--sand-card); color: white; width: 100%; margin-bottom: 5px; font-size: 0.8rem;" onclick="simular('exercicios')">2. Concluir Exercícios</button>
+                <button class="btn" style="background: #e53e3e; color: white; width: 100%; font-size: 0.8rem; margin-top: 10px;" onclick="simular('reset')"><i class="fas fa-trash"></i> Resetar Unidade 1</button>
+            </div>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-outline" onclick="fecharConfiguracoes()">Fechar</button>
+                <button class="btn" style="background: var(--primary-blue); color: white;" onclick="salvarNome()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let usuario = null;
+
+        function inicializar() {
+            if (localStorage.getItem('userLogado') !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            usuario = JSON.parse(localStorage.getItem('userData'));
+
+            if (usuario) {
+                document.getElementById('user-name').innerText = usuario.nome;
+                document.getElementById('user-streak').innerText = `${usuario.streak || 0} Dias`;
+                
+                const avatarDiv = document.getElementById('user-avatar');
+                if(usuario.foto) {
+                    avatarDiv.innerHTML = `<img src="${usuario.foto}">`;
+                } else {
+                    avatarDiv.innerText = usuario.nome.charAt(0).toUpperCase();
+                }
+            }
+            verificarProgresso();
+        }
+
+        function verificarProgresso() {
+            const matOK = localStorage.getItem('u1_material_concluido') === 'true';
+            const exOK = localStorage.getItem('u1_exercicios_concluidos') === 'true';
+            const avOK = localStorage.getItem('u1_avaliacao_concluida') === 'true';
+
+            if(matOK) {
+                marcarCheck('check-conteudo');
+                document.getElementById('card-exercicios').classList.remove('locked');
+                document.getElementById('txt-exercicios').innerText = "(Disponível para prática)";
+            }
+            
+            if(exOK) {
+                marcarCheck('check-exercicios');
+                document.getElementById('card-avaliacao').classList.remove('locked');
+                document.getElementById('txt-avaliacao').innerText = "(Disponível. Nota mínima: 80%)";
+            }
+
+            if(avOK) {
+                marcarCheck('check-avaliacao');
+            }
+        }
+
+        function marcarCheck(id) {
+            const el = document.getElementById(id);
+            el.className = 'fas fa-check-square check-icon checked';
+        }
+
+        function abrirConfiguracoes() {
+            document.getElementById('edit-nome').value = usuario ? usuario.nome : '';
+            document.getElementById('config-modal').style.display = 'flex';
+        }
+
+        function fecharConfiguracoes() { 
+            document.getElementById('config-modal').style.display = 'none'; 
+        }
+        
+        function salvarNome() {
+            const novo = document.getElementById('edit-nome').value;
+            usuario.nome = novo;
+            localStorage.setItem('userData', JSON.stringify(usuario));
+            location.reload();
+        }
+
+        function simular(acao) {
+            if(acao === 'material') localStorage.setItem('u1_material_concluido', 'true');
+            if(acao === 'exercicios') localStorage.setItem('u1_exercicios_concluidos', 'true');
+            if(acao === 'reset') {
+                localStorage.removeItem('u1_material_concluido');
+                localStorage.removeItem('u1_exercicios_concluidos');
+                localStorage.removeItem('u1_avaliacao_concluida');
+            }
+            location.reload();
+        }
+
+        function sair() {
+            localStorage.removeItem('userLogado');
+            window.location.href = 'index.html';
+        }
+
+        function toggleMenuAcessibilidade() {
+            const m = document.getElementById('menu-acess');
+            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function toggleAltoContraste() {
+            document.body.classList.toggle('high-contrast');
+            localStorage.setItem('acess_alto', document.body.classList.contains('high-contrast'));
+        }
+
+        function mudarFonte(d) {
+            let s = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--font-scale')) || 100;
+            document.documentElement.style.setProperty('--font-scale', (s + d) + '%');
+        }
+
+        window.onload = () => {
+            inicializar();
+            if(localStorage.getItem('acess_alto') === 'true') document.body.classList.add('high-contrast');
+        };
+    </script>
+</body>
+</html>

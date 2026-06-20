@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALGORITMOLAB - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================
+           1. DIRETIVAS DE DESIGN E ANIMAÇÕES
+           ========================================== */
+        :root {
+            --primary-blue: #1c3d5a;
+            --accent-teal: #2b6cb0;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --fire-color: #ff9f43;
+            --font-scale: 100%;
+        }
+
+        /* Classe de Alto Contraste / Modo Escuro */
+        .high-contrast {
+            --primary-blue: #00ebff;
+            --accent-teal: #ffff00;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+            --border-color: #4a5568;
+            --fire-color: #ff3f34;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background 0.3s, color 0.3s, font-size 0.3s; }
+        
+        html { font-size: var(--font-scale); }
+        body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 60px; }
+
+        /* Animações */
+        @keyframes scaleUp {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        @keyframes burn {
+            0% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(255,159,67,0.5)); }
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 10px rgba(255,159,67,0.9)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 2px rgba(255,159,67,0.5)); }
+        }
+
+        /* ==========================================
+           2. COMPONENTES DO LAYOUT (NAVBAR & GRIDS)
+           ========================================== */
+        .navbar { 
+            background: var(--card-bg); 
+            padding: 15px 5%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-profile { display: flex; align-items: center; gap: 15px; }
+        
+        .avatar { 
+            width: 55px; height: 55px; 
+            background: var(--accent-teal); 
+            color: white; 
+            border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; 
+            font-size: 1.5rem; font-weight: 700; 
+            cursor: pointer; border: 3px solid var(--border-color);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden; object-fit: cover;
+        }
+        .avatar:hover { transform: scale(1.05); border-color: var(--primary-blue); }
+
+        .streak-badge { 
+            display: inline-flex; align-items: center; gap: 6px; 
+            background: rgba(255, 159, 67, 0.15); 
+            color: var(--fire-color); 
+            padding: 3px 10px; border-radius: 20px; 
+            font-size: 0.85rem; font-weight: 700; margin-top: 2px;
+        }
+        .streak-badge i { animation: burn 1.5s infinite ease-in-out; }
+
+        .container { max-width: 1100px; margin: 0 auto; padding: 30px 20px; }
+        
+        h2 { color: var(--primary-blue); font-size: 1.8rem; margin-bottom: 25px; }
+
+        /* Grade do Dashboard */
+        .dashboard-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+            gap: 25px; 
+        }
+
+        .dash-item { 
+            background: var(--card-bg); 
+            padding: 35px 25px; 
+            border-radius: 20px; 
+            text-align: center; 
+            text-decoration: none; 
+            color: var(--text-main); 
+            font-weight: 700; font-size: 1.1rem;
+            display: flex; flex-direction: column; align-items: center; gap: 15px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+            border: 1px solid var(--border-color);
+            animation: scaleUp 0.5s ease-out backwards;
+        }
+        .dash-item i { font-size: 2.5rem; color: var(--accent-teal); transition: transform 0.3s ease; }
+        .dash-item:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1); 
+            border-color: var(--accent-teal);
+        }
+        .dash-item:hover i { transform: scale(1.1); }
+
+        /* Widgets Adicionais */
+        .widget-missao {
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal));
+            color: white; padding: 25px; border-radius: 20px; margin-bottom: 35px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .widget-missao h3 { font-size: 1.3rem; margin-bottom: 5px; }
+        .widget-missao p { opacity: 0.9; font-size: 0.95rem; }
+
+        /* Botões */
+        .btn { 
+            padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer;
+            border: none; display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-size: 0.95rem; width: 100%;
+        }
+        .btn-auto { width: auto; }
+        .btn-primary { background: var(--accent-teal); color: white; }
+        .btn-primary:hover { filter: brightness(1.1); }
+        .btn-logout { background: transparent; color: var(--text-main); border: 2px solid var(--border-color); }
+        .btn-logout:hover { background: #e2e8f0; }
+        .btn-danger:hover { background: #fed7d7; color: #e53e3e; border-color: #feb2b2; }
+
+        /* ==========================================
+           3. ACESSIBILIDADE E ELEMENTOS FLUTUANTES
+           ========================================== */
+        .floating-actions { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 10px; z-index: 99; }
+        .btn-floating { width: 55px; height: 55px; border-radius: 50%; background: var(--primary-blue); color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.2); justify-content: center; font-size: 1.3rem; display: flex; align-items: center; border: none; cursor: pointer;}
+        .btn-floating:hover { background: var(--accent-teal); }
+        
+        .menu-acessibilidade {
+            position: absolute; bottom: 65px; right: 0; background: var(--card-bg); border: 1px solid var(--border-color);
+            padding: 15px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.15); display: none; flex-direction: column; gap: 10px; width: 230px;
+            max-height: 400px; overflow-y: auto;
+        }
+
+        .menu-title { font-size: 0.9rem; font-weight: 700; color: var(--text-muted); text-align: center; margin-bottom: 5px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;}
+
+        /* Classes Funcionais de Acessibilidade */
+        .dyslexic-font * { font-family: 'Comic Sans MS', 'Arial', sans-serif !important; }
+        .spacing-increased * { letter-spacing: 0.05em !important; line-height: 1.8 !important; }
+        .highlight-links a { text-decoration: underline !important; font-weight: bold !important; color: var(--accent-teal) !important; padding: 2px 4px; border-radius: 4px; background: rgba(43, 108, 176, 0.1); }
+        .high-contrast.highlight-links a { color: #ffff00 !important; background: rgba(255, 255, 0, 0.1); }
+
+        /* ==========================================
+           4. MODAIS (FOTO DE PERFIL)
+           ========================================== */
+        .modal-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+            display: none; justify-content: center; align-items: center; z-index: 100; 
+        }
+        .modal-card { 
+            background: var(--card-bg); padding: 30px; border-radius: 20px; width: 90%; max-width: 450px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2); animation: scaleUp 0.3s ease-out;
+        }
+        .modal-card h3 { margin-bottom: 20px; color: var(--primary-blue); }
+        .avatar-presets { display: flex; justify-content: space-around; margin: 20px 0; }
+        .preset-img { width: 60px; height: 60px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; }
+        .preset-img:hover, .preset-img.selected { border-color: var(--accent-teal); transform: scale(1.1); }
+        .input-text { width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; margin-bottom: 15px; background: var(--bg-color); color: var(--text-main); }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-profile">
+            <div class="avatar" id="user-avatar" onclick="abrirModalAvatar()" title="Alterar Avatar"></div>
+            <div>
+                <strong id="user-name" style="font-size: 1.1rem;">Carregando...</strong>
+                <div>
+                    <div class="streak-badge">
+                        <i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <button class="btn btn-logout btn-auto btn-danger" onclick="fazerLogout()">
+                <i class="fas fa-sign-out-alt"></i> Sair
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <section class="widget-missao">
+            <div>
+                <h3><i class="fas fa-bullseye"></i> Sua Ofensiva Diária</h3>
+                <p id="missao-status">Complete um exercício no módulo de estudos hoje para garantir seu +1 dia de ofensiva e manter seu fogo aceso!</p>
+            </div>
+        </section>
+
+        <h2><i class="fas fa-home"></i> Painel de Controle</h2>
+        
+        <div class="dashboard-grid">
+            <a href="modulos.html" class="dash-item" style="animation-delay: 0.1s;">
+                <i class="fas fa-layer-group"></i>
+                Módulos de Estudo
+            </a>
+            
+            <a href="pesquisador.html" class="dash-item" style="animation-delay: 0.2s;">
+                <i class="fas fa-search"></i>
+                Pesquisador
+            </a>
+            
+            <a href="forum.html" class="dash-item" style="animation-delay: 0.3s;">
+                <i class="fas fa-comments"></i>
+                Fórum
+            </a>
+            
+            <a href="configuracoes.html" class="dash-item" style="animation-delay: 0.4s;">
+                <i class="fas fa-cog"></i>
+                Configurações
+            </a>
+        </div>
+    </main>
+
+    <div class="floating-actions">
+        <div class="menu-acessibilidade" id="menu-acess">
+            <div class="menu-title">Opções de Visualização</div>
+            <button class="btn btn-primary" onclick="toggleAltoContraste()"><i class="fas fa-adjust"></i> Alto Contraste</button>
+            <button class="btn btn-logout" onclick="mudarFonte(2)"><i class="fas fa-font"></i><i class="fas fa-plus"></i> Aumentar Texto</button>
+            <button class="btn btn-logout" onclick="mudarFonte(-2)"><i class="fas fa-font"></i><i class="fas fa-minus"></i> Diminuir Texto</button>
+            <button class="btn btn-logout" onclick="toggleDislexia()"><i class="fas fa-book-reader"></i> Fonte Dislexia</button>
+            <button class="btn btn-logout" onclick="toggleEspacamento()"><i class="fas fa-text-height"></i> Mais Espaçamento</button>
+            <button class="btn btn-logout" onclick="toggleDestaqueLinks()"><i class="fas fa-link"></i> Destacar Links</button>
+        </div>
+        <button class="btn btn-floating" onclick="toggleMenuAcessibilidade()" title="Acessibilidade">
+            <i class="fas fa-universal-access"></i>
+        </button>
+    </div>
+
+    <div class="modal-overlay" id="avatar-modal">
+        <div class="modal-card">
+            <h3><i class="fas fa-camera"></i> Alterar Foto de Perfil</h3>
+            
+            <p style="font-size: 0.9rem; margin-bottom: 10px; color: var(--text-muted);">Escolha um avatar pronto:</p>
+            <div class="avatar-presets">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Felix" class="preset-img" onclick="selecionarPreset(this.src)">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Ane" class="preset-img" onclick="selecionarPreset(this.src)">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Jack" class="preset-img" onclick="selecionarPreset(this.src)">
+            </div>
+
+            <p style="font-size: 0.9rem; margin-bottom: 5px; color: var(--text-muted);">Ou cole a URL de uma imagem da internet:</p>
+            <input type="text" id="avatar-url" class="input-text" placeholder="https://linkdafoto.com/foto.jpg">
+
+            <p style="font-size: 0.9rem; margin-bottom: 5px; color: var(--text-muted);">Ou envie um arquivo do seu computador:</p>
+            <input type="file" id="avatar-file" accept="image/*" onchange="carregarArquivoLocal(event)" style="margin-bottom: 20px;">
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button class="btn btn-logout btn-auto" onclick="fecharModalAvatar()">Cancelar</button>
+                <button class="btn btn-primary btn-auto" onclick="salvarNovaFoto()" id="btn-salvar-foto">Salvar Foto</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // URL da sua API no Render
+        const API_URL = 'https://algoritmolab.onrender.com/api';
+        
+        let usuarioLogadoData = null; 
+        let fotoSelecionadaTemp = "";
+
+        // TRAVA DE SEGURANÇA: Garante autenticação
+        function checkAuth() {
+            const userString = localStorage.getItem('userData');
+            
+            if (!userString) {
+                window.location.href = 'index.html'; // Redireciona se não estiver logado
+                return;
+            }
+            
+            // Pega os dados do usuário que salvamos no login
+            usuarioLogadoData = JSON.parse(userString);
+            renderizarDadosUsuario();
+        }
+
+        // Atualiza a tela com as informações
+        function renderizarDadosUsuario() {
+            document.getElementById('user-name').innerText = usuarioLogadoData.nome;
+            document.getElementById('user-streak').innerText = `${usuarioLogadoData.streak || 0} Dias`;
+            
+            // Renderiza foto ou letra padrão
+            const avatarDiv = document.getElementById('user-avatar');
+            if (usuarioLogadoData.foto && usuarioLogadoData.foto !== "") {
+                avatarDiv.innerHTML = `<img src="${usuarioLogadoData.foto}" style="width:100%; height:100%; object-fit:cover;">`;
+            } else {
+                avatarDiv.innerText = usuarioLogadoData.nome.charAt(0).toUpperCase();
+            }
+
+            // Checa status da missão diária
+            const hoje = new Date().toDateString();
+            if (usuarioLogadoData.lastCompletion === hoje) {
+                document.getElementById('missao-status').innerHTML = '<i class="fas fa-check-circle" style="color:#2ecc71"></i> <strong>Parabéns!</strong> Ofensiva de hoje garantida. Volte amanhã!';
+            }
+        }
+
+        /* MODAL DE FOTO DE PERFIL */
+        function abrirModalAvatar() { document.getElementById('avatar-modal').style.display = 'flex'; }
+        function fecharModalAvatar() { document.getElementById('avatar-modal').style.display = 'none'; }
+        
+        function selecionarPreset(src) {
+            fotoSelecionadaTemp = src;
+            document.querySelectorAll('.preset-img').forEach(img => img.classList.remove('selected'));
+            event.target.classList.add('selected');
+        }
+
+        function carregarArquivoLocal(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                fotoSelecionadaTemp = reader.result; // Converte imagem para String base64
+            }
+            if (file) reader.readAsDataURL(file);
+        }
+
+        // ENVIAR FOTO PARA O BACKEND
+        async function salvarNovaFoto() {
+            const urlInput = document.getElementById('avatar-url').value.trim();
+            const novaFoto = urlInput || fotoSelecionadaTemp;
+            
+            if (!novaFoto) {
+                alert("Por favor, selecione ou informe uma imagem.");
+                return;
+            }
+
+            const btnSalvar = document.getElementById('btn-salvar-foto');
+            btnSalvar.innerText = "Salvando...";
+            btnSalvar.disabled = true;
+
+            try {
+                // Envia a foto e o email do usuário para a sua API no Render
+                const response = await fetch(`${API_URL}/update-photo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: usuarioLogadoData.email,
+                        foto: novaFoto
+                    })
+                });
+
+                if (response.ok) {
+                    // Atualiza a foto localmente
+                    usuarioLogadoData.foto = novaFoto;
+                    localStorage.setItem('userData', JSON.stringify(usuarioLogadoData));
+                    renderizarDadosUsuario();
+                    fecharModalAvatar();
+                } else {
+                    const data = await response.json();
+                    alert("Erro ao salvar: " + data.error);
+                }
+            } catch (error) {
+                console.error("Erro:", error);
+                alert("Erro de conexão com o servidor. Tente novamente.");
+            } finally {
+                btnSalvar.innerText = "Salvar Foto";
+                btnSalvar.disabled = false;
+                document.getElementById('avatar-url').value = "";
+                fotoSelecionadaTemp = "";
+            }
+        }
+
+        /* ==========================================
+           SISTEMA DE ACESSIBILIDADE APRIMORADO
+           ========================================== */
+        function toggleMenuAcessibilidade() {
+            const menu = document.getElementById('menu-acess');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function toggleAltoContraste() {
+            document.body.classList.toggle('high-contrast');
+            localStorage.setItem('acess_alto_contraste', document.body.classList.contains('high-contrast'));
+        }
+
+        let currentScale = 100;
+        function mudarFonte(delta) {
+            currentScale += delta;
+            if (currentScale < 80) currentScale = 80;
+            if (currentScale > 140) currentScale = 140;
+            document.documentElement.style.setProperty('--font-scale', `${currentScale}%`);
+            localStorage.setItem('acess_escala_fonte', currentScale);
+        }
+
+        function toggleDislexia() {
+            document.body.classList.toggle('dyslexic-font');
+            localStorage.setItem('acess_dislexia', document.body.classList.contains('dyslexic-font'));
+        }
+
+        function toggleEspacamento() {
+            document.body.classList.toggle('spacing-increased');
+            localStorage.setItem('acess_espacamento', document.body.classList.contains('spacing-increased'));
+        }
+
+        function toggleDestaqueLinks() {
+            document.body.classList.toggle('highlight-links');
+            localStorage.setItem('acess_links', document.body.classList.contains('highlight-links'));
+        }
+
+        // =====================================
+        // DESLOGAR
+        // =====================================
+        function fazerLogout() {
+            // Apaga todos os registros de login do navegador
+            localStorage.removeItem('userData');
+            localStorage.removeItem('userLogado');
+            localStorage.removeItem('userName');
+            
+            // Vai para o index enviando a ordem de limpar os dados de lá também!
+            window.location.href = 'index.html?logout=true';
+        }
+
+        // Executa ao inicializar a página para carregar dados e configurações salvas
+        window.onload = function() {
+            checkAuth();
+            
+            // Restaura configurações de acessibilidade do LocalStorage
+            if (localStorage.getItem('acess_alto_contraste') === 'true') document.body.classList.add('high-contrast');
+            if (localStorage.getItem('acess_dislexia') === 'true') document.body.classList.add('dyslexic-font');
+            if (localStorage.getItem('acess_espacamento') === 'true') document.body.classList.add('spacing-increased');
+            if (localStorage.getItem('acess_links') === 'true') document.body.classList.add('highlight-links');
+            
+            const savedScale = localStorage.getItem('acess_escala_fonte');
+            if (savedScale) {
+                currentScale = parseInt(savedScale);
+                document.documentElement.style.setProperty('--font-scale', `${currentScale}%`);
+            }
+        };
+    </script>
+</body>
+</html>

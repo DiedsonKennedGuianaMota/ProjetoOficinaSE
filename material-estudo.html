@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material de Estudo - ALGORITMOLAB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-blue: #1c3d5a;
+            --accent-teal: #2b6cb0;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --fire-color: #ff9f43;
+            --success-green: #48bb78;
+            --font-scale: 100%;
+        }
+
+        .high-contrast {
+            --primary-blue: #00ebff; --bg-color: #121212;
+            --card-bg: #1e1e1e; --text-main: #ffffff; --border-color: #4a5568;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+        html { font-size: var(--font-scale); }
+        body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 80px; }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .navbar { 
+            background: var(--card-bg); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 10;
+        }
+        .nav-profile { display: flex; align-items: center; gap: 15px; }
+        .avatar { width: 45px; height: 45px; background: var(--accent-teal); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; border: 2px solid var(--border-color); overflow: hidden; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .streak-badge { color: var(--fire-color); font-weight: 700; font-size: 0.9rem; }
+
+        .btn { padding: 10px 20px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; font-size: 0.9rem; }
+        .btn-outline { background: transparent; color: var(--primary-blue); border: 2px solid var(--primary-blue); }
+        .btn-primary { background: var(--accent-teal); color: white; }
+
+        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
+        .material-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
+
+        .material-card {
+            background: var(--card-bg); border-radius: 20px; padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); border: 1px solid var(--border-color);
+            animation: slideUp 0.5s ease-out backwards;
+        }
+
+        .material-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .material-header h3 { color: var(--primary-blue); font-size: 1.1rem; max-width: 80%; }
+
+        .video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 15px; background: #000; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        .status-check { font-size: 1.5rem; color: var(--border-color); }
+        .status-check.marcado { color: var(--success-green); }
+
+        .btn-concluir { width: 100%; margin-top: 20px; justify-content: center; background: #edf2f7; color: var(--primary-blue); pointer-events: none; opacity: 0.8; }
+        .btn-concluir.done { background: var(--success-green); color: white; opacity: 1; }
+
+        .floating-actions { position: fixed; bottom: 25px; right: 25px; display: flex; align-items: center; gap: 15px; z-index: 99; }
+        .btn-floating { width: 55px; height: 55px; border-radius: 50%; background: var(--primary-blue); color: white; border: none; cursor: pointer; font-size: 1.3rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .menu-acessibilidade { position: absolute; bottom: 65px; right: 0; background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 15px; display: none; flex-direction: column; gap: 10px; width: 200px; box-shadow: 0 5px 25px rgba(0,0,0,0.15); }
+        
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 100; }
+        .modal-card { background: var(--card-bg); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-profile">
+            <div class="avatar" id="user-avatar">...</div>
+            <div>
+                <strong id="user-name">Carregando...</strong>
+                <div class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button class="btn btn-outline" onclick="abrirConfiguracoes()"><i class="fas fa-cog"></i></button>
+        </div>
+    </header>
+
+    <main class="container">
+        <div style="margin-bottom: 40px;">
+            <h2 style="color: var(--primary-blue); display: flex; align-items: center; gap: 12px;">
+                <i class="fas fa-book-reader" style="color: var(--accent-teal);"></i> 
+                Material de Estudo - Unidade 1
+            </h2>
+            <p style="color: var(--text-muted); margin-top: 5px;">Assista à aula e acesse o material para liberar os exercícios.</p>
+        </div>
+
+        <div class="material-grid">
+            
+            <div class="material-card" style="animation-delay: 0.1s;">
+                <div class="material-header">
+                    <h3><i class="fas fa-video"></i> Videoaula: Introdução à Lógica</h3>
+                    <div class="status-check" id="container-check-video">
+                        <i class="far fa-circle" id="check-video"></i>
+                    </div>
+                </div>
+                
+                <div class="video-wrapper">
+                    <div id="yt-player"></div>
+                </div>
+                
+                <div class="btn btn-concluir" id="btn-video">
+                    <i class="fas fa-play-circle"></i> Assista ao vídeo até o final
+                </div>
+            </div>
+
+            <div class="material-card" style="animation-delay: 0.2s;">
+                <div class="material-header">
+                    <h3><i class="fas fa-file-pdf"></i> Apostila Complementar</h3>
+                    <div class="status-check" id="container-check-apostila">
+                        <i class="far fa-circle" id="check-apostila"></i>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; padding: 20px 0; background: #f8fafc; border-radius: 15px; border: 2px dashed var(--border-color);">
+                    <i class="fas fa-file-invoice" style="color: var(--accent-teal); font-size: 4rem; margin-bottom: 15px;"></i>
+                    <p style="font-size: 0.9rem; padding: 0 20px;">Guia prático sobre Algoritmos e Variáveis para consulta rápida.</p>
+                </div>
+
+                <button class="btn btn-primary" onclick="lerApostila()" style="width: 100%; margin-top: 20px; justify-content: center;">
+                    <i class="fas fa-external-link-alt"></i> Gerar e Acessar Apostila PDF
+                </button>
+            </div>
+
+        </div>
+
+        <div style="text-align: center; margin-top: 50px;">
+            <button class="btn btn-outline" style="opacity: 0.6;" onclick="resetarTudo()">
+                <i class="fas fa-sync"></i> Resetar Progresso desta Página
+            </button>
+        </div>
+    </main>
+
+    <div class="floating-actions">
+        <a href="opcoes-unidade.html" class="btn btn-outline" style="background: white;"><i class="fas fa-arrow-left"></i> Voltar</a>
+        <div style="position: relative;">
+            <div class="menu-acessibilidade" id="menu-acess">
+                <button class="btn btn-outline" style="width:100%; background:white" onclick="toggleAltoContraste()">Alto Contraste</button>
+                <button class="btn btn-outline" style="width:100%; background:white" onclick="mudarFonte(2)">Aumentar Texto</button>
+            </div>
+            <button class="btn-floating" onclick="toggleMenuAcessibilidade()"><i class="fas fa-universal-access"></i></button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="config-modal">
+        <div class="modal-card">
+            <h3 style="margin-bottom:15px;"><i class="fas fa-cog"></i> Configurações</h3>
+            <p style="font-size: 0.9rem; margin-bottom: 15px;">Ajuste seu perfil aqui.</p>
+            <button class="btn btn-primary" style="width:100%" onclick="fecharConfiguracoes()">Fechar</button>
+        </div>
+    </div>
+
+    <script>
+        let usuario = null;
+        let player;
+
+        function carregarDados() {
+            if (localStorage.getItem('userLogado') !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            usuario = JSON.parse(localStorage.getItem('userData'));
+
+            if (usuario) {
+                document.getElementById('user-name').innerText = usuario.nome;
+                document.getElementById('user-streak').innerText = `${usuario.streak || 0} Dias`;
+                
+                const avatarDiv = document.getElementById('user-avatar');
+                if(usuario.foto) {
+                    avatarDiv.innerHTML = `<img src="${usuario.foto}">`;
+                } else {
+                    avatarDiv.innerText = usuario.nome.charAt(0).toUpperCase();
+                }
+            }
+            atualizarStatusInterface();
+        }
+
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('yt-player', {
+                height: '100%',
+                width: '100%',
+                videoId: 'jBIPvXHRYpg',
+                events: {
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerStateChange(event) {
+            if (event.data === YT.PlayerState.ENDED) {
+                marcarVideoConcluido();
+            }
+        }
+
+        function marcarVideoConcluido() {
+            localStorage.setItem('video_concluido', 'true');
+            atualizarStatusInterface();
+            verificarConclusaoTotal();
+        }
+
+        function lerApostila() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(24);
+            doc.setTextColor(28, 61, 90);
+            doc.text("ALGORITMOLAB", 105, 20, null, null, "center");
+            doc.setFontSize(18);
+            doc.text("Apostila Unidade 1: Introdução", 105, 30, null, null, "center");
+            
+            doc.setFontSize(16);
+            doc.setTextColor(0, 0, 0);
+            doc.text("1. O que é um Algoritmo?", 20, 50);
+            doc.setFontSize(12);
+            const text1 = "Um algoritmo é uma sequência finita de instruções bem definidas e não ambíguas, cada uma das quais pode ser executada mecanicamente num período de tempo finito e com uma quantidade de esforço finita. Pense nisso como uma receita de bolo: você tem os ingredientes (dados de entrada), o passo a passo (processamento) e o bolo pronto (saída). Na programação, criamos algoritmos para resolver problemas lógicos e automatizar tarefas do nosso dia a dia.";
+            doc.text(doc.splitTextToSize(text1, 170), 20, 60);
+
+            doc.addPage();
+            doc.setFontSize(16);
+            doc.text("2. Variáveis e Tipos de Dados", 20, 20);
+            doc.setFontSize(12);
+            const text2 = "Variáveis são espaços reservados na memória do computador (como caixas) para armazenar dados que serão utilizados durante a execução do seu programa. Cada variável possui um nome, um tipo de dado e um valor.\n\nOs tipos mais comuns são:\n\n- Inteiro (int): Números sem casas decimais (ex: 10, -5, 0).\n- Real ou Float (float/double): Números com casas decimais (ex: 3.14, -0.5).\n- Caractere ou Texto (string): Textos, letras e frases (ex: 'Olá Mundo').\n- Lógico (boolean): Valores que podem ser apenas Verdadeiro ou Falso.\n\nCompreender como as variáveis funcionam é essencial para manipular a informação em qualquer linguagem de programação moderna.";
+            doc.text(doc.splitTextToSize(text2, 170), 20, 30);
+
+            doc.addPage();
+            doc.setFontSize(16);
+            doc.text("3. Estruturas de Controle", 20, 20);
+            doc.setFontSize(12);
+            const text3 = "As estruturas de controle determinam o fluxo de execução de um algoritmo. Elas permitem que o programa tome decisões lógicas ou repita determinados blocos de código com base em condições.\n\n- Estruturas Condicionais (SE / ENTÃO / SENÃO): Permitem que o sistema execute um bloco de código apenas se uma condição predeterminada for verdadeira.\n- Estruturas de Repetição (ENQUANTO / PARA): Permitem executar um bloco de código várias vezes seguidas. É ideal para percorrer listas, ler grandes volumes de dados ou realizar contagens automáticas.\n\nDominando algoritmos, variáveis e controle de fluxo, você terá a base absolutamente necessária para aprender qualquer linguagem de programação.";
+            doc.text(doc.splitTextToSize(text3, 170), 20, 30);
+
+            doc.save("Apostila_AlgoritmoLab_Unidade1.pdf");
+            
+            localStorage.setItem('apostila_concluida', 'true');
+            atualizarStatusInterface();
+            verificarConclusaoTotal();
+        }
+
+        function atualizarStatusInterface() {
+            const videoFeito = localStorage.getItem('video_concluido') === 'true';
+            const apostilaFeita = localStorage.getItem('apostila_concluida') === 'true';
+
+            if(videoFeito) {
+                document.getElementById('check-video').className = 'fas fa-check-circle';
+                document.getElementById('container-check-video').classList.add('marcado');
+                document.getElementById('btn-video').innerHTML = '<i class="fas fa-check-circle"></i> Aula Concluída!';
+                document.getElementById('btn-video').classList.add('done');
+            }
+
+            if(apostilaFeita) {
+                document.getElementById('check-apostila').className = 'fas fa-check-circle';
+                document.getElementById('container-check-apostila').classList.add('marcado');
+            }
+        }
+
+        function verificarConclusaoTotal() {
+            const video = localStorage.getItem('video_concluido') === 'true';
+            const apostila = localStorage.getItem('apostila_concluida') === 'true';
+
+            if(video && apostila) {
+                localStorage.setItem('u1_material_concluido', 'true');
+                alert("Parabéns! Você concluiu todo o material da Unidade 1. A trilha de exercícios foi liberada!");
+            }
+        }
+
+        function resetarTudo() {
+            localStorage.removeItem('video_concluido');
+            localStorage.removeItem('apostila_concluida');
+            localStorage.removeItem('u1_material_concluido');
+            location.reload();
+        }
+
+        function toggleMenuAcessibilidade() {
+            const m = document.getElementById('menu-acess');
+            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+        }
+        
+        function toggleAltoContraste() { 
+            document.body.classList.toggle('high-contrast'); 
+        }
+        
+        function mudarFonte(d) {
+            let s = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--font-scale')) || 100;
+            document.documentElement.style.setProperty('--font-scale', (s + d) + '%');
+        }
+        
+        function abrirConfiguracoes() { 
+            document.getElementById('config-modal').style.display = 'flex'; 
+        }
+        
+        function fecharConfiguracoes() { 
+            document.getElementById('config-modal').style.display = 'none'; 
+        }
+
+        window.onload = carregarDados;
+    </script>
+</body>
+</html>

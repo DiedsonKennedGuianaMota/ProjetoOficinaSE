@@ -1,0 +1,524 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+
+/* ==========================================
+   1. VARIÁVEIS GLOBAIS E RESET
+   ========================================== */
+:root {
+    --primary-blue: #170c79;
+    --accent-teal: #4bc0c8;
+    --bg-light: #f9f9f9;
+    --bg-white: #ffffff;
+    --alert-sand: #f0ebd8;
+    --text-dark: #333333;
+    --success-green: #2ecc71;
+    --error-red: #e74c3c;
+    
+    --radius: 12px;
+    --shadow: 0 4px 10px rgba(0,0,0,0.1);
+    --shadow-hover: 0 10px 20px rgba(23, 12, 121, 0.15);
+    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Modo de Acessibilidade */
+body.accessibility-mode {
+    --primary-blue: #FFFFFF;
+    --bg-light: #000000;
+    --bg-white: #1A1A1A;
+    --accent-teal: #FFFF00;
+    --text-dark: #FFFFFF;
+    font-size: 110%;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+body.no-scroll {
+    overflow: hidden; 
+    height: 100vh;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    width: 100%;
+}
+
+.hidden { display: none !important; }
+
+/* ==========================================
+   2. COMPONENTES COMUNS (Botões, Navbar, Util)
+   ========================================== */
+.btn {
+    background-color: var(--accent-teal);
+    color: var(--bg-white);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    background-color: var(--primary-blue);
+    box-shadow: var(--shadow-hover);
+   text-color: white;
+}
+
+.navbar {
+    background: var(--bg-white);
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-profile {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.avatar {
+    width: 45px;
+    height: 45px;
+    background: var(--primary-blue);
+    color: var(--bg-white);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.streak-badge {
+    color: var(--error-red);
+    background: #FFE0B2;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.floating-actions {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 50;
+}
+
+/* ==========================================
+   3. TELA INICIAL / LOGIN E DASHBOARD
+   ========================================== */
+.hero-section {
+    text-align: center;
+    padding: 60px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.hero-section h1 {
+    font-size: 3rem;
+    color: var(--primary-blue);
+}
+
+.form-group {
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 400px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    font-size: 1rem;
+    outline: none;
+    transition: var(--transition);
+}
+
+.form-group input:focus { border-color: var(--primary-blue); }
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 40px;
+}
+
+.dash-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    text-decoration: none;
+    background: var(--bg-white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    color: var(--primary-blue);
+    font-size: 1.2rem;
+    font-weight: bold;
+    gap: 15px;
+    transition: var(--transition);
+}
+
+.dash-item i { font-size: 3rem; color: var(--accent-teal); transition: var(--transition); }
+.dash-item:hover { transform: translateY(-10px); background: var(--primary-blue); color: white; }
+.dash-item:hover i { color: var(--success-green); }
+
+/* ==========================================
+   4. TRILHA (unidades.html)
+   ========================================== */
+.trilha-page-container {
+    overflow-y: auto;
+    padding-bottom: 50px;
+}
+
+.trilha-feed {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: flex-start;
+    padding-left: 20px;
+}
+
+.trilha-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+}
+
+.trilha-card-visual {
+    background: var(--bg-white);
+    border: 3px solid var(--accent-teal);
+    border-radius: 15px;
+    width: 220px;
+    height: 80px;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: var(--transition);
+}
+
+.trilha-item:hover:not(.locked) .trilha-card-visual {
+    transform: scale(1.05);
+    background: var(--alert-sand);
+}
+
+.map-marker-icon {
+    font-size: 2rem;
+    color: var(--accent-teal);
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    transform: rotate(-15deg);
+}
+
+.status-circle {
+    width: 50px;
+    height: 50px;
+    background: var(--accent-teal);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: white;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 2;
+}
+
+.trilha-text-block {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.trilha-text-block h3 { margin: 0; font-size: 1rem; color: var(--primary-blue); }
+.trilha-text-block p { margin: 0; font-size: 0.9rem; color: #666; }
+
+.trilha-connector {
+    position: absolute;
+    left: 250px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+}
+
+.trilha-connector .line { width: 60px; height: 3px; background: #ccc; }
+.arrow-icon { font-size: 1rem; color: #ccc; margin-left: -5px; }
+
+/* Estados Trilha */
+.trilha-item.locked { pointer-events: none; cursor: default; }
+.trilha-item.locked .trilha-card-visual { border-color: #ccc; box-shadow: none; background: #f5f5f5;}
+.trilha-item.locked .status-circle { background: #ccc; }
+.trilha-item.locked .trilha-text-block h3, .trilha-item.locked .trilha-text-block p { color: #999; }
+.trilha-connector.locked .line { background: #eee; }
+.trilha-connector.locked .arrow-icon { color: #eee; }
+
+/* ==========================================
+   5. OPÇÕES DA UNIDADE (opcoes-unidade.html)
+   ========================================== */
+.opcoes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.opcao-card {
+    border-radius: var(--radius);
+    padding: 40px 20px;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+    background: var(--bg-white);
+    overflow: hidden;
+}
+
+.opcao-card:hover:not(.locked) {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.opcao-card.locked {
+    background-color: #e0e0e0;
+    color: #999;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+}
+
+.icone-grande { font-size: 3.5rem; margin-bottom: 15px; }
+.full-width { grid-column: 1 / -1; flex-direction: row; gap: 20px; padding: 30px; }
+.full-width .icone-grande { margin-bottom: 0; font-size: 2.5rem; }
+
+.bg-teal { background-color: var(--accent-teal); color: var(--primary-blue); }
+.bg-sand { background-color: var(--alert-sand); color: var(--primary-blue); }
+.bg-dark { background-color: var(--primary-blue); color: var(--bg-white); }
+
+.checkbox-container { position: absolute; top: 15px; left: 20px; font-size: 1.5rem; color: #ccc;}
+.check-icon.marcado { color: var(--success-green); }
+.bg-dark .check-icon.marcado { color: #4CAF50; }
+
+/* ==========================================
+   6. MATERIAL DE ESTUDO
+   ========================================== */
+.material-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    margin-bottom: 50px;
+}
+
+@media (min-width: 768px) {
+    .material-grid { grid-template-columns: 2fr 1fr; }
+}
+
+.material-card {
+    background: var(--bg-white);
+    border: 2px solid var(--alert-sand);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+}
+
+.material-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--bg-light);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    color: var(--primary-blue);
+}
+
+.video-container { width: 100%; border-radius: 8px; overflow: hidden; background: #000; }
+.video-container video { width: 100%; display: block; }
+
+/* ==========================================
+   7. FASES, QUIZ, PROVA E IDE (SIMULADORES)
+   ========================================== */
+.wizard-container {
+    flex: 1;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.fase-card {
+    position: absolute;
+    width: 100%;
+    max-width: 900px;
+    background: var(--bg-white);
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.95) translateY(30px);
+    transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+    border-top: 5px solid var(--primary-blue);
+    max-height: 85vh; 
+    overflow-y: auto;
+}
+
+.fase-card.active { opacity: 1; pointer-events: auto; transform: scale(1) translateY(0); z-index: 10; }
+
+.fase-header {
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 2px solid var(--bg-light); padding-bottom: 15px; margin-bottom: 15px;
+}
+.fase-header h3 { margin: 0; color: var(--primary-blue); font-size: 1.5rem; }
+
+.quiz-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+.quiz-grid .questao-quiz:last-child { grid-column: 1 / -1; }
+.questao-quiz { background: #f8f9fa; padding: 10px 15px; border-left: 4px solid var(--accent-teal); border-radius: 8px; font-size: 0.9rem; }
+.questao-quiz p { margin: 0 0 8px 0; font-weight: bold; }
+.opcao-quiz { display: inline-block; margin-right: 10px; cursor: pointer; }
+
+/* IDE */
+.ide-container { border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+.ide-header { background: #1e1e1e; color: #858585; padding: 5px 15px; font-family: monospace; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; }
+.code-editor {
+    width: 100%; height: 180px; background: #2d2d2d; color: #e06c75;
+    font-family: 'Consolas', 'Courier New', monospace; font-size: 1.1rem;
+    padding: 15px; border: none; resize: none; outline: none; line-height: 1.5;
+}
+.small-editor { height: 120px; }
+.ide-footer { background: #1e1e1e; padding: 10px; text-align: right; }
+
+.console-output {
+    background: #000; color: #0f0; font-family: 'Consolas', monospace;
+    padding: 15px; border-radius: 8px; margin-top: 15px; min-height: 60px;
+    white-space: pre-wrap; font-size: 0.9rem; border-left: 4px solid #0f0;
+}
+.console-error { color: #ff5555; border-left-color: #ff5555; }
+
+/* Resultados */
+.resultado-box { padding: 10px; border-radius: 8px; font-weight: bold; text-align: center; margin-top: 15px;}
+.resultado-sucesso { background-color: #d4edda; color: #155724; }
+.resultado-erro { background-color: #f8d7da; color: #721c24; }
+
+/* Prova Específico */
+.prova-header {
+    background-color: var(--primary-blue); padding: 15px 25px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top-left-radius: 15px; border-top-right-radius: 15px;
+    color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); z-index: 5;
+}
+.timer-box {
+    background-color: var(--bg-white); color: var(--primary-blue);
+    padding: 8px 15px; border-radius: 20px; font-weight: bold; font-size: 1.2rem;
+    font-family: monospace; display: flex; align-items: center; gap: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); transition: background-color 0.3s, color 0.3s;
+}
+.timer-box.warning { background-color: var(--error-red); color: white; animation: pulseTimer 1s infinite; }
+@keyframes pulseTimer { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+/* ==========================================
+   8. FÓRUM DE DISCUSSÃO
+   ========================================== */
+.forum-feed-container { display: flex; flex-direction: column; gap: 25px; padding-bottom: 50px; }
+
+/* Modal */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 26, 61, 0.6); backdrop-filter: blur(5px);
+    display: flex; justify-content: center; align-items: center; z-index: 1000;
+    opacity: 1; visibility: visible; transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.modal-overlay.hidden { opacity: 0; visibility: hidden; }
+.modal-content {
+    background: var(--bg-white); width: 90%; max-width: 600px; border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2); transform: scale(1); transition: transform 0.3s ease;
+}
+.modal-overlay.hidden .modal-content { transform: scale(0.8); }
+.modal-header { background: var(--primary-blue); color: white; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
+.btn-close { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; transition: 0.2s; }
+.btn-close:hover { color: var(--accent-teal); transform: rotate(90deg); }
+.modal-body { padding: 20px; }
+.modal-textarea { width: 100%; min-height: 150px; padding: 15px; border: 2px solid #eee; border-radius: 12px; font-size: 1.05rem; resize: none; outline: none; }
+.modal-textarea:focus { border-color: var(--accent-teal); }
+.modal-footer { padding: 15px 20px; background: #f8f9fa; border-top: 1px solid #eee; display: flex; justify-content: flex-end; }
+
+/* Posts e Comentários */
+.post-card {
+    background: var(--bg-white); border-radius: 15px; padding: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-top: 5px solid var(--accent-teal);
+}
+.post-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+.post-avatar {
+    width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal));
+    color: white; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: bold;
+}
+.post-author { font-weight: bold; font-size: 1.1rem; color: var(--primary-blue); }
+.post-time { font-size: 0.85rem; color: #888; }
+.post-content { line-height: 1.6; margin-bottom: 20px; font-size: 1.05rem; white-space: pre-wrap; }
+
+.forum-actions { display: flex; gap: 20px; border-bottom: 2px solid #f1f1f1; padding-bottom: 15px; }
+.action-btn { background: none; border: none; color: #777; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 8px; transition: all 0.2s; }
+.action-btn:hover { background: #f1f5f9; color: var(--primary-blue); }
+.action-btn.liked { color: var(--error-red); background: #fdf2f2; }
+
+.comments-section { padding-top: 20px; }
+.comment-card { background: #f8fafc; border-radius: 12px; padding: 15px; margin-bottom: 15px; border-left: 3px solid #cbd5e1; }
+.replies-section { margin-top: 15px; padding-left: 20px; border-left: 2px dashed #e2e8f0; }
+.reply-card { background: white; border-radius: 10px; padding: 12px; margin-bottom: 10px; border: 1px solid #f1f5f9; }
+.input-row { display: flex; gap: 10px; margin-top: 15px; }
+.forum-input { flex: 1; padding: 12px 15px; border-radius: 20px; border: 1px solid #cbd5e1; background: #f8fafc; outline: none; }
+.forum-input:focus { background: white; border-color: var(--accent-teal); }

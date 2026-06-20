@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avaliação Final - ALGORITMOLAB</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #1c3d5a;
+            --accent-teal: #2b6cb0;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --fire-color: #ff9f43;
+            --success-green: #48bb78;
+            --danger-red: #e53e3e;
+            --font-scale: 100%;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+        html { font-size: var(--font-scale); }
+        body { background: var(--bg-color); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+        /* HEADER */
+        .navbar { 
+            background: var(--card-bg); padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); z-index: 100;
+        }
+        .nav-profile { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 40px; height: 40px; background: var(--accent-teal); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; border: 2px solid var(--border-color); overflow: hidden; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .streak-badge { color: var(--fire-color); font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 4px; }
+
+        /* WIZARD CONTAINER */
+        .wizard-container { flex: 1; overflow-y: auto; display: flex; justify-content: center; padding: 20px; }
+        
+        .fase-card { 
+            background: var(--card-bg); border-radius: 20px; width: 100%; max-width: 900px; padding: 30px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .fase-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid var(--bg-color); padding-bottom: 15px; }
+        .icone-gigante { font-size: 4rem; color: var(--primary-blue); margin-bottom: 10px; }
+
+        /* PROVA HEADER & TIMER */
+        .prova-header { display: flex; justify-content: space-between; align-items: center; background: var(--primary-blue); color: white; padding: 15px 20px; border-radius: 12px 12px 0 0; }
+        .timer-box { background: rgba(0,0,0,0.2); padding: 5px 15px; border-radius: 20px; font-weight: bold; font-family: 'Fira Code', monospace; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;}
+        .timer-box.warning { color: #fbd38d; animation: pulse 1s infinite; }
+        .timer-box.danger { color: #fc8181; animation: pulse 0.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        .prova-content { padding: 20px; overflow-y: auto; flex: 1; border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 12px 12px; background: #fafbfc; }
+
+        /* QUIZ GRID */
+        .quiz-item { background: white; margin-bottom: 20px; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+        .options-grid { display: grid; gap: 10px; margin-top: 15px; }
+        .option-btn { padding: 12px; border: 2px solid var(--border-color); border-radius: 10px; cursor: pointer; background: white; text-align: left; font-size: 0.95rem; }
+        .option-btn:hover { border-color: var(--accent-teal); background: #f0f7ff; }
+        .option-btn.selected { background: var(--accent-teal); color: white; border-color: var(--accent-teal); }
+
+        /* IDE SIMULADOR */
+        .ide-container { background: #282a36; border-radius: 12px; overflow: hidden; border: 1px solid #444; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .ide-header { background: #21222c; padding: 10px 15px; color: #f8f8f2; font-size: 0.85rem; font-family: 'Fira Code', monospace; }
+        .CodeMirror { height: 250px; font-family: 'Fira Code', monospace; font-size: 0.95rem; text-align: left; }
+
+        /* BOTÕES */
+        .btn { padding: 15px 25px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; }
+        .btn-primary { background: var(--primary-blue); color: white; }
+        .btn-teal { background: var(--accent-teal); color: white; }
+        .btn-outline { background: transparent; border: 2px solid var(--border-color); color: var(--text-muted); padding: 8px 15px; }
+        .btn-outline:hover { background: var(--border-color); color: var(--text-main); }
+        
+        /* RESULTADO */
+        .resultado-box { background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); margin: 20px 0; display: flex; flex-direction: column; gap: 10px; }
+        .nota-destaque { font-size: 3rem; font-weight: 800; }
+        .aprovado { color: var(--success-green); }
+        .reprovado { color: var(--danger-red); }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-profile">
+            <div class="avatar" id="user-avatar">A</div>
+            <div>
+                <strong id="user-name">Carregando...</strong>
+                <div class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button type="button" class="btn btn-outline" onclick="location.href='opcoes-unidade.html'" title="Sair"><i class="fas fa-sign-out-alt"></i> Sair</button>
+        </div>
+    </header>
+
+    <main class="wizard-container">
+        
+        <div class="fase-card" id="intro-prova" style="display: flex; flex-direction: column;">
+            <div style="text-align: center;">
+                <i class="fas fa-graduation-cap icone-gigante"></i>
+                <h2>Avaliação Final - Unidade 1</h2>
+                <p style="color: var(--text-muted); margin-top: 10px;">Chegou a hora de testar seus conhecimentos em C e Lógica de Programação!</p>
+            </div>
+            
+            <div style="background: var(--bg-color); padding: 20px; border-radius: 12px; margin: 30px 0;">
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 15px; font-size: 1.1rem;">
+                    <li><i class="fas fa-check-circle" style="color: var(--accent-teal); width: 30px;"></i> 5 Questões Objetivas (10 pontos cada)</li>
+                    <li><i class="fas fa-code" style="color: var(--accent-teal); width: 30px;"></i> 1 Desafio Prático em C (50 pontos)</li>
+                    <li><i class="fas fa-stopwatch" style="color: var(--accent-teal); width: 30px;"></i> Tempo limite: <strong>60 Minutos</strong></li>
+                    <li><i class="fas fa-star" style="color: var(--accent-teal); width: 30px;"></i> Nota para aprovação: <strong>80/100</strong></li>
+                </ul>
+            </div>
+            
+            <button type="button" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 1.2rem;" onclick="iniciarProva()">
+                <i class="fas fa-play"></i> Iniciar Prova Agora
+            </button>
+        </div>
+
+        <div class="fase-card" id="area-prova" style="display: none; padding: 0; height: 100%; max-height: 800px; flex-direction: column;">
+            <div class="prova-header">
+                <h3 style="margin: 0;"><i class="fas fa-pen-alt"></i> Avaliação em Andamento</h3>
+                <div class="timer-box" id="timer-display"><i class="fas fa-clock"></i> 60:00</div>
+            </div>
+
+            <div class="prova-content">
+                <h4 style="color: var(--primary-blue); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">Parte 1: Objetivas</h4>
+                
+                <div id="quiz-container">
+                    </div>
+
+                <h4 style="color: var(--primary-blue); border-bottom: 2px solid #eee; padding-bottom: 10px; margin: 40px 0 20px 0;">Parte 2: Prática (C)</h4>
+                <div class="quiz-item" style="background: transparent; border: none; padding: 0;">
+                    <p style="margin-bottom: 15px;"><strong>Missão (50pts):</strong> Escreva a lógica da função <code>calculaArea</code> em C. Ela recebe a <code>base</code> e a <code>altura</code> de um retângulo e deve retornar a sua área.</p>
+                    
+                    <div class="ide-container">
+                        <div class="ide-header"><span><i class="fas fa-file-code"></i> area.c</span></div>
+                        <textarea id="editor-prova"></textarea>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-teal" onclick="finalizarProva(false)" style="width: 100%; margin-top: 30px; justify-content: center; font-size: 1.1rem;">
+                    <i class="fas fa-check-double"></i> Entregar Avaliação
+                </button>
+            </div>
+        </div>
+
+        <div class="fase-card" id="resultado-prova" style="display: none; text-align: center; flex-direction: column;">
+            <div id="resultado-icone" style="font-size: 5rem; margin-bottom: 20px;"></div>
+            <h2 id="resultado-titulo">Calculando...</h2>
+            
+            <div class="resultado-box">
+                <p>Sua pontuação final:</p>
+                <div class="nota-destaque" id="nota-final">0/100</div>
+                <div style="display: flex; justify-content: space-around; margin-top: 15px; font-size: 0.9rem; color: var(--text-muted);">
+                    <span>Objetivas: <strong id="nota-obj">0</strong>/50</span>
+                    <span>Prática: <strong id="nota-prat">0</strong>/50</span>
+                </div>
+            </div>
+
+            <p id="resultado-mensagem" style="margin-bottom: 30px; font-weight: 600;"></p>
+
+            <button type="button" class="btn btn-primary" onclick="location.href='opcoes-unidade.html'" style="width: 100%; justify-content: center;">
+                <i class="fas fa-home"></i> Voltar para a Unidade
+            </button>
+        </div>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+
+    <script>
+        // --------------------------------------------------------
+        // 1. DADOS E ESTADO DA PROVA
+        // --------------------------------------------------------
+        let usuario = null;
+        let editorCodeMirror = null;
+        let tempoRestante = 60 * 60; // 60 minutos em segundos
+        let intervaloTimer = null;
+        let respostasObjetivas = {};
+
+        const questoes = [
+            { id: 1, pergunta: "Qual função é usada para entrada de dados (ler do teclado) na linguagem C?", opcoes: { a: "printf()", b: "scanf()", c: "input()" }, correta: "b" },
+            { id: 2, pergunta: "Como definimos uma variável para armazenar números decimais (reais) em C?", opcoes: { a: "float", b: "int", c: "char" }, correta: "a" },
+            { id: 3, pergunta: "Qual é o operador lógico correspondente ao 'E' (AND) matemático em C?", opcoes: { a: "||", b: "&&", c: "==" }, correta: "b" },
+            { id: 4, pergunta: "Como se inicia um comentário de múltiplas linhas no código C?", opcoes: { a: "||", b: "&&", c: "==" }, correta: "b" },
+            { id: 5, pergunta: "O que o símbolo ';' representa na linguagem C?", opcoes: { a: "O fim de um comentário", b: "O encerramento de uma instrução", c: "O início de um bloco de código" }, correta: "b" }
+        ];
+
+        // --------------------------------------------------------
+        // 2. INICIALIZAÇÃO
+        // --------------------------------------------------------
+        document.addEventListener('DOMContentLoaded', () => {
+            // Simulação de carregamento de perfil
+            usuario = JSON.parse(localStorage.getItem('usuarioLogado')) || { nome: "Estudante", streak: 7 };
+            document.getElementById('user-name').innerText = usuario.nome;
+            document.getElementById('user-streak').innerText = `${usuario.streak} Dias`;
+            document.getElementById('user-avatar').innerText = usuario.nome.charAt(0).toUpperCase();
+
+            // Inicializar CodeMirror
+            editorCodeMirror = CodeMirror.fromTextArea(document.getElementById('editor-prova'), {
+                mode: "text/x-csrc",
+                theme: "dracula",
+                lineNumbers: true,
+                autoCloseBrackets: true,
+                tabSize: 4
+            });
+            editorCodeMirror.setValue("float calculaArea(float base, float altura) {\n    // Escreva seu código aqui\n    \n}");
+        });
+
+        // --------------------------------------------------------
+        // 3. LOGICA DO TIMER
+        // --------------------------------------------------------
+        function iniciarTimer() {
+            intervaloTimer = setInterval(() => {
+                tempoRestante--;
+                
+                const mins = Math.floor(tempoRestante / 60);
+                const segs = tempoRestante % 60;
+                const display = document.getElementById('timer-display');
+                display.innerHTML = `<i class="fas fa-clock"></i> ${mins.toString().padStart(2, '0')}:${segs.toString().padStart(2, '0')}`;
+
+                if (tempoRestante <= 300) display.parentElement.classList.add('warning');
+                if (tempoRestante <= 60) display.parentElement.classList.add('danger');
+                
+                if (tempoRestante <= 0) {
+                    clearInterval(intervaloTimer);
+                    finalizarProva(true);
+                }
+            }, 1000);
+        }
+
+        // --------------------------------------------------------
+        // 4. CONTROLE DA PROVA
+        // --------------------------------------------------------
+        function iniciarProva() {
+            document.getElementById('intro-prova').style.display = 'none';
+            document.getElementById('area-prova').style.display = 'flex';
+            carregarQuestoes();
+            iniciarTimer();
+        }
+
+        function carregarQuestoes() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = questoes.map((q, index) => `
+                <div class="quiz-item">
+                    <p><strong>${index + 1}. ${q.pergunta}</strong></p>
+                    <div class="options-grid">
+                        ${Object.entries(q.opcoes).map(([key, val]) => `
+                            <button type="button" class="option-btn" data-questao="${q.id}" data-opcao="${key}" onclick="selecionarOpcao(this)">
+                                <strong>${key.toUpperCase()})</strong> ${val}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selecionarOpcao(btn) {
+            const questaoId = btn.getAttribute('data-questao');
+            const opcao = btn.getAttribute('data-opcao');
+            
+            // Remove seleção anterior da mesma questão
+            document.querySelectorAll(`.option-btn[data-questao="${questaoId}"]`).forEach(b => b.classList.remove('selected'));
+            
+            // Adiciona nova seleção
+            btn.classList.add('selected');
+            respostasObjetivas[questaoId] = opcao;
+        }
+
+        function finalizarProva(porTempo = false) {
+            if (!porTempo && !confirm("Deseja realmente entregar a prova agora?")) return;
+            
+            clearInterval(intervaloTimer);
+            
+            // 1. Calcular Objetivas
+            let notaObj = 0;
+            questoes.forEach(q => {
+                if (respostasObjetivas[q.id] === q.correta) notaObj += 10;
+            });
+
+            // 2. Validar Prática (Lógica Simples de String/Regex)
+            let notaPrat = 0;
+            const codigo = editorCodeMirror.getValue().toLowerCase();
+            
+            // Verifica se retornou a multiplicação correta
+            if (codigo.includes("return") && (codigo.includes("base * altura") || codigo.includes("altura * base"))) {
+                notaPrat = 50;
+            } else if (codigo.includes("base * altura") || codigo.includes("altura * base")) {
+                notaPrat = 25; // Escreveu a lógica mas esqueceu o return
+            }
+
+            const notaFinal = notaObj + notaPrat;
+            exibirResultado(notaFinal, notaObj, notaPrat);
+        }
+
+        function exibirResultado(total, obj, prat) {
+            document.getElementById('area-prova').style.display = 'none';
+            document.getElementById('resultado-prova').style.display = 'flex';
+            
+            const notaElement = document.getElementById('nota-final');
+            const titulo = document.getElementById('resultado-titulo');
+            const icone = document.getElementById('resultado-icone');
+            const mensagem = document.getElementById('resultado-mensagem');
+
+            notaElement.innerText = `${total}/100`;
+            document.getElementById('nota-obj').innerText = obj;
+            document.getElementById('nota-prat').innerText = prat;
+
+            if (total >= 80) {
+                titulo.innerText = "Parabéns! Você foi Aprovado!";
+                icone.innerHTML = "🏆";
+                icone.style.color = "#48bb78";
+                notaElement.className = "nota-destaque aprovado";
+                mensagem.innerText = "Excelente desempenho! Você demonstrou domínio dos conceitos básicos.";
+                
+                // --- ADICIONE ESTA LINHA ---
+                // Ela salva no navegador que a Unidade 2 agora está livre
+                localStorage.setItem('unidade2Liberada', 'true'); 
+                // ---------------------------
+
+            } else {
+                titulo.innerText = "Não foi desta vez...";
+                // restante do código mantido...
+                icone.innerHTML = "📚";
+                icone.style.color = "#e53e3e";
+                notaElement.className = "nota-destaque reprovado";
+                mensagem.innerText = "Estude mais um pouco os conceitos de C e tente novamente.";
+            }
+        }
+    </script>
+</body>
+</html>

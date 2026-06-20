@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALGORITMOLAB - Meu Progresso</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================
+           1. ESTILOS BASE (MANTENDO IDENTIDADE)
+           ========================================== */
+        :root {
+            --primary-blue: #1c3d5a;
+            --accent-teal: #2b6cb0;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --fire-color: #ff9f43;
+            --progress-green: #48bb78;
+            --font-scale: 100%;
+        }
+
+        .high-contrast {
+            --primary-blue: #00ebff;
+            --accent-teal: #ffff00;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #ffffff;
+            --text-muted: #a0aec0;
+            --border-color: #4a5568;
+            --fire-color: #ff3f34;
+            --progress-green: #00ff00;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: all 0.3s ease; }
+        html { font-size: var(--font-scale); }
+        body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 80px; }
+
+        /* Animações */
+        @keyframes slideIn { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes fillBar { from { width: 0; } }
+
+        /* ==========================================
+           2. NAVBAR (IGUAL À HOME)
+           ========================================== */
+        .navbar { 
+            background: var(--card-bg); padding: 15px 5%; display: flex; 
+            justify-content: space-between; align-items: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 1px solid var(--border-color);
+        }
+        .nav-profile { display: flex; align-items: center; gap: 15px; text-decoration: none; color: inherit; }
+        .avatar { 
+            width: 50px; height: 50px; background: var(--accent-teal); color: white; 
+            border-radius: 50%; display: flex; justify-content: center; align-items: center; 
+            font-weight: 700; border: 2px solid var(--border-color); overflow: hidden;
+        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .streak-badge { 
+            display: inline-flex; align-items: center; gap: 5px; 
+            background: rgba(255, 159, 67, 0.1); color: var(--fire-color); 
+            padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;
+        }
+
+        /* ==========================================
+           3. CONTEÚDO DE PROGRESSO
+           ========================================== */
+        .container { max-width: 900px; margin: 0 auto; padding: 30px 20px; }
+        
+        .header-page { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; }
+        .header-page a { color: var(--text-muted); font-size: 1.5rem; text-decoration: none; }
+        .header-page a:hover { color: var(--accent-teal); }
+
+        /* Card de Resumo */
+        .stats-summary {
+            background: var(--card-bg); border-radius: 20px; padding: 25px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px; margin-bottom: 40px; border: 1px solid var(--border-color);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+        }
+        .stat-card { text-align: center; }
+        .stat-card h4 { font-size: 0.85rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
+        .stat-card p { font-size: 1.8rem; font-weight: 800; color: var(--primary-blue); }
+
+        /* Lista de Módulos */
+        .module-card {
+            background: var(--card-bg); border-radius: 20px; padding: 25px; margin-bottom: 25px;
+            border: 1px solid var(--border-color); animation: slideIn 0.5s ease-out;
+        }
+        .module-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .module-info h3 { color: var(--primary-blue); font-size: 1.2rem; }
+        
+        /* Barra de Progresso */
+        .progress-wrapper { width: 100%; background: var(--bg-color); height: 12px; border-radius: 10px; overflow: hidden; margin: 15px 0; }
+        .progress-fill { 
+            height: 100%; background: linear-gradient(90deg, var(--accent-teal), var(--progress-green)); 
+            border-radius: 10px; animation: fillBar 1.5s ease-in-out;
+        }
+
+        /* Unidades / Exercícios */
+        .unit-list { list-style: none; margin-top: 20px; }
+        .unit-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 12px 15px; border-radius: 12px; margin-bottom: 8px;
+            background: var(--bg-color); border: 1px solid transparent;
+        }
+        .unit-item.completed { border-left: 4px solid var(--progress-green); }
+        .unit-item.locked { opacity: 0.6; }
+        .unit-name { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 0.95rem; }
+        .unit-name i { color: var(--progress-green); }
+        .unit-item.locked i { color: var(--text-muted); }
+
+        /* Botões */
+        .btn { padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; font-size: 0.9rem; }
+        .btn-primary { background: var(--accent-teal); color: white; text-decoration: none; }
+        .btn-logout { background: transparent; color: var(--text-muted); border: 2px solid var(--border-color); }
+
+        /* Acessibilidade Flutuante */
+        .floating-actions { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 10px; z-index: 99; }
+        .btn-floating { width: 50px; height: 50px; border-radius: 50%; background: var(--primary-blue); color: white; border: none; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .menu-acessibilidade {
+            position: absolute; bottom: 60px; right: 0; background: var(--card-bg); border: 1px solid var(--border-color);
+            padding: 15px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.15); display: none; flex-direction: column; gap: 10px; width: 180px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <a href="home.html" class="nav-profile">
+            <div class="avatar" id="user-avatar">A</div>
+            <div>
+                <strong id="user-name">Usuário</strong>
+                <div><div class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></div></div>
+            </div>
+        </a>
+        <button class="btn btn-logout" onclick="fazerLogout()">Sair</button>
+    </header>
+
+    <main class="container">
+        <div class="header-page">
+            <a href="home.html"><i class="fas fa-arrow-left"></i></a>
+            <h2>Meu Progresso Acadêmico</h2>
+        </div>
+
+        <section class="stats-summary">
+            <div class="stat-card">
+                <h4>Conclusão Geral</h4>
+                <p id="total-percent">0%</p>
+            </div>
+            <div class="stat-card">
+                <h4>Exercícios</h4>
+                <p id="total-exercises">0/15</p>
+            </div>
+            <div class="stat-card">
+                <h4>Módulos</h4>
+                <p id="total-modules">0/3</p>
+            </div>
+        </section>
+
+        <div id="modules-container">
+            <div class="module-card">
+                <div class="module-header">
+                    <div class="module-info">
+                        <h3>Módulo 1: Fundamentos de C</h3>
+                        <p class="text-muted">Variáveis, Entrada e Saída</p>
+                    </div>
+                    <span class="badge-percent" id="m1-label">0%</span>
+                </div>
+                <div class="progress-wrapper">
+                    <div class="progress-fill" id="m1-bar" style="width: 0%"></div>
+                </div>
+                <ul class="unit-list">
+                    <li class="unit-item completed">
+                        <div class="unit-name"><i class="fas fa-check-circle"></i> Introdução ao Ambiente</div>
+                        <span class="text-muted">Concluído</span>
+                    </li>
+                    <li class="unit-item completed">
+                        <div class="unit-name"><i class="fas fa-check-circle"></i> Sintaxe e Printf</div>
+                        <span class="text-muted">Concluído</span>
+                    </li>
+                    <li class="unit-item" id="unit-ativa">
+                        <div class="unit-name"><i class="far fa-circle"></i> Operadores Matemáticos</div>
+                        <a href="#" class="btn btn-primary" style="padding: 5px 12px; font-size: 0.75rem;">Continuar</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="module-card" style="opacity: 0.8;">
+                <div class="module-header">
+                    <div class="module-info">
+                        <h3>Módulo 2: Estruturas Condicionais</h3>
+                        <p class="text-muted">Tomada de decisão com IF/ELSE</p>
+                    </div>
+                    <span class="text-muted"><i class="fas fa-lock"></i> Bloqueado</span>
+                </div>
+                <div class="progress-wrapper"><div class="progress-fill" style="width: 0%"></div></div>
+            </div>
+        </div>
+    </main>
+
+    <div class="floating-actions">
+        <div class="menu-acessibilidade" id="menu-acess">
+            <button class="btn btn-primary" onclick="toggleAltoContraste()"><i class="fas fa-adjust"></i> Contraste</button>
+            <button class="btn btn-logout" onclick="mudarFonte(2)"><i class="fas fa-plus"></i> Texto</button>
+            <button class="btn btn-logout" onclick="mudarFonte(-2)"><i class="fas fa-minus"></i> Texto</button>
+        </div>
+        <button class="btn btn-floating" onclick="toggleMenuAcessibilidade()">
+            <i class="fas fa-universal-access"></i>
+        </button>
+    </div>
+
+    <script>
+        let usuarioAtivo = null;
+
+        function checkAuth() {
+            if (localStorage.getItem('userLogado') !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+            
+            const nomeLogado = localStorage.getItem('userName');
+            const usuarios = JSON.parse(localStorage.getItem('algoritmolab_usuarios')) || [];
+            usuarioAtivo = usuarios.find(u => u.nome === nomeLogado);
+
+            if (usuarioAtivo) {
+                renderizarNav();
+                animarProgresso();
+            }
+        }
+
+        function renderizarNav() {
+            document.getElementById('user-name').innerText = usuarioAtivo.nome;
+            document.getElementById('user-streak').innerText = `${usuarioAtivo.streak || 0} Dias`;
+            
+            const avatarDiv = document.getElementById('user-avatar');
+            if (usuarioAtivo.foto) {
+                avatarDiv.innerHTML = `<img src="${usuarioAtivo.foto}">`;
+            } else {
+                avatarDiv.innerText = usuarioAtivo.nome.charAt(0).toUpperCase();
+            }
+        }
+
+        function animarProgresso() {
+            // Simulando busca de progresso no BD para animação
+            // Em um sistema real, esses valores viriam de usuarioAtivo.progresso
+            const m1_percent = 66; 
+            const total_ex = 12;
+
+            setTimeout(() => {
+                document.getElementById('m1-bar').style.width = m1_percent + '%';
+                document.getElementById('m1-label').innerText = m1_percent + '%';
+                
+                document.getElementById('total-percent').innerText = '22%';
+                document.getElementById('total-exercises').innerText = `${total_ex}/45`;
+                document.getElementById('total-modules').innerText = `1/3`;
+            }, 300);
+        }
+
+        /* Funções de Suporte (Igual à Home para consistência) */
+        function toggleMenuAcessibilidade() {
+            const menu = document.getElementById('menu-acess');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function toggleAltoContraste() {
+            document.body.classList.toggle('high-contrast');
+            localStorage.setItem('acess_alto_contraste', document.body.classList.contains('high-contrast'));
+        }
+
+        let currentScale = 100;
+        function mudarFonte(delta) {
+            currentScale += delta;
+            document.documentElement.style.setProperty('--font-scale', `${currentScale}%`);
+        }
+
+        function fazerLogout() {
+            localStorage.setItem('userLogado', 'false');
+            window.location.href = 'index.html';
+        }
+
+        window.onload = () => {
+            checkAuth();
+            if (localStorage.getItem('acess_alto_contraste') === 'true') document.body.classList.add('high-contrast');
+        };
+    </script>
+</body>
+</html>

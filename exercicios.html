@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trilha de Exercícios - ALGORITMOLAB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    
+    <style>
+        :root {
+            --primary-blue: #1c3d5a;
+            --accent-teal: #2b6cb0;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --fire-color: #ff9f43;
+            --success-green: #48bb78;
+            --font-scale: 100%;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+        html { font-size: var(--font-scale); }
+        body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
+
+        /* HEADER */
+        .navbar { 
+            background: var(--card-bg); padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100;
+        }
+        .nav-profile { display: flex; align-items: center; gap: 12px; }
+        .avatar { width: 40px; height: 40px; background: var(--accent-teal); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; border: 2px solid var(--border-color); overflow: hidden; }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .streak-badge { color: var(--fire-color); font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 4px; }
+
+        /* WIZARD CONTAINER */
+        .container { max-width: 800px; margin: 30px auto; padding: 0 20px; }
+        
+        .fase-card { 
+            background: var(--card-bg); border-radius: 20px; padding: 30px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08); display: none;
+            animation: slideIn 0.5s ease-out;
+        }
+        .fase-card.active { display: block; }
+        @keyframes slideIn { from { opacity: 0; transform: translateX(50px); } to { opacity: 1; transform: translateX(0); } }
+
+        .fase-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid var(--bg-color); padding-bottom: 15px; }
+        
+        /* QUIZ GRID */
+        .quiz-item { margin-bottom: 20px; padding: 15px; border-radius: 12px; background: #f8fafc; }
+        .options-grid { display: grid; gap: 10px; margin-top: 10px; }
+        .option-btn { padding: 12px; border: 2px solid var(--border-color); border-radius: 10px; cursor: pointer; background: white; text-align: left; font-size: 0.9rem; }
+        .option-btn:hover { border-color: var(--accent-teal); background: #f0f7ff; }
+        .option-btn.selected { background: var(--accent-teal); color: white; border-color: var(--accent-teal); }
+
+        /* SIMULADOR DE C (IDE) */
+        .ide-container { background: #282a36; border-radius: 12px; overflow: hidden; margin: 20px 0; border: 1px solid #444; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .ide-header { background: #21222c; padding: 10px 15px; color: #f8f8f2; font-size: 0.85rem; display: flex; justify-content: space-between; font-family: 'Fira Code', monospace; }
+        
+        .CodeMirror { height: 200px; font-family: 'Fira Code', monospace; font-size: 0.95rem; }
+        
+        .console-output { 
+            background: #000000; color: #00ff00; padding: 15px; font-family: 'Fira Code', monospace; 
+            font-size: 0.85rem; border-top: 1px solid #444; min-height: 80px; max-height: 200px; overflow-y: auto; white-space: pre-wrap;
+        }
+
+        /* BOTÕES */
+        .btn { padding: 12px 25px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; justify-content: center; }
+        .btn-primary { background: var(--primary-blue); color: white; }
+        .btn-teal { background: var(--accent-teal); color: white; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        
+        .progress-bar { width: 100%; height: 8px; background: var(--border-color); border-radius: 4px; margin-bottom: 30px; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--success-green); width: 33%; transition: 1s; }
+
+        .success-overlay { text-align: center; padding: 40px; }
+        .success-overlay i { font-size: 5rem; color: var(--success-green); margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-profile">
+            <div class="avatar" id="user-avatar">A</div>
+            <div>
+                <strong id="user-name">Carregando...</strong>
+                <div class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px;">
+            <button type="button" class="btn" style="background:transparent; color: var(--primary-blue);" onclick="location.href='opcoes-unidade.html'"><i class="fas fa-times"></i> Sair</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progresso-trilha"></div>
+        </div>
+
+        <div class="fase-card active" id="fase1">
+            <div class="fase-header">
+                <h3><i class="fas fa-brain"></i> Fase 1: Teoria Básica</h3>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Questão 1 de 2</span>
+            </div>
+            
+            <div class="quiz-item">
+                <p><strong>1. Qual comando em C é utilizado para exibir informações na tela?</strong></p>
+                <div class="options-grid">
+                    <button type="button" class="option-btn" onclick="selectOption(this, 1, 'a')">a) scanf()</button>
+                    <button type="button" class="option-btn" onclick="selectOption(this, 1, 'b')">b) printf()</button>
+                    <button type="button" class="option-btn" onclick="selectOption(this, 1, 'c')">c) main()</button>
+                </div>
+            </div>
+
+            <div class="quiz-item">
+                <p><strong>2. Como declaramos uma variável do tipo "número inteiro" em C?</strong></p>
+                <div class="options-grid">
+                    <button type="button" class="option-btn" onclick="selectOption(this, 2, 'a')">a) integer num;</button>
+                    <button type="button" class="option-btn" onclick="selectOption(this, 2, 'b')">b) float num;</button>
+                    <button type="button" class="option-btn" onclick="selectOption(this, 2, 'c')">c) int num;</button>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" style="width: 100%;" onclick="validarFase1()">Validar Respostas <i class="fas fa-chevron-right"></i></button>
+        </div>
+
+        <div class="fase-card" id="fase2">
+            <div class="fase-header">
+                <h3><i class="fas fa-code"></i> Fase 2: Laboratório de C</h3>
+                <span class="streak-badge" style="color: var(--accent-teal)"><i class="fas fa-server"></i> API Piston</span>
+            </div>
+            <p style="font-size: 0.9rem; margin-bottom: 15px;"><strong>Missão:</strong> Escreva a lógica da função abaixo para que ela retorne a <b>soma</b> de <code>a</code> e <code>b</code>.</p>
+            
+            <div class="ide-container">
+                <div class="ide-header">
+                    <span><i class="fas fa-file-code"></i> exercicio.c</span> 
+                    <i class="fas fa-circle" style="color: #50fa7b; font-size: 0.6rem;"></i>
+                </div>
+                <textarea id="editor-c"></textarea>
+                <div class="console-output" id="console-fase2">> Terminal GCC pronto. Aguardando execução...</div>
+            </div>
+
+            <button type="button" class="btn btn-teal" id="btn-compilar" style="width: 100%;" onclick="compilarCReal()">
+                <i class="fas fa-play"></i> Executar Código
+            </button>
+        </div>
+
+        <div class="fase-card" id="fase3">
+            <div class="fase-header">
+                <h3><i class="fas fa-trophy"></i> Fase 3: Desafio Final</h3>
+            </div>
+            <p style="margin-bottom: 20px;">Para encerrar, qual o caractere obrigatório ao final de quase todas as instruções em C?</p>
+            
+            <div class="options-grid" style="margin-bottom: 30px;">
+                <button type="button" class="option-btn" onclick="selectOption(this, 3, 'a')">a) Dois pontos ( : )</button>
+                <button type="button" class="option-btn" onclick="selectOption(this, 3, 'b')">b) Ponto e vírgula ( ; )</button>
+                <button type="button" class="option-btn" onclick="selectOption(this, 3, 'c')">c) Ponto final ( . )</button>
+            </div>
+
+            <button type="button" class="btn btn-primary" style="width: 100%; background: #1a202c;" onclick="finalizarTrilha()">Concluir Trilha de Exercícios <i class="fas fa-flag-checkered"></i></button>
+        </div>
+
+        <div class="fase-card" id="fase-sucesso">
+            <div class="success-overlay">
+                <i class="fas fa-check-circle"></i>
+                <h2>Excelente Trabalho!</h2>
+                <p style="color: var(--text-muted); margin: 15px 0 30px 0;">Você dominou os fundamentos da Unidade 1 e escreveu código real.</p>
+                <button type="button" class="btn btn-primary" onclick="location.href='opcoes-unidade.html'">Voltar para a Unidade</button>
+            </div>
+        </div>
+
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+
+    <script>
+        let respostas = { q1: '', q2: '', q3: '' };
+        let usuario = null;
+        let editorCodeMirror = null;
+
+        function inicializar() {
+            const nomeLogado = localStorage.getItem('userName');
+            const usuarios = JSON.parse(localStorage.getItem('algoritmolab_usuarios')) || [];
+            usuario = usuarios.find(u => u.nome === nomeLogado);
+
+            if (usuario) {
+                document.getElementById('user-name').innerText = usuario.nome;
+                document.getElementById('user-streak').innerText = `${usuario.streak || 0} Dias`;
+                if(usuario.foto) document.getElementById('user-avatar').innerHTML = `<img src="${usuario.foto}">`;
+            }
+        }
+
+        function selectOption(btn, questao, valor) {
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            respostas['q' + questao] = valor;
+        }
+
+        function validarFase1() {
+            if(respostas.q1 === 'b' && respostas.q2 === 'c') {
+                mudarFase('fase1', 'fase2', 66);
+            } else {
+                alert("Ops! Alguma resposta está incorreta. Revise o material!");
+            }
+        }
+
+        function mudarFase(atual, proxima, progresso) {
+            document.getElementById(atual).classList.remove('active');
+            document.getElementById(proxima).classList.add('active');
+            document.getElementById('progresso-trilha').style.width = progresso + '%';
+
+            if (proxima === 'fase2' && !editorCodeMirror) {
+                setTimeout(() => {
+                    editorCodeMirror = CodeMirror.fromTextArea(document.getElementById("editor-c"), {
+                        lineNumbers: true,
+                        mode: "text/x-csrc",
+                        theme: "dracula",
+                        indentUnit: 4,
+                        matchBrackets: true
+                    });
+                    
+                    editorCodeMirror.setValue("int soma(int a, int b) {\n    // Digite sua logica aqui\n    return \n}");
+                }, 50);
+            }
+        }
+function compilarCReal() {
+            const consoleOut = document.getElementById('console-fase2');
+            const btnCompilar = document.getElementById('btn-compilar');
+            
+            if (!editorCodeMirror) return;
+            const codigoAluno = editorCodeMirror.getValue();
+
+            consoleOut.innerHTML = "> Inicializando simulador GCC...\n> Analisando sintaxe e lógica...";
+            btnCompilar.disabled = true;
+            btnCompilar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processando...';
+
+            // Simulamos um pequeno delay para dar a sensação de compilação real
+            setTimeout(() => {
+                try {
+                    // 1. Verificações de Sintaxe Básica do C
+                    if (!codigoAluno.includes("return")) {
+                        throw new Error("Erro Lógico: A função precisa da palavra 'return' para devolver um valor.");
+                    }
+                    if (!codigoAluno.includes(";")) {
+                        throw new Error("Erro de Sintaxe: Faltou o ponto e vírgula (;) no final da sua instrução.");
+                    }
+
+                    // 2. Extrai e limpa apenas o conteúdo de dentro da função para analisar
+                    // Removemos espaços para facilitar a verificação independentemente da formatação do aluno
+                    const codigoLimpo = codigoAluno.replace(/\s+/g, '').toLowerCase();
+
+                    // 3. Verifica se a lógica de soma de 'a' e 'b' está presente
+                    const passouNosTestes = 
+                        codigoLimpo.includes("returna+b;") || 
+                        codigoLimpo.includes("returnb+a;") || 
+                        codigoLimpo.includes("return(a+b);");
+
+                    if (passouNosTestes) {
+                        consoleOut.innerHTML = "<span style='color: #50fa7b;'>> Compilação bem-sucedida!<br>> Teste 1 (10+5): OK<br>> Teste 2 (-2+8): OK<br>> Excelente! Função C válida! Avançando...</span>";
+                        setTimeout(() => mudarFase('fase2', 'fase3', 100), 2500);
+                    } else {
+                        consoleOut.innerHTML = `<span style="color:#f1fa8c;">> O código rodou, mas o resultado não é a soma de 'a' e 'b'. Tente novamente!</span>`;
+                    }
+                } catch (error) {
+                    consoleOut.innerHTML = `<span style="color:#ff5555;">> FALHA NA COMPILAÇÃO:\n${error.message}</span>`;
+                }
+
+                btnCompilar.disabled = false;
+                btnCompilar.innerHTML = '<i class="fas fa-play"></i> Executar Código';
+            }, 1200); // 1.2 segundos de "compilação"
+        }
+
+                function finalizarTrilha() {
+            if(respostas.q3 === 'b') {
+                localStorage.setItem('u1_exercicios_concluidos', 'true');
+                mudarFase('fase3', 'fase-sucesso', 100);
+            } else {
+                alert("Resposta incorreta! O compilador C não perdoa o esquecimento desse caractere!");
+            }
+        }
+
+        window.onload = inicializar;
+    </script>
+</body>
+</html>

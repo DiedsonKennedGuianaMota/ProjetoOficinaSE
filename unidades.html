@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidades - ALGORITMOLAB</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #1c3d5a;
+            --accent-teal: #2b6cb0;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --text-muted: #718096;
+            --border-color: #e2e8f0;
+            --fire-color: #ff9f43;
+            --success-green: #48bb78;
+            --font-scale: 100%;
+        }
+
+        .high-contrast {
+            --primary-blue: #00ebff;
+            --accent-teal: #ffff00;
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #ffffff;
+            --border-color: #4a5568;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+        html { font-size: var(--font-scale); }
+        body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 50px; }
+
+        @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        @keyframes wave { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+        .navbar { 
+            background: var(--card-bg); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 1px solid var(--border-color);
+            position: sticky; top: 0; z-index: 10;
+        }
+        .nav-profile { display: flex; align-items: center; gap: 15px; }
+        .avatar { 
+            width: 45px; height: 45px; background: var(--accent-teal); color: white; border-radius: 50%; 
+            display: flex; justify-content: center; align-items: center; font-weight: 700; 
+            border: 2px solid var(--border-color); overflow: hidden;
+        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .streak-badge { display: inline-flex; align-items: center; gap: 5px; color: var(--fire-color); font-weight: 700; font-size: 0.9rem; }
+
+        .btn { padding: 8px 18px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; text-decoration: none; }
+        .btn-outline { background: transparent; color: var(--primary-blue); border: 2px solid var(--primary-blue); }
+
+        .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
+        .trilha-header { text-align: center; margin-bottom: 50px; }
+        
+        .trilha-feed { display: flex; flex-direction: column; align-items: center; gap: 0; }
+
+        .unidade-item {
+            display: flex; flex-direction: column; align-items: center; width: 100%;
+            text-decoration: none; color: inherit; position: relative;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+        }
+
+        .unidade-circle {
+            width: 100px; height: 100px; border-radius: 50%;
+            background: var(--card-bg); border: 6px solid var(--border-color);
+            display: flex; justify-content: center; align-items: center;
+            font-size: 2.5rem; color: var(--border-color);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            z-index: 2; transition: 0.4s;
+        }
+
+        .unidade-item.unlocked .unidade-circle { border-color: var(--accent-teal); color: var(--accent-teal); cursor: pointer; }
+        .unidade-item.unlocked:hover .unidade-circle { transform: scale(1.1); box-shadow: 0 12px 25px rgba(43, 108, 176, 0.2); }
+        
+        .unidade-item.completed .unidade-circle { background: var(--success-green); border-color: #38a169; color: white; }
+
+        .unidade-info { text-align: center; margin: 15px 0 30px 0; }
+        .unidade-info h3 { color: var(--primary-blue); font-size: 1.1rem; }
+        .unidade-info p { color: var(--text-muted); font-size: 0.85rem; }
+
+        .conector {
+            width: 8px; height: 60px; background: var(--border-color);
+            margin: -10px 0; border-radius: 4px; position: relative; transition: 0.5s;
+        }
+        .conector.active { background: var(--success-green); box-shadow: 0 0 10px var(--success-green); }
+
+        .status-badge {
+            position: absolute; top: -10px; right: -20px;
+            background: var(--primary-blue); color: white;
+            padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700;
+        }
+
+        .floating-actions { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 10px; z-index: 99; }
+        .btn-floating { width: 55px; height: 55px; border-radius: 50%; background: var(--primary-blue); color: white; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .menu-acessibilidade { position: absolute; bottom: 65px; right: 0; background: var(--card-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 15px; display: none; flex-direction: column; gap: 10px; width: 200px; box-shadow: 0 5px 25px rgba(0,0,0,0.15); }
+
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); display: none; justify-content: center; align-items: center; z-index: 100; }
+        .modal-card { background: var(--card-bg); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-profile">
+            <div class="avatar" id="user-avatar">...</div>
+            <div>
+                <strong id="user-name">Carregando...</strong>
+                <div class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></div>
+            </div>
+        </div>
+        <button class="btn btn-outline" onclick="abrirConfiguracoes()"><i class="fas fa-cog"></i> Configurações</button>
+    </header>
+
+    <main class="container">
+        <div class="trilha-header">
+            <a href="modulos.html" style="text-decoration:none; color:var(--accent-teal); font-weight:600;"><i class="fas fa-chevron-left"></i> Voltar aos Módulos</a>
+            <h2 style="margin-top:20px; color: var(--primary-blue);">Unidades: Lógica de Programação</h2>
+            <p style="color:var(--text-muted)">Complete os desafios para avançar no mapa.</p>
+        </div>
+
+        <div class="trilha-feed">
+            
+            <div class="unidade-item unlocked" id="item-u1" style="animation-delay: 0.1s;">
+                <a href="opcoes-unidade.html" class="unidade-circle" id="circle-u1">
+                    <i class="fas fa-star"></i>
+                </a>
+                <div class="unidade-info">
+                    <h3>Unidade 1</h3>
+                    <p>Introdução e Algoritmos</p>
+                </div>
+            </div>
+
+            <div class="conector" id="line-1"></div>
+
+            <div class="unidade-item" id="item-u2" style="animation-delay: 0.3s;">
+                <a href="#" class="unidade-circle" id="circle-u2">
+                    <i class="fas fa-lock"></i>
+                </a>
+                <div class="unidade-info">
+                    <h3>Unidade 2</h3>
+                    <p>Estruturas Condicionais</p>
+                </div>
+            </div>
+
+            <div class="conector" id="line-2"></div>
+
+            <div class="unidade-item" id="item-u3" style="animation-delay: 0.5s;">
+                <a href="#" class="unidade-circle" id="circle-u3">
+                    <i class="fas fa-lock"></i>
+                </a>
+                <div class="unidade-info">
+                    <h3>Unidade 3</h3>
+                    <p>Laços de Repetição</p>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div class="floating-actions">
+        <div class="menu-acessibilidade" id="menu-acess">
+            <button class="btn btn-primary" onclick="toggleAltoContraste()">Alto Contraste</button>
+            <button class="btn btn-outline" style="background:var(--card-bg)" onclick="mudarFonte(2)">Aumentar Texto</button>
+            <button class="btn btn-outline" style="background:var(--card-bg)" onclick="mudarFonte(-2)">Diminuir Texto</button>
+        </div>
+        <button class="btn-floating" onclick="toggleMenuAcessibilidade()"><i class="fas fa-universal-access"></i></button>
+    </div>
+
+    <div class="modal-overlay" id="config-modal">
+        <div class="modal-card">
+            <h3 style="margin-bottom:15px;"><i class="fas fa-cog"></i> Configurações</h3>
+            <label style="font-size:0.8rem; color:var(--text-muted)">Nome de Usuário:</label>
+            <input type="text" id="edit-nome" style="width:100%; padding:10px; margin-bottom:20px; border:1px solid var(--border-color); border-radius:8px;">
+            
+            <button class="btn" style="background:#e53e3e; color:white; width:100%; margin-bottom:10px;" onclick="resetarProgressoLocal()">
+                <i class="fas fa-trash"></i> Resetar Progresso das Unidades
+            </button>
+            
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button class="btn btn-outline" onclick="fecharConfiguracoes()">Cancelar</button>
+                <button class="btn btn-primary" onclick="salvarNome()">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let usuario = null;
+
+        function inicializar() {
+            if (localStorage.getItem('userLogado') !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            usuario = JSON.parse(localStorage.getItem('userData'));
+
+            if (usuario) {
+                document.getElementById('user-name').innerText = usuario.nome;
+                document.getElementById('user-streak').innerText = `${usuario.streak || 0} Dias`;
+                
+                const avatarDiv = document.getElementById('user-avatar');
+                if(usuario.foto) {
+                    avatarDiv.innerHTML = `<img src="${usuario.foto}">`;
+                } else {
+                    avatarDiv.innerText = usuario.nome.charAt(0).toUpperCase();
+                }
+            }
+
+            verificarProgresso();
+        }
+
+        function verificarProgresso() {
+            const u1Feita = localStorage.getItem('unidade1_concluida') === 'true';
+            const u2Feita = localStorage.getItem('unidade2_concluida') === 'true';
+
+            if(u1Feita) {
+                document.getElementById('item-u1').classList.add('completed');
+                document.getElementById('circle-u1').innerHTML = '<i class="fas fa-check"></i>';
+                document.getElementById('line-1').classList.add('active');
+                
+                const u2 = document.getElementById('item-u2');
+                u2.classList.add('unlocked');
+                const circle2 = document.getElementById('circle-u2');
+                circle2.innerHTML = '<i class="fas fa-bolt"></i>';
+                circle2.setAttribute('href', 'unidade-2-conteudo.html');
+            }
+
+            if(u2Feita) {
+                document.getElementById('item-u2').classList.add('completed');
+                document.getElementById('circle-u2').innerHTML = '<i class="fas fa-check"></i>';
+                document.getElementById('line-2').classList.add('active');
+
+                const u3 = document.getElementById('item-u3');
+                u3.classList.add('unlocked');
+                const circle3 = document.getElementById('circle-u3');
+                circle3.innerHTML = '<i class="fas fa-terminal"></i>';
+                circle3.setAttribute('href', 'unidade-3-conteudo.html');
+            }
+        }
+
+        function abrirConfiguracoes() {
+            document.getElementById('edit-nome').value = usuario.nome;
+            document.getElementById('config-modal').style.display = 'flex';
+        }
+
+        function fecharConfiguracoes() { 
+            document.getElementById('config-modal').style.display = 'none'; 
+        }
+        
+        function salvarNome() {
+            const novo = document.getElementById('edit-nome').value;
+            usuario.nome = novo;
+            localStorage.setItem('userData', JSON.stringify(usuario));
+            location.reload();
+        }
+
+        function resetarProgressoLocal() {
+            if(confirm("Deseja trancar as unidades novamente?")) {
+                localStorage.removeItem('unidade1_concluida');
+                localStorage.removeItem('unidade2_concluida');
+                localStorage.removeItem('unidade2Liberada');
+                location.reload();
+            }
+        }
+
+        function toggleMenuAcessibilidade() {
+            const m = document.getElementById('menu-acess');
+            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function toggleAltoContraste() {
+            document.body.classList.toggle('high-contrast');
+            localStorage.setItem('acess_alto', document.body.classList.contains('high-contrast'));
+        }
+
+        function mudarFonte(d) {
+            let s = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--font-scale')) || 100;
+            document.documentElement.style.setProperty('--font-scale', (s + d) + '%');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('unidade2Liberada') === 'true') {
+                const cardUnidade2 = document.getElementById('card-unidade-2'); 
+                if(cardUnidade2) {
+                    cardUnidade2.classList.remove('bloqueado');
+                    cardUnidade2.disabled = false;
+                }
+            }
+        });
+
+        window.onload = () => {
+            inicializar();
+            if(localStorage.getItem('acess_alto') === 'true') document.body.classList.add('high-contrast');
+        };
+    </script>
+</body>
+</html>
