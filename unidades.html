@@ -3,41 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cynix - Módulos</title>
+    <title>Unidades - Cynix</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
         :root {
+            --primary-blue: #7dd3fc;
+            --accent-teal: #38bdf8;
+            --accent-purple: #a78bfa;
             --bg-color: #07111f;
-            --bg-soft: #0b1b31;
-            --card-bg: rgba(255, 255, 255, 0.08);
-            --card-strong: rgba(255, 255, 255, 0.12);
-            --text-main: #f8fafc;
-            --text-muted: #aab7ca;
-            --primary-blue: #72e7ff;
-            --accent-teal: #5f7cff;
-            --accent-purple: #a855f7;
-            --success-green: #40d97a;
-            --warning: #ffcd4d;
-            --danger: #ff6b6b;
-            --border-color: rgba(255, 255, 255, 0.14);
-            --shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+            --bg-soft: #0f1b2d;
+            --card-bg: rgba(15, 27, 45, 0.82);
+            --card-bg-strong: rgba(18, 31, 51, 0.94);
+            --text-main: #eef6ff;
+            --text-muted: #9fb3c8;
+            --border-color: rgba(148, 163, 184, 0.22);
+            --fire-color: #fb923c;
+            --success-green: #22c55e;
+            --warning: #facc15;
+            --danger: #ef4444;
+            --shadow: 0 24px 70px rgba(0, 0, 0, 0.35);
             --font-scale: 100%;
         }
 
         .high-contrast {
-            --bg-color: #000000;
-            --bg-soft: #111111;
-            --card-bg: #1b1b1b;
-            --card-strong: #222222;
-            --text-main: #ffffff;
-            --text-muted: #d6d6d6;
             --primary-blue: #00ebff;
             --accent-teal: #ffff00;
             --accent-purple: #ffffff;
-            --success-green: #00ff88;
-            --warning: #ffff00;
+            --bg-color: #000000;
+            --bg-soft: #111111;
+            --card-bg: #121212;
+            --card-bg-strong: #1f1f1f;
+            --text-main: #ffffff;
+            --text-muted: #d1d5db;
             --border-color: #ffffff;
         }
 
@@ -46,20 +45,20 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Poppins', sans-serif;
-            transition: background .25s ease, color .25s ease, border-color .25s ease, transform .25s ease, opacity .25s ease;
         }
 
-        html { font-size: var(--font-scale); }
+        html { font-size: var(--font-scale); scroll-behavior: smooth; }
 
         body {
             min-height: 100vh;
             color: var(--text-main);
             background:
-                radial-gradient(circle at 15% 5%, rgba(114, 231, 255, .18), transparent 32%),
-                radial-gradient(circle at 88% 18%, rgba(168, 85, 247, .18), transparent 34%),
-                linear-gradient(135deg, #07111f 0%, #0a1830 55%, #070d18 100%);
+                radial-gradient(circle at 15% 15%, rgba(56, 189, 248, 0.18), transparent 28%),
+                radial-gradient(circle at 80% 5%, rgba(167, 139, 250, 0.20), transparent 30%),
+                radial-gradient(circle at 75% 90%, rgba(34, 197, 94, 0.11), transparent 25%),
+                var(--bg-color);
             overflow-x: hidden;
-            padding-bottom: 90px;
+            padding-bottom: 80px;
         }
 
         body::before {
@@ -68,745 +67,832 @@
             inset: 0;
             pointer-events: none;
             background-image:
-                linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+                linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
             background-size: 42px 42px;
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,.8), transparent 85%);
-            z-index: -2;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.75), transparent 85%);
+            z-index: 0;
         }
 
-        .orb {
-            position: fixed;
-            border-radius: 999px;
-            filter: blur(4px);
-            opacity: .55;
-            z-index: -1;
-            animation: floatOrb 8s ease-in-out infinite;
-        }
-
-        .orb.one { width: 160px; height: 160px; background: rgba(95, 124, 255, .22); top: 17%; left: -50px; }
-        .orb.two { width: 120px; height: 120px; background: rgba(114, 231, 255, .18); bottom: 14%; right: 6%; animation-delay: -2s; }
-        .orb.three { width: 90px; height: 90px; background: rgba(168, 85, 247, .20); top: 54%; left: 7%; animation-delay: -4s; }
-
-        @keyframes floatOrb {
-            0%, 100% { transform: translateY(0) translateX(0); }
-            50% { transform: translateY(-22px) translateX(14px); }
+        @keyframes floatSoft {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
         }
 
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(26px); }
+            from { opacity: 0; transform: translateY(28px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 0 rgba(114, 231, 255, .0); }
-            50% { box-shadow: 0 0 28px rgba(114, 231, 255, .22); }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.86); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        @keyframes pulseDot {
-            0% { transform: scale(.92); opacity: .7; }
-            50% { transform: scale(1.12); opacity: 1; }
-            100% { transform: scale(.92); opacity: .7; }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 rgba(56, 189, 248, 0); }
+            50% { box-shadow: 0 0 36px rgba(56, 189, 248, 0.32); }
         }
+
+        @keyframes lineFill {
+            from { transform: scaleY(0); transform-origin: top; }
+            to { transform: scaleY(1); transform-origin: top; }
+        }
+
+        a { color: inherit; }
+
+        .decor {
+            position: fixed;
+            border-radius: 999px;
+            filter: blur(1px);
+            opacity: 0.65;
+            pointer-events: none;
+            z-index: 0;
+            animation: floatSoft 6s ease-in-out infinite;
+        }
+
+        .decor-1 { width: 12px; height: 12px; top: 18%; left: 7%; background: var(--accent-teal); }
+        .decor-2 { width: 18px; height: 18px; top: 35%; right: 9%; background: var(--accent-purple); animation-delay: 1s; }
+        .decor-3 { width: 10px; height: 10px; bottom: 22%; left: 13%; background: var(--success-green); animation-delay: 2s; }
+        .decor-4 { width: 9px; height: 9px; bottom: 14%; right: 22%; background: var(--warning); animation-delay: 1.7s; }
 
         .navbar {
             position: sticky;
             top: 0;
-            z-index: 20;
+            z-index: 50;
             display: flex;
+            align-items: center;
             justify-content: space-between;
-            align-items: center;
             gap: 18px;
-            padding: 16px 6%;
-            background: rgba(7, 17, 31, .76);
-            backdrop-filter: blur(18px);
+            padding: 16px 5%;
+            background: rgba(7, 17, 31, 0.76);
             border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(18px);
         }
 
-        .brand {
+        .brand-area {
             display: flex;
             align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--text-main);
+            gap: 14px;
         }
 
-        .brand-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 15px;
+        .brand-mark {
+            width: 46px;
+            height: 46px;
             display: grid;
             place-items: center;
-            color: white;
-            background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal), var(--accent-purple));
-            box-shadow: 0 12px 28px rgba(95, 124, 255, .28);
+            border-radius: 16px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: #031525;
+            box-shadow: 0 14px 38px rgba(56, 189, 248, 0.25);
+            font-size: 1.35rem;
+            font-weight: 800;
         }
 
-        .brand strong {
+        .brand-text strong {
             display: block;
-            font-size: 1.1rem;
-            letter-spacing: .3px;
+            line-height: 1;
+            font-size: 1.05rem;
+            letter-spacing: 0.03em;
         }
 
-        .brand span {
+        .brand-text span {
             color: var(--text-muted);
-            font-size: .78rem;
+            font-size: 0.78rem;
         }
 
         .nav-profile {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 13px;
+            padding: 8px 12px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color);
         }
 
         .avatar {
-            width: 48px;
-            height: 48px;
+            width: 46px;
+            height: 46px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: #061222;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            border: 2px solid rgba(114, 231, 255, .38);
-            background: linear-gradient(135deg, var(--accent-teal), var(--primary-blue));
-            color: white;
             font-weight: 800;
-            box-shadow: 0 12px 26px rgba(0,0,0,.25);
+            border: 2px solid rgba(255,255,255,0.18);
+            overflow: hidden;
+            flex: 0 0 auto;
         }
 
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
-        .user-name { font-size: .98rem; font-weight: 700; display: block; }
+        #user-name { font-size: 0.96rem; }
+
         .streak-badge {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            margin-top: 2px;
-            color: var(--warning);
-            font-size: .82rem;
+            gap: 5px;
+            color: var(--fire-color);
             font-weight: 700;
+            font-size: 0.78rem;
         }
 
         .btn {
-            border: 0;
-            outline: 0;
+            border: none;
+            border-radius: 14px;
+            padding: 10px 16px;
+            font-weight: 700;
             cursor: pointer;
-            text-decoration: none;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 9px;
-            padding: 11px 16px;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: .92rem;
+            gap: 8px;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: 0.25s ease;
         }
+
+        .btn:hover { transform: translateY(-2px); }
 
         .btn-primary {
-            color: #07111f;
-            background: linear-gradient(135deg, var(--primary-blue), #8fffd2);
-            box-shadow: 0 14px 30px rgba(114, 231, 255, .22);
+            color: #061222;
+            background: linear-gradient(135deg, var(--accent-teal), var(--primary-blue));
+            box-shadow: 0 15px 35px rgba(56, 189, 248, 0.18);
         }
 
-        .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.07); }
-
         .btn-outline {
-            background: rgba(255,255,255,.07);
+            background: rgba(255,255,255,0.04);
             color: var(--text-main);
             border: 1px solid var(--border-color);
         }
 
-        .btn-outline:hover {
-            border-color: rgba(114, 231, 255, .48);
-            background: rgba(114, 231, 255, .10);
-            transform: translateY(-2px);
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.12);
+            color: #fecaca;
+            border: 1px solid rgba(239, 68, 68, 0.28);
         }
 
         .container {
-            width: min(1120px, 92%);
+            position: relative;
+            z-index: 2;
+            max-width: 1080px;
             margin: 0 auto;
-            padding: 34px 0;
+            padding: 34px 20px 0;
         }
 
-        .back-link {
+        .top-link {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            color: var(--primary-blue);
             text-decoration: none;
+            color: var(--primary-blue);
             font-weight: 700;
-            margin-bottom: 18px;
-            opacity: .92;
+            margin-bottom: 22px;
+            transition: 0.25s ease;
         }
 
-        .back-link:hover { transform: translateX(-3px); opacity: 1; }
+        .top-link:hover { transform: translateX(-4px); }
 
         .hero {
-            position: relative;
-            overflow: hidden;
             display: grid;
-            grid-template-columns: 1.4fr .8fr;
-            gap: 24px;
+            grid-template-columns: minmax(0, 1.4fr) minmax(270px, 0.8fr);
+            gap: 22px;
             align-items: stretch;
-            background: linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
-            border: 1px solid var(--border-color);
-            border-radius: 30px;
-            padding: 30px;
-            box-shadow: var(--shadow);
-            animation: fadeUp .6s ease both;
+            margin-bottom: 28px;
         }
 
-        .hero::after {
+        .hero-card, .status-card, .trilha-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            animation: fadeUp 0.65s ease backwards;
+        }
+
+        .hero-card {
+            padding: 30px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero-card::after {
             content: "</>";
             position: absolute;
-            right: 28px;
-            top: 12px;
-            font-size: 6rem;
-            line-height: 1;
-            color: rgba(255,255,255,.045);
+            right: 22px;
+            bottom: -26px;
+            font-size: 8rem;
             font-weight: 800;
+            color: rgba(255,255,255,0.045);
+            transform: rotate(-10deg);
         }
 
-        .hero-kicker {
+        .pill {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            width: fit-content;
-            margin-bottom: 12px;
-            padding: 7px 12px;
+            padding: 8px 12px;
             border-radius: 999px;
+            background: rgba(56, 189, 248, 0.10);
+            border: 1px solid rgba(56, 189, 248, 0.20);
             color: var(--primary-blue);
-            background: rgba(114, 231, 255, .10);
-            border: 1px solid rgba(114, 231, 255, .22);
-            font-size: .82rem;
-            font-weight: 800;
+            font-weight: 700;
+            font-size: 0.83rem;
+            margin-bottom: 16px;
         }
 
         .hero h1 {
-            font-size: clamp(2rem, 4vw, 3.1rem);
-            line-height: 1.06;
-            margin-bottom: 12px;
+            font-size: clamp(2rem, 4vw, 3.25rem);
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            margin-bottom: 14px;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            -webkit-background-clip: text;
+            color: transparent;
         }
 
         .hero p {
             color: var(--text-muted);
-            line-height: 1.7;
-            max-width: 680px;
-        }
-
-        .progress-card {
+            line-height: 1.75;
+            max-width: 650px;
             position: relative;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 16px;
-            min-height: 210px;
-            padding: 22px;
-            border-radius: 24px;
-            border: 1px solid rgba(114, 231, 255, .18);
-            background: rgba(7, 17, 31, .42);
-            overflow: hidden;
+            z-index: 2;
         }
 
-        .progress-card::before {
+        .mini-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 22px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .mini-chip {
+            padding: 9px 12px;
+            border-radius: 14px;
+            color: var(--text-main);
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            font-size: 0.84rem;
+            font-weight: 600;
+        }
+
+        .status-card {
+            padding: 24px;
+            animation-delay: 0.12s;
+        }
+
+        .status-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.05rem;
+            margin-bottom: 16px;
+        }
+
+        .progress-ring {
+            width: 128px;
+            height: 128px;
+            margin: 12px auto 18px;
+            border-radius: 50%;
+            background: conic-gradient(var(--accent-teal) var(--percent, 0%), rgba(255,255,255,0.09) 0);
+            display: grid;
+            place-items: center;
+            position: relative;
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .progress-ring::before {
             content: "";
             position: absolute;
-            width: 180px;
-            height: 180px;
+            inset: 11px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(114,231,255,.18), transparent 68%);
-            right: -70px;
-            top: -70px;
+            background: var(--bg-soft);
+            border: 1px solid var(--border-color);
         }
 
-        .progress-number {
-            font-size: 3rem;
-            font-weight: 800;
-            letter-spacing: -2px;
+        .progress-ring strong {
+            position: relative;
+            z-index: 2;
+            font-size: 1.55rem;
         }
 
-        .progress-number span { color: var(--primary-blue); }
-
-        .progress-bar {
-            width: 100%;
-            height: 12px;
-            border-radius: 999px;
-            background: rgba(255,255,255,.10);
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,.08);
+        .status-text {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.9rem;
+            text-align: center;
         }
 
-        .progress-fill {
-            height: 100%;
-            width: 0%;
-            border-radius: inherit;
-            background: linear-gradient(90deg, var(--primary-blue), var(--accent-teal), var(--success-green));
-            transition: width .7s ease;
+        .trilha-card {
+            padding: 28px;
+            animation-delay: 0.22s;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .section-title h2 {
+            color: var(--text-main);
+            font-size: clamp(1.3rem, 3vw, 1.75rem);
+        }
+
+        .section-title p {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            margin-top: 5px;
         }
 
         .sync-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--text-muted);
-            font-size: .82rem;
+            min-width: max-content;
+            padding: 9px 12px;
+            border-radius: 999px;
+            background: rgba(34, 197, 94, 0.10);
+            color: #bbf7d0;
+            border: 1px solid rgba(34, 197, 94, 0.22);
+            font-weight: 700;
+            font-size: 0.78rem;
         }
 
-        .sync-dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            background: var(--success-green);
-            animation: pulseDot 1.8s ease-in-out infinite;
-        }
-
-        .section-head {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
+        .trilha-feed {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 18px;
-            margin: 34px 0 18px;
-            animation: fadeUp .7s ease both;
+            position: relative;
         }
 
-        .section-head h2 {
-            font-size: clamp(1.5rem, 3vw, 2rem);
-            margin-bottom: 4px;
-        }
-
-        .section-head p { color: var(--text-muted); line-height: 1.6; }
-
-        .module-list {
+        .unidade-item {
             position: relative;
             display: flex;
             flex-direction: column;
-            gap: 18px;
-        }
-
-        .module-list::before {
-            content: "";
-            position: absolute;
-            left: 35px;
-            top: 20px;
-            bottom: 20px;
-            width: 2px;
-            background: linear-gradient(to bottom, rgba(114,231,255,.5), rgba(255,255,255,.10));
-            z-index: 0;
-        }
-
-        .module-card {
-            position: relative;
-            z-index: 1;
-            display: grid;
-            grid-template-columns: 72px 1fr auto;
-            gap: 20px;
-            align-items: center;
-            min-height: 116px;
-            padding: 20px;
+            min-height: 245px;
+            padding: 22px;
             border-radius: 24px;
-            color: inherit;
-            text-decoration: none;
-            background: var(--card-bg);
+            background: rgba(255,255,255,0.045);
             border: 1px solid var(--border-color);
-            box-shadow: 0 16px 35px rgba(0,0,0,.18);
+            text-decoration: none;
+            color: inherit;
             overflow: hidden;
-            animation: fadeUp .55s ease backwards;
+            animation: popIn 0.5s ease backwards;
+            transition: 0.28s ease;
         }
 
-        .module-card::before {
+        .unidade-item::before {
             content: "";
             position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, rgba(114,231,255,.12), transparent 42%);
-            opacity: .65;
-            pointer-events: none;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            right: -72px;
+            top: -72px;
+            background: rgba(148, 163, 184, 0.10);
+            transition: 0.3s ease;
         }
 
-        .module-card:hover:not(.locked) {
-            transform: translateY(-5px) scale(1.01);
-            border-color: rgba(114, 231, 255, .52);
-            background: var(--card-strong);
-            animation: glow 1.8s ease-in-out infinite;
+        .unidade-item.unlocked {
+            cursor: pointer;
+            border-color: rgba(56, 189, 248, 0.42);
         }
 
-        .module-card.locked {
-            opacity: .58;
+        .unidade-item.unlocked::before { background: rgba(56, 189, 248, 0.13); }
+
+        .unidade-item.unlocked:hover {
+            transform: translateY(-8px);
+            border-color: rgba(56, 189, 248, 0.78);
+            box-shadow: 0 24px 60px rgba(56, 189, 248, 0.14);
+        }
+
+        .unidade-item.completed {
+            border-color: rgba(34, 197, 94, 0.70);
+            background: linear-gradient(180deg, rgba(34, 197, 94, 0.14), rgba(255,255,255,0.045));
+        }
+
+        .unidade-item.completed::before { background: rgba(34, 197, 94, 0.17); }
+
+        .unidade-item.locked {
+            opacity: 0.64;
             cursor: not-allowed;
-            pointer-events: none;
-            filter: grayscale(.75);
+            filter: grayscale(0.35);
         }
 
-        .module-card.completed {
-            border-color: rgba(64, 217, 122, .55);
-            background: linear-gradient(135deg, rgba(64,217,122,.13), rgba(255,255,255,.07));
-        }
-
-        .module-number {
+        .unidade-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
             position: relative;
-            width: 62px;
-            height: 62px;
-            border-radius: 20px;
+            z-index: 2;
+        }
+
+        .unidade-circle {
+            width: 72px;
+            height: 72px;
+            border-radius: 22px;
             display: grid;
             place-items: center;
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #07111f;
-            background: linear-gradient(135deg, var(--primary-blue), #8fffd2);
-            box-shadow: 0 13px 28px rgba(114,231,255,.20);
-        }
-
-        .module-card.completed .module-number {
-            background: linear-gradient(135deg, var(--success-green), #c8ffdd);
-        }
-
-        .module-info h3 {
-            position: relative;
-            z-index: 1;
-            color: var(--text-main);
-            font-size: 1.15rem;
-            margin-bottom: 6px;
-        }
-
-        .module-info p {
-            position: relative;
-            z-index: 1;
             color: var(--text-muted);
-            line-height: 1.5;
-            font-size: .92rem;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
+            font-size: 1.85rem;
+            transition: 0.28s ease;
         }
 
-        .module-tags {
-            position: relative;
-            z-index: 1;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
+        .unlocked .unidade-circle {
+            color: #061222;
+            background: linear-gradient(135deg, var(--accent-teal), var(--primary-blue));
+            box-shadow: 0 18px 34px rgba(56, 189, 248, 0.22);
         }
 
-        .tag {
-            padding: 5px 9px;
-            border-radius: 999px;
-            font-size: .74rem;
+        .completed .unidade-circle {
+            color: #052e16;
+            background: linear-gradient(135deg, #22c55e, #86efac);
+            box-shadow: 0 18px 34px rgba(34, 197, 94, 0.18);
+        }
+
+        .unidade-num {
+            color: var(--text-muted);
+            font-size: 0.78rem;
             font-weight: 800;
-            color: var(--primary-blue);
-            background: rgba(114, 231, 255, .10);
-            border: 1px solid rgba(114, 231, 255, .16);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
         }
 
-        .module-status {
+        .unidade-info {
             position: relative;
-            z-index: 1;
+            z-index: 2;
+            margin-top: auto;
+        }
+
+        .unidade-info h3 {
+            color: var(--text-main);
+            font-size: 1.16rem;
+            margin-bottom: 8px;
+        }
+
+        .unidade-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.55;
+            margin-bottom: 16px;
+        }
+
+        .unidade-footer {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            gap: 10px;
-            min-width: 135px;
-            color: var(--text-muted);
-            font-weight: 700;
+            justify-content: space-between;
+            gap: 8px;
         }
 
-        .status-pill {
+        .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
-            padding: 8px 10px;
+            gap: 6px;
+            padding: 7px 10px;
             border-radius: 999px;
-            background: rgba(255,255,255,.08);
-            border: 1px solid var(--border-color);
-            white-space: nowrap;
-            font-size: .78rem;
-        }
-
-        .status-pill.ok { color: var(--success-green); border-color: rgba(64,217,122,.30); background: rgba(64,217,122,.10); }
-        .status-pill.lock { color: var(--text-muted); }
-        .status-pill.next { color: var(--primary-blue); border-color: rgba(114,231,255,.30); background: rgba(114,231,255,.10); }
-        .status-pill.grade { color: var(--warning); border-color: rgba(255,205,77,.30); background: rgba(255,205,77,.10); }
-
-        .quick-info {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 14px;
-            margin-top: 20px;
-        }
-
-        .mini-card {
-            padding: 15px;
-            border-radius: 18px;
-            border: 1px solid var(--border-color);
-            background: rgba(255,255,255,.06);
+            font-size: 0.75rem;
+            font-weight: 800;
             color: var(--text-muted);
-            animation: fadeUp .7s ease both;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border-color);
         }
 
-        .mini-card strong {
-            display: block;
-            color: var(--text-main);
-            margin-bottom: 4px;
+        .status-badge.open {
+            color: var(--primary-blue);
+            background: rgba(56, 189, 248, 0.11);
+            border-color: rgba(56, 189, 248, 0.24);
         }
+
+        .status-badge.done {
+            color: #bbf7d0;
+            background: rgba(34, 197, 94, 0.12);
+            border-color: rgba(34, 197, 94, 0.28);
+        }
+
+        .status-badge.lock {
+            color: #cbd5e1;
+        }
+
+        .mini-arrow {
+            width: 34px;
+            height: 34px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.045);
+            border: 1px solid var(--border-color);
+        }
+
+        .unlocked .mini-arrow { color: var(--primary-blue); }
+        .completed .mini-arrow { color: #bbf7d0; }
+
+        .path-line {
+            grid-column: 1 / -1;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.06);
+            overflow: hidden;
+            margin: 3px 8px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .path-line span {
+            display: block;
+            height: 100%;
+            width: var(--w, 0%);
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--accent-teal), var(--success-green));
+            transition: width 0.7s ease;
+        }
+
+        .note-card {
+            margin-top: 18px;
+            padding: 18px 20px;
+            border-radius: 20px;
+            background: rgba(56, 189, 248, 0.07);
+            border: 1px solid rgba(56, 189, 248, 0.18);
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 0.9rem;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            animation: fadeUp 0.65s ease 0.32s backwards;
+        }
+
+        .note-card i { color: var(--primary-blue); margin-top: 3px; }
 
         .floating-actions {
             position: fixed;
-            right: 22px;
-            bottom: 22px;
+            bottom: 24px;
+            right: 24px;
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
             gap: 10px;
-            z-index: 50;
+            z-index: 99;
         }
 
         .btn-floating {
             width: 56px;
             height: 56px;
             border-radius: 50%;
-            border: 1px solid rgba(114,231,255,.34);
-            background: linear-gradient(135deg, var(--accent-teal), var(--primary-blue));
-            color: white;
+            border: none;
             cursor: pointer;
             display: grid;
             place-items: center;
-            font-size: 1.3rem;
-            box-shadow: 0 18px 40px rgba(0,0,0,.32);
+            color: #061222;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            box-shadow: 0 20px 45px rgba(56, 189, 248, 0.22);
+            font-size: 1.35rem;
+            transition: 0.25s ease;
         }
 
-        .btn-floating:hover { transform: translateY(-3px) rotate(4deg); }
+        .btn-floating:hover { transform: translateY(-4px) scale(1.03); }
 
         .menu-acessibilidade {
+            position: absolute;
+            bottom: 68px;
+            right: 0;
             display: none;
             flex-direction: column;
             gap: 10px;
-            width: 230px;
+            width: 225px;
             padding: 14px;
             border-radius: 20px;
-            background: rgba(7,17,31,.90);
-            backdrop-filter: blur(16px);
+            background: var(--card-bg-strong);
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
         }
 
-        .menu-acessibilidade.active { display: flex; animation: fadeUp .25s ease both; }
-        .menu-title { color: var(--text-muted); font-size: .78rem; font-weight: 800; text-align: center; padding-bottom: 6px; border-bottom: 1px solid var(--border-color); }
+        .menu-title {
+            color: var(--text-muted);
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-align: center;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+        }
 
         .modal-overlay {
             position: fixed;
             inset: 0;
             display: none;
-            align-items: center;
             justify-content: center;
-            padding: 18px;
-            background: rgba(0,0,0,.62);
+            align-items: center;
+            background: rgba(0,0,0,0.58);
             backdrop-filter: blur(8px);
-            z-index: 100;
+            z-index: 120;
+            padding: 20px;
         }
 
         .modal-card {
             width: min(440px, 100%);
-            border-radius: 24px;
-            padding: 24px;
-            background: #0d1c32;
+            padding: 28px;
+            border-radius: 26px;
+            background: var(--card-bg-strong);
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
-            animation: fadeUp .3s ease both;
+            animation: popIn 0.25s ease;
         }
 
-        .modal-card h3 { margin-bottom: 15px; }
-        .modal-card p { color: var(--text-muted); line-height: 1.6; font-size: .92rem; margin-bottom: 14px; }
+        .modal-card h3 {
+            color: var(--text-main);
+            margin-bottom: 16px;
+        }
 
         .input-text {
             width: 100%;
-            padding: 12px 14px;
-            margin: 8px 0 16px;
-            color: var(--text-main);
-            border: 1px solid var(--border-color);
+            padding: 13px 14px;
+            margin: 8px 0 18px;
             border-radius: 14px;
-            background: rgba(255,255,255,.07);
+            border: 1px solid var(--border-color);
             outline: none;
+            color: var(--text-main);
+            background: rgba(255,255,255,0.05);
         }
-
-        .input-text:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 4px rgba(114,231,255,.10); }
 
         .toast {
             position: fixed;
             left: 50%;
-            bottom: 24px;
+            bottom: 28px;
             transform: translateX(-50%) translateY(20px);
             opacity: 0;
             pointer-events: none;
+            z-index: 160;
             padding: 12px 16px;
-            border-radius: 14px;
-            background: rgba(7,17,31,.92);
+            border-radius: 999px;
+            background: var(--card-bg-strong);
             color: var(--text-main);
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
-            z-index: 120;
             font-weight: 700;
+            transition: 0.25s ease;
+            max-width: calc(100% - 32px);
+            text-align: center;
         }
 
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-        .toast.ok { border-color: rgba(64,217,122,.45); }
-        .toast.err { border-color: rgba(255,107,107,.45); }
-
-        @media (max-width: 860px) {
-            .navbar { padding: 14px 4%; }
-            .brand span { display: none; }
-            .hero { grid-template-columns: 1fr; padding: 24px; }
-            .section-head { flex-direction: column; align-items: flex-start; }
-            .quick-info { grid-template-columns: 1fr; }
-            .module-card { grid-template-columns: 58px 1fr; gap: 14px; }
-            .module-status { grid-column: 1 / -1; justify-content: flex-start; margin-left: 72px; }
-            .module-number { width: 54px; height: 54px; border-radius: 18px; }
-            .module-list::before { left: 27px; }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
 
-        @media (max-width: 560px) {
-            .nav-profile > div:last-child { display: none; }
-            .container { width: min(94%, 1120px); padding-top: 24px; }
-            .hero h1 { font-size: 2rem; }
-            .module-status { margin-left: 0; }
-            .module-card { padding: 16px; }
+        @media (max-width: 820px) {
+            .navbar { align-items: flex-start; flex-direction: column; }
+            .brand-area { width: 100%; }
+            .nav-profile { width: 100%; justify-content: flex-start; }
+            .hero { grid-template-columns: 1fr; }
+            .section-title { flex-direction: column; align-items: flex-start; }
+            .trilha-feed { grid-template-columns: 1fr; }
+            .path-line { display: none; }
+            .unidade-item { min-height: auto; }
+        }
+
+        @media (max-width: 520px) {
+            .hero-card, .status-card, .trilha-card { border-radius: 22px; }
+            .hero-card, .status-card, .trilha-card { padding: 22px; }
             .floating-actions { right: 16px; bottom: 16px; }
         }
     </style>
 </head>
 <body>
-    <div class="orb one"></div>
-    <div class="orb two"></div>
-    <div class="orb three"></div>
+    <span class="decor decor-1"></span>
+    <span class="decor decor-2"></span>
+    <span class="decor decor-3"></span>
+    <span class="decor decor-4"></span>
 
     <header class="navbar">
-        <a href="home.html" class="brand" aria-label="Ir para a página inicial">
-            <div class="brand-icon"><i class="fas fa-code"></i></div>
-            <div>
+        <div class="brand-area">
+            <div class="brand-mark"><i class="fas fa-code"></i></div>
+            <div class="brand-text">
                 <strong>Cynix</strong>
-                <span>Trilha de lógica e programação em C</span>
+                <span>Trilha guiada de lógica</span>
             </div>
-        </a>
+        </div>
 
         <div class="nav-profile">
             <div class="avatar" id="user-avatar">...</div>
             <div>
-                <span class="user-name" id="user-name">Carregando...</span>
-                <span class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></span>
+                <strong id="user-name">Carregando...</strong>
+                <div class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></div>
             </div>
-            <button class="btn btn-outline" onclick="abrirConfiguracoes()"><i class="fas fa-sliders-h"></i> Ajustes</button>
         </div>
+
+        <button class="btn btn-outline" onclick="abrirConfiguracoes()"><i class="fas fa-cog"></i> Configurações</button>
     </header>
 
     <main class="container">
-        <a href="home.html" class="back-link"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
+        <a href="modulos.html" class="top-link"><i class="fas fa-chevron-left"></i> Voltar aos Módulos</a>
 
         <section class="hero">
-            <div>
-                <span class="hero-kicker"><i class="fas fa-route"></i> Módulos do Cynix</span>
-                <h1>Sua trilha de aprendizado</h1>
-                <p>Avance por etapas curtas, pratique com calma e acompanhe seu caminho. O desbloqueio dos módulos agora é carregado diretamente do banco de dados, evitando perda de progresso ao trocar de navegador ou computador.</p>
-
-                <div class="quick-info">
-                    <div class="mini-card" style="animation-delay: .10s;">
-                        <strong><i class="fas fa-database"></i> Progresso salvo</strong>
-                        Banco de dados
-                    </div>
-                    <div class="mini-card" style="animation-delay: .18s;">
-                        <strong><i class="fas fa-lock-open"></i> Desbloqueio</strong>
-                        Por conclusão
-                    </div>
-                    <div class="mini-card" style="animation-delay: .26s;">
-                        <strong><i class="fas fa-certificate"></i> Finalização</strong>
-                        Certificado ao concluir
-                    </div>
+            <div class="hero-card">
+                <div class="pill"><i class="fas fa-route"></i> Módulo 1</div>
+                <h1>Unidades de <span>Lógica de Programação</span></h1>
+                <p>
+                    Siga a trilha no seu ritmo. Cada unidade libera a próxima etapa, ajudando você a aprender
+                    lógica de forma organizada, com prática, revisão e avanço por conclusão.
+                </p>
+                <div class="mini-info">
+                    <div class="mini-chip"><i class="fas fa-check-circle"></i> Progresso salvo no banco</div>
+                    <div class="mini-chip"><i class="fas fa-lock-open"></i> Desbloqueio por etapa</div>
+                    <div class="mini-chip"><i class="fas fa-brain"></i> Conteúdo direto</div>
                 </div>
             </div>
 
-            <aside class="progress-card">
-                <div>
-                    <div class="sync-status"><span class="sync-dot"></span> <span id="sync-text">Buscando progresso no banco...</span></div>
-                    <div class="progress-number"><span id="percentual-geral">0</span>%</div>
-                    <p style="color: var(--text-muted);">da trilha concluída</p>
+            <aside class="status-card">
+                <h3><i class="fas fa-chart-line"></i> Seu avanço</h3>
+                <div class="progress-ring" id="progress-ring" style="--percent:0%;">
+                    <strong id="progress-percent">0%</strong>
                 </div>
-                <div class="progress-bar" aria-label="Progresso geral da trilha">
-                    <div class="progress-fill" id="progress-fill"></div>
-                </div>
+                <p class="status-text" id="progress-message">Buscando seu progresso no banco de dados...</p>
             </aside>
         </section>
 
-        <section class="section-head">
-            <div>
-                <h2><i class="fas fa-layer-group"></i> Painel de Módulos</h2>
-                <p>Comece pela avaliação diagnóstica. Depois disso, os próximos módulos serão liberados conforme seu desempenho.</p>
+        <section class="trilha-card">
+            <div class="section-title">
+                <div>
+                    <h2><i class="fas fa-map-signs"></i> Caminho da Unidade 1</h2>
+                    <p>Conclua as etapas para liberar os próximos conteúdos.</p>
+                </div>
+                <div class="sync-status" id="sync-status"><i class="fas fa-cloud"></i> Sincronizando...</div>
             </div>
-            <button class="btn btn-primary" onclick="buscarProgressoModulosBanco()"><i class="fas fa-rotate"></i> Atualizar progresso</button>
-        </section>
 
-        <section class="module-list" aria-label="Lista de módulos">
-            <a href="avaliacao-diagnostica.html" class="module-card" id="mod-0" style="animation-delay: .08s;">
-                <div class="module-number">0</div>
-                <div class="module-info">
-                    <h3 id="title-0">Avaliação Diagnóstica</h3>
-                    <p>Primeiro passo para entender seu nível inicial e liberar a trilha de estudos.</p>
-                    <div class="module-tags">
-                        <span class="tag">início</span>
-                        <span class="tag">diagnóstico</span>
+            <div class="trilha-feed">
+                <a href="opcoes-unidade.html" class="unidade-item unlocked" id="item-u1" style="animation-delay: 0.08s;">
+                    <div class="unidade-top">
+                        <div class="unidade-circle" id="circle-u1"><i class="fas fa-star"></i></div>
+                        <span class="unidade-num">Unidade 01</span>
                     </div>
-                </div>
-                <div class="module-status" id="status-0">
-                    <span class="status-pill next"><i class="fas fa-arrow-right"></i> Iniciar</span>
-                </div>
-            </a>
+                    <div class="unidade-info">
+                        <h3>Introdução e Algoritmos</h3>
+                        <p>Primeiros conceitos, sequência de passos e ideia de algoritmo.</p>
+                        <div class="unidade-footer">
+                            <span class="status-badge open" id="badge-u1"><i class="fas fa-play"></i> Disponível</span>
+                            <span class="mini-arrow"><i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </a>
 
-            <a href="unidades.html" class="module-card locked" id="mod-1" style="animation-delay: .16s;">
-                <div class="module-number">1</div>
-                <div class="module-info">
-                    <h3 id="title-1">Lógica de Programação <i class="fas fa-lock"></i></h3>
-                    <p>Fundamentos, sequência lógica, entrada, processamento e saída.</p>
-                    <div class="module-tags">
-                        <span class="tag">algoritmos</span>
-                        <span class="tag">base</span>
+                <a href="#" class="unidade-item locked" id="item-u2" style="animation-delay: 0.18s;">
+                    <div class="unidade-top">
+                        <div class="unidade-circle" id="circle-u2"><i class="fas fa-lock"></i></div>
+                        <span class="unidade-num">Unidade 02</span>
                     </div>
-                </div>
-                <div class="module-status" id="status-1">
-                    <span class="status-pill lock"><i class="fas fa-lock"></i> Bloqueado</span>
-                </div>
-            </a>
+                    <div class="unidade-info">
+                        <h3>Estruturas Condicionais</h3>
+                        <p>Decisões com se/senão e caminhos diferentes no algoritmo.</p>
+                        <div class="unidade-footer">
+                            <span class="status-badge lock" id="badge-u2"><i class="fas fa-lock"></i> Bloqueada</span>
+                            <span class="mini-arrow"><i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </a>
 
-            <a href="#" class="module-card locked" id="mod-2" style="animation-delay: .24s;">
-                <div class="module-number">2</div>
-                <div class="module-info">
-                    <h3 id="title-2">Variáveis e Tipos <i class="fas fa-lock"></i></h3>
-                    <p>Armazenamento de informações, tipos de dados e uso de variáveis em C.</p>
-                    <div class="module-tags">
-                        <span class="tag">C</span>
-                        <span class="tag">variáveis</span>
+                <a href="#" class="unidade-item locked" id="item-u3" style="animation-delay: 0.28s;">
+                    <div class="unidade-top">
+                        <div class="unidade-circle" id="circle-u3"><i class="fas fa-lock"></i></div>
+                        <span class="unidade-num">Unidade 03</span>
                     </div>
-                </div>
-                <div class="module-status" id="status-2">
-                    <span class="status-pill lock"><i class="fas fa-lock"></i> Bloqueado</span>
-                </div>
-            </a>
+                    <div class="unidade-info">
+                        <h3>Laços de Repetição</h3>
+                        <p>Repetição de ações, contadores e controle de fluxo.</p>
+                        <div class="unidade-footer">
+                            <span class="status-badge lock" id="badge-u3"><i class="fas fa-lock"></i> Bloqueada</span>
+                            <span class="mini-arrow"><i class="fas fa-arrow-right"></i></span>
+                        </div>
+                    </div>
+                </a>
 
-            <a href="certificados.html" class="module-card locked" id="mod-cert" style="animation-delay: .32s;">
-                <div class="module-number"><i class="fas fa-certificate"></i></div>
-                <div class="module-info">
-                    <h3 id="title-cert">Certificado Final <i class="fas fa-lock"></i></h3>
-                    <p>Disponível quando todos os módulos principais forem concluídos.</p>
-                    <div class="module-tags">
-                        <span class="tag">conclusão</span>
-                        <span class="tag">certificado</span>
-                    </div>
+                <div class="path-line"><span id="path-progress"></span></div>
+            </div>
+
+            <div class="note-card">
+                <i class="fas fa-circle-info"></i>
+                <div>
+                    O progresso desta tela agora é consultado e salvo no banco de dados. Assim, o desbloqueio das unidades
+                    continua aparecendo mesmo se o aluno trocar de navegador ou computador.
                 </div>
-                <div class="module-status" id="status-cert">
-                    <span class="status-pill lock"><i class="fas fa-lock"></i> Bloqueado</span>
-                </div>
-            </a>
+            </div>
         </section>
     </main>
 
     <div class="floating-actions">
         <div class="menu-acessibilidade" id="menu-acess">
-            <div class="menu-title">Acessibilidade</div>
+            <div class="menu-title">Visualização</div>
             <button class="btn btn-primary" onclick="toggleAltoContraste()"><i class="fas fa-adjust"></i> Alto Contraste</button>
-            <button class="btn btn-outline" onclick="mudarFonte(2)"><i class="fas fa-font"></i><i class="fas fa-plus"></i> Aumentar Texto</button>
-            <button class="btn btn-outline" onclick="mudarFonte(-2)"><i class="fas fa-font"></i><i class="fas fa-minus"></i> Diminuir Texto</button>
+            <button class="btn btn-outline" onclick="mudarFonte(2)"><i class="fas fa-font"></i> Aumentar Texto</button>
+            <button class="btn btn-outline" onclick="mudarFonte(-2)"><i class="fas fa-font"></i> Diminuir Texto</button>
         </div>
         <button class="btn-floating" onclick="toggleMenuAcessibilidade()" title="Acessibilidade">
             <i class="fas fa-universal-access"></i>
@@ -815,19 +901,17 @@
 
     <div class="modal-overlay" id="config-modal">
         <div class="modal-card">
-            <h3><i class="fas fa-sliders-h"></i> Ajustes da Trilha</h3>
-            <p>O nome pode ser ajustado localmente para exibição nesta tela. O progresso dos módulos é consultado e zerado no banco de dados.</p>
-
-            <label style="font-size: .84rem; font-weight: 800; color: var(--text-muted);">Nome exibido nesta tela</label>
+            <h3><i class="fas fa-cog"></i> Configurações</h3>
+            <label style="font-size:0.82rem; color:var(--text-muted); font-weight:700;">Nome de usuário:</label>
             <input type="text" id="edit-nome" class="input-text" placeholder="Seu nome">
 
-            <button class="btn" style="background: var(--danger); color: white; width: 100%; margin-bottom: 12px;" onclick="zerarProgresso()">
-                <i class="fas fa-sync-alt"></i> Zerar progresso no banco
+            <button class="btn btn-danger" style="width:100%; margin-bottom:12px;" onclick="resetarProgressoBanco()">
+                <i class="fas fa-trash"></i> Resetar Progresso das Unidades
             </button>
 
-            <div style="display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;">
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
                 <button class="btn btn-outline" onclick="fecharConfiguracoes()">Cancelar</button>
-                <button class="btn btn-primary" onclick="salvarConfiguracoes()">Salvar</button>
+                <button class="btn btn-primary" onclick="salvarNome()">Salvar</button>
             </div>
         </div>
     </div>
@@ -836,201 +920,233 @@
 
     <script>
         const API_URL = 'https://algoritmolab.onrender.com/api';
+        let usuario = null;
+        let progressoUnidades = {
+            unidade1_concluida: false,
+            unidade2_concluida: false,
+            unidade3_concluida: false
+        };
 
-        let userData = null;
-        let progressoModulos = null;
-        let scale = 100;
-
-        function normalizarBoolean(valor) {
-            return valor === true || valor === 1 || valor === '1' || valor === 'true';
-        }
-
-        function mostrarToast(msg, tipo = 'ok') {
+        function mostrarToast(msg) {
             const toast = document.getElementById('toast');
-            toast.className = `toast show ${tipo}`;
             toast.innerHTML = msg;
-            setTimeout(() => { toast.className = 'toast'; }, 2800);
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2600);
         }
 
-        function carregarPerfil() {
+        function atualizarStatusSync(texto, tipo = 'ok') {
+            const status = document.getElementById('sync-status');
+            const cores = {
+                ok: 'rgba(34, 197, 94, 0.10)',
+                erro: 'rgba(239, 68, 68, 0.12)',
+                load: 'rgba(56, 189, 248, 0.10)'
+            };
+            const icones = {
+                ok: 'fa-database',
+                erro: 'fa-triangle-exclamation',
+                load: 'fa-cloud-arrow-down'
+            };
+            status.style.background = cores[tipo] || cores.ok;
+            status.innerHTML = `<i class="fas ${icones[tipo] || icones.ok}"></i> ${texto}`;
+        }
+
+        function inicializar() {
             if (localStorage.getItem('userLogado') !== 'true') {
-                window.location.replace('index.html');
+                window.location.href = 'index.html';
                 return;
             }
 
-            const cacheUsuario = localStorage.getItem('userData');
-            if (!cacheUsuario) {
-                window.location.replace('index.html');
-                return;
+            usuario = JSON.parse(localStorage.getItem('userData'));
+
+            if (usuario) {
+                document.getElementById('user-name').innerText = usuario.nome;
+                document.getElementById('user-streak').innerText = `${usuario.streak || 0} Dias`;
+
+                const avatarDiv = document.getElementById('user-avatar');
+                if (usuario.foto) {
+                    avatarDiv.innerHTML = `<img src="${usuario.foto}">`;
+                } else {
+                    avatarDiv.innerText = usuario.nome.charAt(0).toUpperCase();
+                }
             }
 
-            try {
-                userData = JSON.parse(cacheUsuario);
-            } catch (error) {
-                localStorage.removeItem('userData');
-                localStorage.removeItem('userLogado');
-                window.location.replace('index.html');
-                return;
-            }
-
-            if (!userData || !userData.email) {
-                window.location.replace('index.html');
-                return;
-            }
-
-            renderizarPerfil();
-            buscarProgressoModulosBanco();
+            carregarProgressoBanco();
         }
 
-        function renderizarPerfil() {
-            document.getElementById('user-name').innerText = userData.nome || 'Estudante';
-            document.getElementById('user-streak').innerText = `${userData.streak || 0} Dias`;
+        async function carregarProgressoBanco() {
+            if (!usuario || !usuario.email) return;
 
-            const avatarDiv = document.getElementById('user-avatar');
-            if (userData.foto) {
-                avatarDiv.innerHTML = `<img src="${userData.foto}" alt="Avatar do usuário">`;
-            } else {
-                avatarDiv.innerText = (userData.nome || 'C').charAt(0).toUpperCase();
-            }
-        }
-
-        async function buscarProgressoModulosBanco() {
-            if (!userData || !userData.email) return;
-
-            document.getElementById('sync-text').innerText = 'Buscando progresso no banco...';
+            atualizarStatusSync('Sincronizando...', 'load');
 
             try {
-                const response = await fetch(`${API_URL}/modulos/progresso?email=${encodeURIComponent(userData.email)}`);
+                const response = await fetch(`${API_URL}/modulos/progresso?email=${encodeURIComponent(usuario.email)}`);
                 const data = await response.json();
 
                 if (!response.ok) {
-                    throw new Error(data.error || 'Não foi possível buscar o progresso.');
+                    throw new Error(data.error || 'Erro ao buscar progresso.');
                 }
 
-                progressoModulos = data.progresso;
-                document.getElementById('sync-text').innerText = 'Progresso sincronizado com o banco';
-                verificarBloqueios(progressoModulos);
-            } catch (error) {
-                console.error('Erro ao buscar progresso:', error);
-                document.getElementById('sync-text').innerText = 'Erro ao sincronizar. Usando dados do login.';
-
-                progressoModulos = {
-                    nota_diagnostica: userData.nota_diagnostica,
-                    avaliacao_concluida: userData.avaliacao_concluida,
-                    mod1_concluido: userData.mod1_concluido,
-                    mod2_concluido: userData.mod2_concluido,
-                    certificado_liberado: userData.certificado_liberado
+                progressoUnidades = {
+                    unidade1_concluida: !!data.progresso.unidade1_concluida,
+                    unidade2_concluida: !!data.progresso.unidade2_concluida,
+                    unidade3_concluida: !!data.progresso.unidade3_concluida
                 };
-                verificarBloqueios(progressoModulos);
-                mostrarToast('<i class="fas fa-triangle-exclamation"></i> Não consegui buscar o progresso no banco.', 'err');
+
+                usuario.progresso = data.progresso;
+                localStorage.setItem('userData', JSON.stringify(usuario));
+
+                verificarProgresso();
+                atualizarStatusSync('Salvo no banco', 'ok');
+            } catch (error) {
+                console.error(error);
+                atualizarStatusSync('Falha ao sincronizar', 'erro');
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> Não foi possível buscar o progresso no banco.');
+                verificarProgresso();
             }
         }
 
-        function limparEstadoVisual() {
-            ['mod-0', 'mod-1', 'mod-2', 'mod-cert'].forEach(id => {
-                const item = document.getElementById(id);
-                item.classList.remove('completed');
-                if (id !== 'mod-0') item.classList.add('locked');
-            });
+        function marcarUnidade(id, estado, href, icone, textoBadge) {
+            const item = document.getElementById(`item-u${id}`);
+            const circle = document.getElementById(`circle-u${id}`);
+            const badge = document.getElementById(`badge-u${id}`);
 
-            document.getElementById('mod-2').setAttribute('href', '#');
-            document.getElementById('mod-cert').setAttribute('href', 'certificados.html');
-            document.getElementById('title-1').innerHTML = 'Lógica de Programação <i class="fas fa-lock"></i>';
-            document.getElementById('title-2').innerHTML = 'Variáveis e Tipos <i class="fas fa-lock"></i>';
-            document.getElementById('title-cert').innerHTML = 'Certificado Final <i class="fas fa-lock"></i>';
-            document.getElementById('status-0').innerHTML = '<span class="status-pill next"><i class="fas fa-arrow-right"></i> Iniciar</span>';
-            document.getElementById('status-1').innerHTML = '<span class="status-pill lock"><i class="fas fa-lock"></i> Bloqueado</span>';
-            document.getElementById('status-2').innerHTML = '<span class="status-pill lock"><i class="fas fa-lock"></i> Bloqueado</span>';
-            document.getElementById('status-cert').innerHTML = '<span class="status-pill lock"><i class="fas fa-lock"></i> Bloqueado</span>';
+            item.classList.remove('locked', 'unlocked', 'completed');
+
+            if (estado === 'completed') {
+                item.classList.add('completed', 'unlocked');
+                item.setAttribute('href', href);
+                circle.innerHTML = '<i class="fas fa-check"></i>';
+                badge.className = 'status-badge done';
+                badge.innerHTML = '<i class="fas fa-check-circle"></i> Concluída';
+                return;
+            }
+
+            if (estado === 'unlocked') {
+                item.classList.add('unlocked');
+                item.setAttribute('href', href);
+                circle.innerHTML = `<i class="fas ${icone}"></i>`;
+                badge.className = 'status-badge open';
+                badge.innerHTML = `<i class="fas fa-play"></i> ${textoBadge}`;
+                return;
+            }
+
+            item.classList.add('locked');
+            item.setAttribute('href', '#');
+            circle.innerHTML = '<i class="fas fa-lock"></i>';
+            badge.className = 'status-badge lock';
+            badge.innerHTML = '<i class="fas fa-lock"></i> Bloqueada';
         }
 
-        function verificarBloqueios(progresso) {
-            limparEstadoVisual();
+        function verificarProgresso() {
+            const u1Feita = !!progressoUnidades.unidade1_concluida;
+            const u2Feita = !!progressoUnidades.unidade2_concluida;
+            const u3Feita = !!progressoUnidades.unidade3_concluida;
 
-            const notaDiagnostica = progresso ? progresso.nota_diagnostica : null;
-            const temNotaSalva = notaDiagnostica !== undefined && notaDiagnostica !== null && notaDiagnostica !== '';
-            const avaliacaoOK = temNotaSalva || normalizarBoolean(progresso.avaliacao_concluida);
-            const mod1OK = normalizarBoolean(progresso.mod1_concluido);
-            const mod2OK = normalizarBoolean(progresso.mod2_concluido);
-            const certificadoOK = normalizarBoolean(progresso.certificado_liberado) || (avaliacaoOK && mod1OK && mod2OK);
+            marcarUnidade(1, u1Feita ? 'completed' : 'unlocked', 'opcoes-unidade.html', 'fa-star', 'Disponível');
+            marcarUnidade(2, u1Feita ? (u2Feita ? 'completed' : 'unlocked') : 'locked', 'unidade-2-conteudo.html', 'fa-bolt', 'Liberada');
+            marcarUnidade(3, u2Feita ? (u3Feita ? 'completed' : 'unlocked') : 'locked', 'unidade-3-conteudo.html', 'fa-terminal', 'Liberada');
 
-            let etapasConcluidas = 0;
+            const total = [u1Feita, u2Feita, u3Feita].filter(Boolean).length;
+            const percent = Math.round((total / 3) * 100);
 
-            if (avaliacaoOK) {
-                etapasConcluidas++;
-                document.getElementById('mod-0').classList.add('completed');
-                document.getElementById('status-0').innerHTML = `
-                    <span class="status-pill ok"><i class="fas fa-check-circle"></i> Concluída</span>
-                    ${temNotaSalva ? `<span class="status-pill grade">Nota: ${notaDiagnostica}</span>` : ''}
-                `;
+            document.getElementById('progress-ring').style.setProperty('--percent', `${percent}%`);
+            document.getElementById('progress-percent').innerText = `${percent}%`;
+            document.getElementById('path-progress').style.setProperty('--w', `${percent}%`);
 
-                const mod1 = document.getElementById('mod-1');
-                mod1.classList.remove('locked');
-                document.getElementById('title-1').innerHTML = 'Lógica de Programação';
-                document.getElementById('status-1').innerHTML = '<span class="status-pill next"><i class="fas fa-arrow-right"></i> Continuar</span>';
-            }
-
-            if (mod1OK) {
-                etapasConcluidas++;
-                document.getElementById('mod-1').classList.add('completed');
-                document.getElementById('status-1').innerHTML = '<span class="status-pill ok"><i class="fas fa-check-circle"></i> Concluído</span>';
-
-                const mod2 = document.getElementById('mod-2');
-                mod2.classList.remove('locked');
-                mod2.setAttribute('href', 'variaveis.html');
-                document.getElementById('title-2').innerHTML = 'Variáveis e Tipos';
-                document.getElementById('status-2').innerHTML = '<span class="status-pill next"><i class="fas fa-arrow-right"></i> Continuar</span>';
-            }
-
-            if (mod2OK) {
-                etapasConcluidas++;
-                document.getElementById('mod-2').classList.add('completed');
-                document.getElementById('status-2').innerHTML = '<span class="status-pill ok"><i class="fas fa-check-circle"></i> Concluído</span>';
-            }
-
-            if (certificadoOK) {
-                document.getElementById('mod-cert').classList.remove('locked');
-                document.getElementById('title-cert').innerHTML = 'Certificado Final';
-                document.getElementById('status-cert').innerHTML = '<span class="status-pill next"><i class="fas fa-medal"></i> Emitir</span>';
-            }
-
-            atualizarBarraProgresso(etapasConcluidas, 3);
+            const mensagens = {
+                0: 'Comece pela primeira unidade para liberar o restante da trilha.',
+                1: 'Boa! A segunda unidade foi liberada para continuar sua jornada.',
+                2: 'Você está quase terminando este módulo. Falta só a última unidade.',
+                3: 'Módulo completo. Seu avanço já está salvo no banco de dados.'
+            };
+            document.getElementById('progress-message').innerText = mensagens[total];
         }
 
-        function atualizarBarraProgresso(valor, total) {
-            const percentual = Math.round((valor / total) * 100);
-            document.getElementById('percentual-geral').innerText = percentual;
-            document.getElementById('progress-fill').style.width = `${percentual}%`;
-        }
-
-        async function salvarProgressoModulo(modulo, concluido = true) {
-            if (!userData || !userData.email) return;
+        async function salvarProgressoUnidade(unidade, concluido = true) {
+            if (!usuario || !usuario.email) {
+                mostrarToast('Usuário não encontrado. Faça login novamente.');
+                return false;
+            }
 
             try {
+                atualizarStatusSync('Salvando...', 'load');
+
                 const response = await fetch(`${API_URL}/modulos/salvar`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        email: userData.email,
-                        modulo,
-                        concluido
+                        email: usuario.email,
+                        modulo: unidade,
+                        concluido: concluido
                     })
                 });
 
                 const data = await response.json();
-                if (!response.ok) throw new Error(data.error || 'Erro ao salvar progresso.');
 
-                progressoModulos = data.progresso;
-                verificarBloqueios(progressoModulos);
+                if (!response.ok) {
+                    throw new Error(data.error || 'Erro ao salvar progresso.');
+                }
+
+                progressoUnidades = {
+                    unidade1_concluida: !!data.progresso.unidade1_concluida,
+                    unidade2_concluida: !!data.progresso.unidade2_concluida,
+                    unidade3_concluida: !!data.progresso.unidade3_concluida
+                };
+
+                usuario.progresso = data.progresso;
+                localStorage.setItem('userData', JSON.stringify(usuario));
+
+                verificarProgresso();
+                atualizarStatusSync('Salvo no banco', 'ok');
                 mostrarToast('<i class="fas fa-check-circle"></i> Progresso salvo no banco.');
+                return true;
             } catch (error) {
-                console.error('Erro ao salvar módulo:', error);
-                mostrarToast('<i class="fas fa-circle-xmark"></i> Erro ao salvar progresso no banco.', 'err');
+                console.error(error);
+                atualizarStatusSync('Erro ao salvar', 'erro');
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> Erro ao salvar progresso no banco.');
+                return false;
+            }
+        }
+
+        async function resetarProgressoBanco() {
+            if (!confirm('Deseja trancar as unidades novamente?')) return;
+            if (!usuario || !usuario.email) return;
+
+            try {
+                atualizarStatusSync('Resetando...', 'load');
+
+                const etapas = ['unidade1', 'unidade2', 'unidade3'];
+                for (const unidade of etapas) {
+                    const response = await fetch(`${API_URL}/modulos/salvar`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: usuario.email,
+                            modulo: unidade,
+                            concluido: false
+                        })
+                    });
+                    if (!response.ok) throw new Error('Falha ao resetar ' + unidade);
+                }
+
+                progressoUnidades = {
+                    unidade1_concluida: false,
+                    unidade2_concluida: false,
+                    unidade3_concluida: false
+                };
+                verificarProgresso();
+                fecharConfiguracoes();
+                atualizarStatusSync('Salvo no banco', 'ok');
+                mostrarToast('<i class="fas fa-check-circle"></i> Progresso das unidades resetado.');
+            } catch (error) {
+                console.error(error);
+                atualizarStatusSync('Erro ao resetar', 'erro');
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> Não foi possível resetar no banco.');
             }
         }
 
         function abrirConfiguracoes() {
-            if (userData) document.getElementById('edit-nome').value = userData.nome || '';
+            document.getElementById('edit-nome').value = usuario ? usuario.nome : '';
             document.getElementById('config-modal').style.display = 'flex';
         }
 
@@ -1038,44 +1154,20 @@
             document.getElementById('config-modal').style.display = 'none';
         }
 
-        function salvarConfiguracoes() {
-            const novoNome = document.getElementById('edit-nome').value.trim();
-            if (novoNome && userData) {
-                userData.nome = novoNome;
-                localStorage.setItem('userData', JSON.stringify(userData));
-                renderizarPerfil();
-                mostrarToast('<i class="fas fa-check-circle"></i> Nome atualizado nesta tela.');
-            }
-            fecharConfiguracoes();
-        }
-
-        async function zerarProgresso() {
-            if (!confirm('Deseja realmente zerar seu progresso? Essa ação será aplicada no banco de dados.')) return;
-            if (!userData || !userData.email) return;
-
-            try {
-                const response = await fetch(`${API_URL}/modulos/zerar`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: userData.email })
-                });
-
-                const data = await response.json();
-                if (!response.ok) throw new Error(data.error || 'Erro ao zerar progresso.');
-
-                progressoModulos = data.progresso;
-                verificarBloqueios(progressoModulos);
+        function salvarNome() {
+            const novo = document.getElementById('edit-nome').value.trim();
+            if (novo && usuario) {
+                usuario.nome = novo;
+                localStorage.setItem('userData', JSON.stringify(usuario));
+                document.getElementById('user-name').innerText = novo;
                 fecharConfiguracoes();
-                mostrarToast('<i class="fas fa-check-circle"></i> Progresso zerado no banco.');
-            } catch (error) {
-                console.error('Erro ao zerar progresso:', error);
-                mostrarToast('<i class="fas fa-circle-xmark"></i> Erro ao zerar progresso no banco.', 'err');
+                mostrarToast('Nome atualizado nesta sessão.');
             }
         }
 
         function toggleMenuAcessibilidade() {
-            const menu = document.getElementById('menu-acess');
-            menu.classList.toggle('active');
+            const m = document.getElementById('menu-acess');
+            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
         }
 
         function toggleAltoContraste() {
@@ -1083,18 +1175,17 @@
             localStorage.setItem('acess_alto', document.body.classList.contains('high-contrast'));
         }
 
-        function mudarFonte(delta) {
-            scale += delta;
-            if (scale < 84) scale = 84;
-            if (scale > 140) scale = 140;
-            document.documentElement.style.setProperty('--font-scale', `${scale}%`);
-            localStorage.setItem('acess_escala_fonte', scale);
+        function mudarFonte(d) {
+            let s = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--font-scale')) || 100;
+            s += d;
+            if (s < 82) s = 82;
+            if (s > 142) s = 142;
+            document.documentElement.style.setProperty('--font-scale', s + '%');
+            localStorage.setItem('acess_escala_fonte', s);
         }
 
-        window.salvarProgressoModulo = salvarProgressoModulo;
-
         window.onload = () => {
-            carregarPerfil();
+            inicializar();
 
             if (localStorage.getItem('acess_alto') === 'true') {
                 document.body.classList.add('high-contrast');
@@ -1102,8 +1193,7 @@
 
             const escalaSalva = localStorage.getItem('acess_escala_fonte');
             if (escalaSalva) {
-                scale = parseInt(escalaSalva, 10);
-                document.documentElement.style.setProperty('--font-scale', `${scale}%`);
+                document.documentElement.style.setProperty('--font-scale', escalaSalva + '%');
             }
         };
     </script>
