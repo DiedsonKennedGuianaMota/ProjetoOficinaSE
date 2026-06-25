@@ -974,37 +974,27 @@
         }
 
         async function carregarProgressoBanco() {
-            if (!usuario || !usuario.email) return;
+    if (!usuario || !usuario.email) return;
 
-            atualizarStatusSync('Sincronizando...', 'load');
+    try {
+        const response = await fetch(`${API_URL}/modulos/progresso?email=${encodeURIComponent(usuario.email)}`);
 
-            try {
-                const response = await fetch(`${API_URL}/modulos/progresso?email=${encodeURIComponent(usuario.email)}`);
-                const data = await response.json();
-
-                if (!response.ok) {
-                    throw new Error(data.error || 'Erro ao buscar progresso.');
-                }
-
-                progressoUnidades = {
-                    unidade1_concluida: !!data.progresso.unidade1_concluida,
-                    unidade2_concluida: !!data.progresso.unidade2_concluida,
-                    unidade3_concluida: !!data.progresso.unidade3_concluida
-                };
-
-                usuario.progresso = data.progresso;
-                localStorage.setItem('userData', JSON.stringify(usuario));
-
-                verificarProgresso();
-                atualizarStatusSync('Salvo no banco', 'ok');
-            } catch (error) {
-                console.error(error);
-                atualizarStatusSync('Falha ao sincronizar', 'erro');
-                mostrarToast('<i class="fas fa-triangle-exclamation"></i> Não foi possível buscar o progresso no banco.');
-                verificarProgresso();
-            }
+        if (!response.ok) {
+            const textoErro = await response.text();
+            console.error('Erro ao buscar progresso. Resposta do servidor:', textoErro);
+            return;
         }
 
+        const data = await response.json();
+
+        if (data.progresso) {
+            aplicarProgressoNaTela(data.progresso);
+        }
+
+    } catch (error) {
+        console.error('Erro de conexão ao buscar progresso:', error);
+    }
+}
         function marcarUnidade(id, estado, href, icone, textoBadge) {
             const item = document.getElementById(`item-u${id}`);
             const circle = document.getElementById(`circle-u${id}`);
