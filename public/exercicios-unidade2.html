@@ -1554,13 +1554,13 @@ int main() {
         }
 
         function limparSaida(saida) {
-            return String(saida || '')
-                .trim()
-                .toLowerCase()
-                .normalize('NFD')
-                .replace(/[\\u0300-\\u036f]/g, '')
-                .replace(/\\s+/g, ' ');
-        }
+    return String(saida || '')
+        .trim()
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/\s+/g, ' ');
+}
 
         function mostrarResultadoExecucao(resultado) {
             if (resultado.erro) {
