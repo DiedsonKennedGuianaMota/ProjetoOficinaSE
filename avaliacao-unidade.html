@@ -3,340 +3,1795 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Avaliação Final - ALGORITMOLAB</title>
-    
+    <title>Cynix - Avaliação Final da Unidade 1</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
-    
+
     <style>
         :root {
-            --primary-blue: #1c3d5a;
-            --accent-teal: #2b6cb0;
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --text-main: #333333;
-            --text-muted: #718096;
-            --border-color: #e2e8f0;
-            --fire-color: #ff9f43;
-            --success-green: #48bb78;
-            --danger-red: #e53e3e;
+            --primary-blue: #10243b;
+            --accent-teal: #23b7d9;
+            --accent-purple: #7c5cff;
+            --bg-color: #07111f;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-solid: #10243b;
+            --text-main: #f8fafc;
+            --text-muted: #9fb0c8;
+            --border-color: rgba(255,255,255,0.13);
+            --fire-color: #ffb547;
+            --success-green: #42d392;
+            --warning-yellow: #f6c35b;
+            --danger-red: #ff5c7a;
+            --console-bg: #050915;
             --font-scale: 100%;
+            --shadow: 0 24px 70px rgba(0,0,0,0.35);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: 0.3s; }
-        html { font-size: var(--font-scale); }
-        body { background: var(--bg-color); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
-
-        /* HEADER */
-        .navbar { 
-            background: var(--card-bg); padding: 10px 5%; display: flex; justify-content: space-between; align-items: center; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); z-index: 100;
+        .high-contrast {
+            --primary-blue: #000000;
+            --accent-teal: #ffff00;
+            --accent-purple: #00ebff;
+            --bg-color: #000000;
+            --card-bg: #1e1e1e;
+            --card-solid: #1e1e1e;
+            --text-main: #ffffff;
+            --text-muted: #e2e8f0;
+            --border-color: #ffff00;
+            --success-green: #00ff7f;
+            --warning-yellow: #ffff00;
+            --danger-red: #ff4d4d;
+            --console-bg: #000000;
         }
-        .nav-profile { display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 40px; height: 40px; background: var(--accent-teal); color: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-weight: 700; border: 2px solid var(--border-color); overflow: hidden; }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .streak-badge { color: var(--fire-color); font-weight: 700; font-size: 0.85rem; display: flex; align-items: center; gap: 4px; }
 
-        /* WIZARD CONTAINER */
-        .wizard-container { flex: 1; overflow-y: auto; display: flex; justify-content: center; padding: 20px; }
-        
-        .fase-card { 
-            background: var(--card-bg); border-radius: 20px; width: 100%; max-width: 900px; padding: 30px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            animation: fadeIn 0.5s ease-out forwards;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .fase-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 2px solid var(--bg-color); padding-bottom: 15px; }
-        .icone-gigante { font-size: 4rem; color: var(--primary-blue); margin-bottom: 10px; }
+        html {
+            font-size: var(--font-scale);
+            scroll-behavior: smooth;
+        }
 
-        /* PROVA HEADER & TIMER */
-        .prova-header { display: flex; justify-content: space-between; align-items: center; background: var(--primary-blue); color: white; padding: 15px 20px; border-radius: 12px 12px 0 0; }
-        .timer-box { background: rgba(0,0,0,0.2); padding: 5px 15px; border-radius: 20px; font-weight: bold; font-family: 'Fira Code', monospace; font-size: 1.1rem; display: flex; align-items: center; gap: 8px;}
-        .timer-box.warning { color: #fbd38d; animation: pulse 1s infinite; }
-        .timer-box.danger { color: #fc8181; animation: pulse 0.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        body {
+            min-height: 100vh;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at 12% 10%, rgba(35,183,217,.22), transparent 26%),
+                radial-gradient(circle at 88% 16%, rgba(124,92,255,.22), transparent 28%),
+                radial-gradient(circle at 55% 96%, rgba(66,211,146,.13), transparent 30%),
+                linear-gradient(135deg, #060d18 0%, var(--bg-color) 48%, #0b1829 100%);
+            overflow-x: hidden;
+            padding-bottom: 90px;
+        }
 
-        .prova-content { padding: 20px; overflow-y: auto; flex: 1; border: 1px solid var(--border-color); border-top: none; border-radius: 0 0 12px 12px; background: #fafbfc; }
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 390px;
+            height: 390px;
+            border-radius: 50%;
+            filter: blur(25px);
+            opacity: .22;
+            pointer-events: none;
+            z-index: -1;
+            animation: floatGlow 9s ease-in-out infinite alternate;
+        }
 
-        /* QUIZ GRID */
-        .quiz-item { background: white; margin-bottom: 20px; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
-        .options-grid { display: grid; gap: 10px; margin-top: 15px; }
-        .option-btn { padding: 12px; border: 2px solid var(--border-color); border-radius: 10px; cursor: pointer; background: white; text-align: left; font-size: 0.95rem; }
-        .option-btn:hover { border-color: var(--accent-teal); background: #f0f7ff; }
-        .option-btn.selected { background: var(--accent-teal); color: white; border-color: var(--accent-teal); }
+        body::before {
+            background: var(--accent-teal);
+            left: -190px;
+            top: 120px;
+        }
 
-        /* IDE SIMULADOR */
-        .ide-container { background: #282a36; border-radius: 12px; overflow: hidden; border: 1px solid #444; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .ide-header { background: #21222c; padding: 10px 15px; color: #f8f8f2; font-size: 0.85rem; font-family: 'Fira Code', monospace; }
-        .CodeMirror { height: 250px; font-family: 'Fira Code', monospace; font-size: 0.95rem; text-align: left; }
+        body::after {
+            background: var(--accent-purple);
+            right: -160px;
+            bottom: 40px;
+            animation-delay: 1.5s;
+        }
 
-        /* BOTÕES */
-        .btn { padding: 15px 25px; border-radius: 12px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; }
-        .btn-primary { background: var(--primary-blue); color: white; }
-        .btn-teal { background: var(--accent-teal); color: white; }
-        .btn-outline { background: transparent; border: 2px solid var(--border-color); color: var(--text-muted); padding: 8px 15px; }
-        .btn-outline:hover { background: var(--border-color); color: var(--text-main); }
-        
-        /* RESULTADO */
-        .resultado-box { background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); margin: 20px 0; display: flex; flex-direction: column; gap: 10px; }
-        .nota-destaque { font-size: 3rem; font-weight: 800; }
-        .aprovado { color: var(--success-green); }
-        .reprovado { color: var(--danger-red); }
+        @keyframes floatGlow {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(40px, -32px) scale(1.08); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseGlow {
+            0%,100% { transform: scale(1); box-shadow: 0 0 0 rgba(35,183,217,0); }
+            50% { transform: scale(1.04); box-shadow: 0 0 28px rgba(35,183,217,.30); }
+        }
+
+        @keyframes shine {
+            from { transform: translateX(-130%) rotate(15deg); }
+            to { transform: translateX(170%) rotate(15deg); }
+        }
+
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            20% { transform: translateX(-8px); }
+            40% { transform: translateX(8px); }
+            60% { transform: translateX(-5px); }
+            80% { transform: translateX(5px); }
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            padding: 15px 5%;
+            background: rgba(7, 17, 31, .76);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 12px 40px rgba(0,0,0,.18);
+            animation: slideDown .55s ease both;
+        }
+
+        .brand-area,
+        .nav-profile,
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: white;
+            font-size: 1.35rem;
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .brand-text strong {
+            display: block;
+            font-weight: 800;
+            letter-spacing: .5px;
+        }
+
+        .brand-text span {
+            display: block;
+            color: var(--text-muted);
+            font-size: .78rem;
+        }
+
+        .nav-profile {
+            padding: 8px 10px;
+            border-radius: 18px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 800;
+            border: 2px solid rgba(255,255,255,.18);
+            overflow: hidden;
+            flex: 0 0 auto;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #user-name {
+            display: block;
+            max-width: 190px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 800;
+            font-size: .95rem;
+        }
+
+        .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--fire-color);
+            font-weight: 800;
+            font-size: .78rem;
+        }
+
+        .btn {
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 14px;
+            padding: 11px 17px;
+            font-size: .9rem;
+            font-weight: 800;
+            transition: .25s ease;
+            color: var(--text-main);
+        }
+
+        .btn-outline {
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            transform: translateY(-2px);
+            border-color: rgba(35,183,217,.75);
+            background: rgba(35,183,217,.12);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: white;
+            box-shadow: 0 14px 35px rgba(35,183,217,.22);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.08);
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, var(--success-green), #20b987);
+            color: white;
+        }
+
+        .btn-danger {
+            background: rgba(255,92,122,.16);
+            border: 1px solid rgba(255,92,122,.34);
+            color: #ffd6dd;
+        }
+
+        .btn:disabled {
+            opacity: .58;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .container {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 32px 22px 0;
+        }
+
+        .top-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 800;
+            margin-bottom: 18px;
+            transition: .25s ease;
+        }
+
+        .top-link:hover {
+            color: var(--accent-teal);
+            transform: translateX(-4px);
+        }
+
+        .hero,
+        .card {
+            position: relative;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background:
+                linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04)),
+                radial-gradient(circle at 90% 12%, rgba(35,183,217,.22), transparent 28%),
+                radial-gradient(circle at 8% 100%, rgba(124,92,255,.19), transparent 30%);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: slideUp .65s ease both;
+        }
+
+        .hero::before,
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+            transform: translateX(-130%) rotate(15deg);
+            animation: shine 5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .hero-content,
+        .card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero {
+            padding: 30px;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: minmax(0, 1.4fr) minmax(270px, .75fr);
+            gap: 28px;
+            align-items: center;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #c7f5ff;
+            background: rgba(35,183,217,.12);
+            border: 1px solid rgba(35,183,217,.28);
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: .82rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            color: var(--text-main);
+            font-size: clamp(2rem, 5vw, 3.35rem);
+            line-height: 1.04;
+            letter-spacing: -1px;
+            margin-bottom: 14px;
+        }
+
+        .hero h1 span {
+            color: var(--accent-teal);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 760px;
+            font-size: 1rem;
+        }
+
+        .hero-stats {
+            display: grid;
+            gap: 14px;
+        }
+
+        .stat-card {
+            padding: 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.07);
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-card small {
+            display: block;
+            color: var(--text-muted);
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .stat-card strong {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.02rem;
+        }
+
+        .screen {
+            display: none;
+            margin-top: 26px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .intro-card {
+            padding: 30px;
+        }
+
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            margin: 26px 0;
+        }
+
+        .rule-item {
+            padding: 17px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.07);
+            border: 1px solid var(--border-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .rule-item i {
+            width: 36px;
+            height: 36px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: rgba(35,183,217,.12);
+            color: var(--accent-teal);
+            flex: 0 0 auto;
+        }
+
+        .rule-item strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .rule-item span {
+            color: var(--text-muted);
+            font-size: .86rem;
+            line-height: 1.5;
+        }
+
+        .exam-layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            gap: 20px;
+            align-items: start;
+        }
+
+        .exam-main,
+        .exam-side {
+            padding: 24px;
+            border-radius: 30px;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 18px 45px rgba(0,0,0,.23);
+            animation: slideUp .5s ease both;
+        }
+
+        .exam-side {
+            position: sticky;
+            top: 98px;
+        }
+
+        .exam-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .exam-head h2 {
+            font-size: 1.5rem;
+        }
+
+        .timer-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 16px;
+            background: rgba(0,0,0,.24);
+            border: 1px solid var(--border-color);
+            color: #d8f8ff;
+            font-family: 'Fira Code', monospace;
+            font-weight: 700;
+        }
+
+        .timer-box.warning {
+            color: var(--warning-yellow);
+            animation: pulseGlow 1.2s infinite;
+        }
+
+        .timer-box.danger {
+            color: var(--danger-red);
+            animation: shake .45s infinite;
+        }
+
+        .warning-panel {
+            padding: 15px;
+            border-radius: 20px;
+            background: rgba(255,92,122,.10);
+            border: 1px solid rgba(255,92,122,.28);
+            margin-bottom: 14px;
+        }
+
+        .warning-panel strong {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #ffd6dd;
+            margin-bottom: 8px;
+        }
+
+        .warning-bars {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 7px;
+            margin-top: 10px;
+        }
+
+        .warning-bar {
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.10);
+            border: 1px solid var(--border-color);
+        }
+
+        .warning-bar.active {
+            background: linear-gradient(90deg, var(--warning-yellow), var(--danger-red));
+            border-color: rgba(255,92,122,.4);
+        }
+
+        .progress-panel {
+            padding: 15px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 11px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--accent-teal), var(--success-green));
+            box-shadow: 0 0 20px rgba(35,183,217,.40);
+            transition: width .45s ease;
+        }
+
+        .quiz-container {
+            display: grid;
+            gap: 16px;
+        }
+
+        .quiz-item {
+            padding: 17px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .quiz-item p {
+            line-height: 1.55;
+        }
+
+        .quiz-number {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(35,183,217,.12);
+            border: 1px solid rgba(35,183,217,.25);
+            color: #c7f5ff;
+            font-weight: 800;
+            font-size: .78rem;
+            margin-bottom: 10px;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 10px;
+            margin-top: 13px;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            cursor: pointer;
+            background: rgba(255,255,255,.06);
+            color: var(--text-main);
+            text-align: left;
+            font-size: .92rem;
+            line-height: 1.4;
+            transition: .22s ease;
+        }
+
+        .option-btn:hover {
+            border-color: rgba(35,183,217,.7);
+            background: rgba(35,183,217,.12);
+            transform: translateX(4px);
+        }
+
+        .option-btn.selected {
+            background: linear-gradient(135deg, rgba(35,183,217,.85), rgba(124,92,255,.85));
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 12px 28px rgba(35,183,217,.18);
+        }
+
+        .pratica-box {
+            margin-top: 26px;
+            padding-top: 22px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .mission-card {
+            padding: 16px;
+            border-radius: 20px;
+            background: rgba(35,183,217,.10);
+            border: 1px solid rgba(35,183,217,.24);
+            color: #d8f8ff;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .code-chip {
+            display: inline-flex;
+            padding: 2px 7px;
+            border-radius: 8px;
+            background: rgba(0,0,0,.24);
+            border: 1px solid rgba(255,255,255,.10);
+            font-family: 'Fira Code', monospace;
+            color: #f8f8f2;
+        }
+
+        .ide-container {
+            border-radius: 22px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,.12);
+            background: #282a36;
+            box-shadow: 0 22px 50px rgba(0,0,0,.35);
+        }
+
+        .ide-header {
+            background: #1e2030;
+            padding: 12px 15px;
+            color: #f8f8f2;
+            font-size: .86rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Fira Code', monospace;
+            border-bottom: 1px solid rgba(255,255,255,.10);
+        }
+
+        .CodeMirror {
+            height: 340px !important;
+            min-height: 340px;
+            font-family: 'Fira Code', monospace;
+            font-size: .95rem;
+            line-height: 1.55;
+        }
+
+        .CodeMirror-scroll {
+            min-height: 340px;
+        }
+
+        .result-card {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .result-icon {
+            width: 110px;
+            height: 110px;
+            display: grid;
+            place-items: center;
+            border-radius: 34px;
+            margin: 0 auto 22px;
+            font-size: 4.4rem;
+            color: white;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            box-shadow: 0 26px 60px rgba(35,183,217,.28);
+            animation: pulseGlow 2.5s ease-in-out infinite;
+        }
+
+        .nota-destaque {
+            font-size: clamp(3rem, 7vw, 5rem);
+            font-weight: 800;
+            line-height: 1;
+            margin: 18px 0;
+        }
+
+        .nota-destaque.aprovado {
+            color: var(--success-green);
+        }
+
+        .nota-destaque.reprovado {
+            color: var(--danger-red);
+        }
+
+        .nota-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin: 24px 0;
+        }
+
+        .nota-mini {
+            padding: 15px;
+            border-radius: 18px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .nota-mini small {
+            display: block;
+            color: var(--text-muted);
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 26px;
+            transform: translateX(-50%) translateY(30px);
+            min-width: min(470px, calc(100% - 40px));
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(16,36,59,.97);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            box-shadow: var(--shadow);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 180;
+            opacity: 0;
+            transition: .35s ease;
+            line-height: 1.45;
+        }
+
+        .toast.show {
+            display: flex;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.success i { color: var(--success-green); }
+        .toast.error i { color: var(--danger-red); }
+        .toast.info i { color: var(--accent-teal); }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.72);
+            backdrop-filter: blur(7px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 150;
+            padding: 22px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-card {
+            max-width: 520px;
+            width: 100%;
+            padding: 28px;
+            border-radius: 28px;
+            background:
+                linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04)),
+                var(--card-solid);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            text-align: center;
+            animation: slideUp .35s ease both;
+        }
+
+        .modal-card i {
+            font-size: 3.6rem;
+            color: var(--danger-red);
+            margin-bottom: 16px;
+        }
+
+        .floating-actions {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 99;
+        }
+
+        .btn-floating {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            font-size: 1.28rem;
+            box-shadow: 0 18px 40px rgba(35,183,217,.28);
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .menu-acessibilidade {
+            position: absolute;
+            bottom: 68px;
+            right: 0;
+            width: 230px;
+            padding: 14px;
+            border-radius: 20px;
+            background: rgba(16,36,59,.96);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .menu-acessibilidade .btn {
+            width: 100%;
+        }
+
+        @media (max-width: 980px) {
+            .hero-content,
+            .exam-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .exam-side {
+                position: static;
+            }
+
+            .rules-grid,
+            .nota-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .navbar {
+                flex-wrap: wrap;
+                padding: 14px 18px;
+            }
+
+            .brand-text span {
+                display: none;
+            }
+
+            .nav-profile {
+                width: 100%;
+                order: 3;
+            }
+
+            .container {
+                padding-inline: 16px;
+            }
+
+            .hero,
+            .intro-card,
+            .exam-main,
+            .exam-side,
+            .result-card {
+                padding: 22px;
+            }
+
+            .exam-head {
+                flex-direction: column;
+            }
+
+            .floating-actions {
+                right: 16px;
+                bottom: 16px;
+            }
+
+            .CodeMirror,
+            .CodeMirror-scroll {
+                height: 280px !important;
+                min-height: 280px;
+            }
+        }
     </style>
 </head>
-<body>
 
+<body>
     <header class="navbar">
+        <div class="brand-area">
+            <div class="brand-logo">
+                <i class="fas fa-graduation-cap"></i>
+            </div>
+            <div class="brand-text">
+                <strong>Cynix</strong>
+                <span>avaliação da Unidade 1</span>
+            </div>
+        </div>
+
         <div class="nav-profile">
             <div class="avatar" id="user-avatar">A</div>
             <div>
                 <strong id="user-name">Carregando...</strong>
-                <div class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></div>
+                <div class="streak-badge">
+                    <i class="fas fa-fire"></i>
+                    <span id="user-streak">0 Dias</span>
+                </div>
             </div>
         </div>
-        <div style="display: flex; gap: 10px;">
-            <button type="button" class="btn btn-outline" onclick="location.href='opcoes-unidade.html'" title="Sair"><i class="fas fa-sign-out-alt"></i> Sair</button>
+
+        <div class="nav-actions">
+            <button type="button" class="btn btn-outline" onclick="confirmarSaida()">
+                <i class="fas fa-sign-out-alt"></i>
+                Sair
+            </button>
         </div>
     </header>
 
-    <main class="wizard-container">
-        
-        <div class="fase-card" id="intro-prova" style="display: flex; flex-direction: column;">
-            <div style="text-align: center;">
-                <i class="fas fa-graduation-cap icone-gigante"></i>
-                <h2>Avaliação Final - Unidade 1</h2>
-                <p style="color: var(--text-muted); margin-top: 10px;">Chegou a hora de testar seus conhecimentos em C e Lógica de Programação!</p>
-            </div>
-            
-            <div style="background: var(--bg-color); padding: 20px; border-radius: 12px; margin: 30px 0;">
-                <ul style="list-style: none; display: flex; flex-direction: column; gap: 15px; font-size: 1.1rem;">
-                    <li><i class="fas fa-check-circle" style="color: var(--accent-teal); width: 30px;"></i> 5 Questões Objetivas (10 pontos cada)</li>
-                    <li><i class="fas fa-code" style="color: var(--accent-teal); width: 30px;"></i> 1 Desafio Prático em C (50 pontos)</li>
-                    <li><i class="fas fa-stopwatch" style="color: var(--accent-teal); width: 30px;"></i> Tempo limite: <strong>60 Minutos</strong></li>
-                    <li><i class="fas fa-star" style="color: var(--accent-teal); width: 30px;"></i> Nota para aprovação: <strong>80/100</strong></li>
-                </ul>
-            </div>
-            
-            <button type="button" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 1.2rem;" onclick="iniciarProva()">
-                <i class="fas fa-play"></i> Iniciar Prova Agora
-            </button>
-        </div>
+    <main class="container">
+        <a href="opcoes-unidade.html" class="top-link">
+            <i class="fas fa-chevron-left"></i>
+            Voltar para Opções da Unidade
+        </a>
 
-        <div class="fase-card" id="area-prova" style="display: none; padding: 0; height: 100%; max-height: 800px; flex-direction: column;">
-            <div class="prova-header">
-                <h3 style="margin: 0;"><i class="fas fa-pen-alt"></i> Avaliação em Andamento</h3>
-                <div class="timer-box" id="timer-display"><i class="fas fa-clock"></i> 60:00</div>
-            </div>
-
-            <div class="prova-content">
-                <h4 style="color: var(--primary-blue); border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px;">Parte 1: Objetivas</h4>
-                
-                <div id="quiz-container">
+        <section class="hero">
+            <div class="hero-content">
+                <div>
+                    <div class="eyebrow">
+                        <i class="fas fa-pen-alt"></i>
+                        Prova final • Unidade 1
                     </div>
 
-                <h4 style="color: var(--primary-blue); border-bottom: 2px solid #eee; padding-bottom: 10px; margin: 40px 0 20px 0;">Parte 2: Prática (C)</h4>
-                <div class="quiz-item" style="background: transparent; border: none; padding: 0;">
-                    <p style="margin-bottom: 15px;"><strong>Missão (50pts):</strong> Escreva a lógica da função <code>calculaArea</code> em C. Ela recebe a <code>base</code> e a <code>altura</code> de um retângulo e deve retornar a sua área.</p>
-                    
-                    <div class="ide-container">
-                        <div class="ide-header"><span><i class="fas fa-file-code"></i> area.c</span></div>
-                        <textarea id="editor-prova"></textarea>
+                    <h1>Avaliação com proteção e questões <span>variáveis</span></h1>
+
+                    <p>
+                        A prova mistura questões objetivas e um desafio prático em C. A cada tentativa,
+                        as perguntas são sorteadas em nova ordem. Evite trocar de aba: a prova permite no máximo
+                        3 advertências.
+                    </p>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <small>Nota mínima</small>
+                        <strong><i class="fas fa-star"></i> 80/100</strong>
+                    </div>
+                    <div class="stat-card">
+                        <small>Advertências</small>
+                        <strong><i class="fas fa-triangle-exclamation"></i> 3 no máximo</strong>
+                    </div>
+                    <div class="stat-card">
+                        <small>Perfil</small>
+                        <strong><i class="fas fa-database"></i> Banco sincronizado</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="screen active" id="intro-prova">
+            <div class="card intro-card">
+                <div class="card-content">
+                    <div class="eyebrow">
+                        <i class="fas fa-circle-info"></i>
+                        Antes de começar
+                    </div>
+
+                    <h2 style="font-size: clamp(1.8rem, 4vw, 2.6rem); margin-bottom: 10px;">
+                        Leia as regras da avaliação
+                    </h2>
+
+                    <p style="color: var(--text-muted); line-height: 1.7; max-width: 840px;">
+                        Ao iniciar, o cronômetro começa e a proteção contra troca de aba fica ativa.
+                        Se você sair da aba ou minimizar a janela, receberá uma advertência. Ao ultrapassar
+                        3 advertências, a tentativa é encerrada e você volta para a tela anterior para tentar novamente.
+                    </p>
+
+                    <div class="rules-grid">
+                        <div class="rule-item">
+                            <i class="fas fa-list-check"></i>
+                            <div>
+                                <strong>5 questões objetivas</strong>
+                                <span>Valem até 50 pontos no total.</span>
+                            </div>
+                        </div>
+
+                        <div class="rule-item">
+                            <i class="fas fa-code"></i>
+                            <div>
+                                <strong>1 desafio prático em C</strong>
+                                <span>Vale até 50 pontos e exige retorno correto da função.</span>
+                            </div>
+                        </div>
+
+                        <div class="rule-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <strong>Tempo limite</strong>
+                                <span>60 minutos para concluir a tentativa.</span>
+                            </div>
+                        </div>
+
+                        <div class="rule-item">
+                            <i class="fas fa-random"></i>
+                            <div>
+                                <strong>Perguntas variáveis</strong>
+                                <span>A cada nova tentativa, a prova sorteia outras perguntas do banco.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary" style="width:100%; font-size:1.05rem;" onclick="iniciarProva()">
+                        <i class="fas fa-play"></i>
+                        Iniciar Prova Agora
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="screen" id="area-prova">
+            <div class="exam-layout">
+                <div class="exam-main">
+                    <div class="exam-head">
+                        <div>
+                            <div class="eyebrow" style="margin-bottom: 10px;">
+                                <i class="fas fa-shield-alt"></i>
+                                Tentativa em andamento
+                            </div>
+                            <h2>Avaliação Final da Unidade 1</h2>
+                        </div>
+
+                        <div class="timer-box" id="timer-display">
+                            <i class="fas fa-clock"></i>
+                            60:00
+                        </div>
+                    </div>
+
+                    <h3 style="margin-bottom: 14px;">
+                        <i class="fas fa-circle-question" style="color: var(--accent-teal);"></i>
+                        Parte 1: Questões objetivas
+                    </h3>
+
+                    <div class="quiz-container" id="quiz-container"></div>
+
+                    <div class="pratica-box">
+                        <h3 style="margin-bottom: 14px;">
+                            <i class="fas fa-code" style="color: var(--accent-teal);"></i>
+                            Parte 2: Desafio prático em C
+                        </h3>
+
+                        <div class="mission-card" id="mission-text">
+                            Carregando missão prática...
+                        </div>
+
+                        <div class="ide-container">
+                            <div class="ide-header">
+                                <span><i class="fas fa-file-code"></i> avaliacao_unidade1.c</span>
+                                <span style="font-family:'Fira Code', monospace; color:#50fa7b;"><i class="fas fa-circle"></i> C</span>
+                            </div>
+                            <textarea id="editor-prova"></textarea>
+                        </div>
+
+                        <button type="button" class="btn btn-green" style="width:100%; margin-top:18px;" onclick="finalizarProva(false)">
+                            <i class="fas fa-check-double"></i>
+                            Entregar Avaliação
+                        </button>
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-teal" onclick="finalizarProva(false)" style="width: 100%; margin-top: 30px; justify-content: center; font-size: 1.1rem;">
-                    <i class="fas fa-check-double"></i> Entregar Avaliação
+                <aside class="exam-side">
+                    <div class="warning-panel">
+                        <strong>
+                            <i class="fas fa-triangle-exclamation"></i>
+                            Advertências
+                        </strong>
+                        <p style="color:var(--text-muted); font-size:.86rem; line-height:1.55;">
+                            Não saia desta aba durante a prova. Limite: 3 advertências.
+                        </p>
+
+                        <div class="warning-bars">
+                            <div class="warning-bar" id="warn-1"></div>
+                            <div class="warning-bar" id="warn-2"></div>
+                            <div class="warning-bar" id="warn-3"></div>
+                        </div>
+
+                        <p style="margin-top:10px; color:var(--text-muted); font-size:.86rem;">
+                            Atual: <strong id="warning-count">0</strong>/3
+                        </p>
+                    </div>
+
+                    <div class="progress-panel">
+                        <div class="progress-head">
+                            <span>Questões respondidas</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card" style="margin-top:14px;">
+                        <small>Prática</small>
+                        <strong><i class="fas fa-terminal"></i> Editor ativo</strong>
+                    </div>
+
+                    <div class="stat-card" style="margin-top:14px;">
+                        <small>Resultado</small>
+                        <strong><i class="fas fa-database"></i> Salva no banco se aprovado</strong>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="screen" id="resultado-prova">
+            <div class="card result-card">
+                <div class="card-content">
+                    <div class="result-icon" id="resultado-icone">
+                        <i class="fas fa-spinner"></i>
+                    </div>
+
+                    <h2 id="resultado-titulo">Calculando resultado...</h2>
+
+                    <div class="nota-destaque" id="nota-final">0/100</div>
+
+                    <div class="nota-grid">
+                        <div class="nota-mini">
+                            <small>Objetivas</small>
+                            <strong><span id="nota-obj">0</span>/50</strong>
+                        </div>
+
+                        <div class="nota-mini">
+                            <small>Prática</small>
+                            <strong><span id="nota-prat">0</span>/50</strong>
+                        </div>
+
+                        <div class="nota-mini">
+                            <small>Advertências</small>
+                            <strong><span id="nota-warn">0</span>/3</strong>
+                        </div>
+                    </div>
+
+                    <p id="resultado-mensagem" style="color:var(--text-muted); line-height:1.7; margin-bottom:24px;"></p>
+
+                    <button type="button" class="btn btn-primary" onclick="location.href='opcoes-unidade.html'" style="width:100%;">
+                        <i class="fas fa-home"></i>
+                        Voltar para a Unidade
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="floating-actions">
+        <div style="position:relative;">
+            <div class="menu-acessibilidade" id="menu-acess">
+                <button class="btn btn-outline" onclick="toggleAltoContraste()">
+                    <i class="fas fa-adjust"></i>
+                    Alto Contraste
+                </button>
+                <button class="btn btn-outline" onclick="mudarFonte(2)">
+                    <i class="fas fa-font"></i>
+                    Aumentar Texto
+                </button>
+                <button class="btn btn-outline" onclick="mudarFonte(-2)">
+                    <i class="fas fa-text-height"></i>
+                    Diminuir Texto
                 </button>
             </div>
-        </div>
 
-        <div class="fase-card" id="resultado-prova" style="display: none; text-align: center; flex-direction: column;">
-            <div id="resultado-icone" style="font-size: 5rem; margin-bottom: 20px;"></div>
-            <h2 id="resultado-titulo">Calculando...</h2>
-            
-            <div class="resultado-box">
-                <p>Sua pontuação final:</p>
-                <div class="nota-destaque" id="nota-final">0/100</div>
-                <div style="display: flex; justify-content: space-around; margin-top: 15px; font-size: 0.9rem; color: var(--text-muted);">
-                    <span>Objetivas: <strong id="nota-obj">0</strong>/50</span>
-                    <span>Prática: <strong id="nota-prat">0</strong>/50</span>
-                </div>
-            </div>
-
-            <p id="resultado-mensagem" style="margin-bottom: 30px; font-weight: 600;"></p>
-
-            <button type="button" class="btn btn-primary" onclick="location.href='opcoes-unidade.html'" style="width: 100%; justify-content: center;">
-                <i class="fas fa-home"></i> Voltar para a Unidade
+            <button class="btn-floating" onclick="toggleMenuAcessibilidade()" title="Acessibilidade">
+                <i class="fas fa-universal-access"></i>
             </button>
         </div>
+    </div>
 
-    </main>
+    <div class="modal-overlay" id="warning-modal">
+        <div class="modal-card">
+            <i class="fas fa-triangle-exclamation"></i>
+            <h2>Advertência registrada</h2>
+            <p id="warning-modal-text" style="color:var(--text-muted); line-height:1.7; margin:14px 0 22px;">
+                Você saiu da aba durante a prova.
+            </p>
+            <button class="btn btn-primary" onclick="fecharWarningModal()" style="width:100%;">
+                Entendi, continuar prova
+            </button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <i class="fas fa-circle-info"></i>
+        <span id="toast-text">Mensagem</span>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
 
     <script>
-        // --------------------------------------------------------
-        // 1. DADOS E ESTADO DA PROVA
-        // --------------------------------------------------------
+        const API_URL = 'https://algoritmolab.onrender.com/api';
+
         let usuario = null;
         let editorCodeMirror = null;
-        let tempoRestante = 60 * 60; // 60 minutos em segundos
+        let tempoRestante = 60 * 60;
         let intervaloTimer = null;
         let respostasObjetivas = {};
+        let provaEmAndamento = false;
+        let provaFinalizada = false;
+        let advertencias = 0;
+        let questoesSelecionadas = [];
+        let desafioSelecionado = null;
 
-        const questoes = [
-            { id: 1, pergunta: "Qual função é usada para entrada de dados (ler do teclado) na linguagem C?", opcoes: { a: "printf()", b: "scanf()", c: "input()" }, correta: "b" },
-            { id: 2, pergunta: "Como definimos uma variável para armazenar números decimais (reais) em C?", opcoes: { a: "float", b: "int", c: "char" }, correta: "a" },
-            { id: 3, pergunta: "Qual é o operador lógico correspondente ao 'E' (AND) matemático em C?", opcoes: { a: "||", b: "&&", c: "==" }, correta: "b" },
-            { id: 4, pergunta: "Como se inicia um comentário de múltiplas linhas no código C?", opcoes: { a: "||", b: "&&", c: "==" }, correta: "b" },
-            { id: 5, pergunta: "O que o símbolo ';' representa na linguagem C?", opcoes: { a: "O fim de um comentário", b: "O encerramento de uma instrução", c: "O início de um bloco de código" }, correta: "b" }
+        const bancoQuestoes = [
+            {
+                pergunta: "Qual função é usada para entrada de dados, ou seja, leitura pelo teclado, na linguagem C?",
+                opcoes: { a: "printf()", b: "scanf()", c: "input()", d: "readline()" },
+                correta: "b"
+            },
+            {
+                pergunta: "Qual tipo em C é adequado para armazenar números inteiros?",
+                opcoes: { a: "float", b: "char", c: "int", d: "string" },
+                correta: "c"
+            },
+            {
+                pergunta: "Em um algoritmo, o que representa a etapa de processamento?",
+                opcoes: { a: "O resultado exibido ao usuário", b: "A entrada de dados pelo teclado", c: "As operações feitas com os dados para gerar uma saída", d: "O nome do arquivo do programa" },
+                correta: "c"
+            },
+            {
+                pergunta: "Qual comando em C é usado para mostrar informações na tela?",
+                opcoes: { a: "scanf()", b: "printf()", c: "show()", d: "output()" },
+                correta: "b"
+            },
+            {
+                pergunta: "Qual símbolo normalmente encerra uma instrução em C?",
+                opcoes: { a: ":", b: ".", c: ";", d: "," },
+                correta: "c"
+            },
+            {
+                pergunta: "O que é uma variável em programação?",
+                opcoes: { a: "Um espaço para armazenar valores durante a execução", b: "Um erro do compilador", c: "Um comentário obrigatório", d: "Um tipo de laço de repetição" },
+                correta: "a"
+            },
+            {
+                pergunta: "Qual operador é usado para multiplicação em C?",
+                opcoes: { a: "x", b: "*", c: "#", d: "%" },
+                correta: "b"
+            },
+            {
+                pergunta: "Qual opção representa corretamente uma atribuição em C?",
+                opcoes: { a: "idade == 12;", b: "idade <- 12;", c: "idade = 12;", d: "idade := 12;" },
+                correta: "c"
+            },
+            {
+                pergunta: "Qual estrutura básica é o ponto inicial de execução de muitos programas em C?",
+                opcoes: { a: "int main()", b: "start()", c: "begin()", d: "programa()" },
+                correta: "a"
+            },
+            {
+                pergunta: "Em C, qual tipo pode representar números com casas decimais?",
+                opcoes: { a: "int", b: "float", c: "char", d: "booltexto" },
+                correta: "b"
+            },
+            {
+                pergunta: "Qual alternativa representa melhor uma saída de um algoritmo?",
+                opcoes: { a: "Os dados que entram no sistema", b: "O resultado produzido após o processamento", c: "A senha do usuário", d: "O nome da variável" },
+                correta: "b"
+            },
+            {
+                pergunta: "Para calcular a área de um retângulo, qual operação principal é necessária?",
+                opcoes: { a: "base + altura", b: "base - altura", c: "base * altura", d: "base / altura" },
+                correta: "c"
+            }
         ];
 
-        // --------------------------------------------------------
-        // 2. INICIALIZAÇÃO
-        // --------------------------------------------------------
-        document.addEventListener('DOMContentLoaded', () => {
-            // Simulação de carregamento de perfil
-            usuario = JSON.parse(localStorage.getItem('usuarioLogado')) || { nome: "Estudante", streak: 7 };
-            document.getElementById('user-name').innerText = usuario.nome;
-            document.getElementById('user-streak').innerText = `${usuario.streak} Dias`;
-            document.getElementById('user-avatar').innerText = usuario.nome.charAt(0).toUpperCase();
+        const bancoDesafios = [
+            {
+                titulo: "Área do retângulo",
+                descricao: "Complete a função calculaArea. Ela recebe base e altura e deve retornar base * altura.",
+                funcao: "calculaArea",
+                esperado: "base*altura",
+                codigo: `float calculaArea(float base, float altura) {\n    // Escreva seu código aqui\n    \n}`
+            },
+            {
+                titulo: "Dobro de um número",
+                descricao: "Complete a função dobro. Ela recebe um número e deve retornar numero * 2.",
+                funcao: "dobro",
+                esperado: "numero*2",
+                codigo: `int dobro(int numero) {\n    // Escreva seu código aqui\n    \n}`
+            },
+            {
+                titulo: "Soma de dois valores",
+                descricao: "Complete a função soma. Ela recebe a e b e deve retornar a + b.",
+                funcao: "soma",
+                esperado: "a+b",
+                codigo: `int soma(int a, int b) {\n    // Escreva seu código aqui\n    \n}`
+            },
+            {
+                titulo: "Média simples",
+                descricao: "Complete a função media. Ela recebe n1 e n2 e deve retornar (n1 + n2) / 2.",
+                funcao: "media",
+                esperado: "(n1+n2)/2",
+                codigo: `float media(float n1, float n2) {\n    // Escreva seu código aqui\n    \n}`
+            }
+        ];
 
-            // Inicializar CodeMirror
+        document.addEventListener('DOMContentLoaded', () => {
+            restaurarAcessibilidade();
+            carregarPerfil();
+            prepararEditor();
+        });
+
+        async function carregarPerfil() {
+            if (localStorage.getItem('userLogado') !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                usuario = JSON.parse(localStorage.getItem('userData'));
+            } catch (e) {
+                usuario = null;
+            }
+
+            if (!usuario || !usuario.email) {
+                usuario = {
+                    nome: localStorage.getItem('userName') || 'Estudante',
+                    email: '',
+                    streak: 0
+                };
+            }
+
+            renderizarPerfil();
+
+            if (usuario.email) {
+                try {
+                    const response = await fetch(`${API_URL}/get-user?email=${encodeURIComponent(usuario.email)}`);
+
+                    if (response.ok) {
+                        const dados = await response.json();
+
+                        usuario = {
+                            ...usuario,
+                            nome: dados.nome || usuario.nome,
+                            email: dados.email || usuario.email,
+                            streak: dados.streak || 0,
+                            xp: dados.xp || usuario.xp || 0,
+                            foto: dados.foto || usuario.foto || ''
+                        };
+
+                        localStorage.setItem('userData', JSON.stringify(usuario));
+                        renderizarPerfil();
+                    }
+                } catch (error) {
+                    console.error('Não foi possível atualizar perfil pelo banco:', error);
+                }
+            }
+        }
+
+        function renderizarPerfil() {
+            document.getElementById('user-name').innerText = usuario.nome || 'Estudante';
+            document.getElementById('user-streak').innerText = `${usuario.streak || 0} Dias`;
+
+            const avatar = document.getElementById('user-avatar');
+
+            if (usuario.foto) {
+                avatar.innerHTML = `<img src="${usuario.foto}" alt="Foto do usuário">`;
+            } else {
+                avatar.innerText = (usuario.nome || 'E').charAt(0).toUpperCase();
+            }
+        }
+
+        function prepararEditor() {
             editorCodeMirror = CodeMirror.fromTextArea(document.getElementById('editor-prova'), {
                 mode: "text/x-csrc",
                 theme: "dracula",
                 lineNumbers: true,
-                autoCloseBrackets: true,
-                tabSize: 4
+                tabSize: 4,
+                indentUnit: 4,
+                matchBrackets: true,
+                lineWrapping: false,
+                viewportMargin: Infinity
             });
-            editorCodeMirror.setValue("float calculaArea(float base, float altura) {\n    // Escreva seu código aqui\n    \n}");
-        });
-
-        // --------------------------------------------------------
-        // 3. LOGICA DO TIMER
-        // --------------------------------------------------------
-        function iniciarTimer() {
-            intervaloTimer = setInterval(() => {
-                tempoRestante--;
-                
-                const mins = Math.floor(tempoRestante / 60);
-                const segs = tempoRestante % 60;
-                const display = document.getElementById('timer-display');
-                display.innerHTML = `<i class="fas fa-clock"></i> ${mins.toString().padStart(2, '0')}:${segs.toString().padStart(2, '0')}`;
-
-                if (tempoRestante <= 300) display.parentElement.classList.add('warning');
-                if (tempoRestante <= 60) display.parentElement.classList.add('danger');
-                
-                if (tempoRestante <= 0) {
-                    clearInterval(intervaloTimer);
-                    finalizarProva(true);
-                }
-            }, 1000);
         }
 
-        // --------------------------------------------------------
-        // 4. CONTROLE DA PROVA
-        // --------------------------------------------------------
         function iniciarProva() {
-            document.getElementById('intro-prova').style.display = 'none';
-            document.getElementById('area-prova').style.display = 'flex';
+            respostasObjetivas = {};
+            advertencias = 0;
+            provaEmAndamento = true;
+            provaFinalizada = false;
+            tempoRestante = 60 * 60;
+
+            questoesSelecionadas = sortearItens(bancoQuestoes, 5);
+            desafioSelecionado = sortearItens(bancoDesafios, 1)[0];
+
+            mostrarTela('area-prova');
             carregarQuestoes();
+            carregarDesafio();
+            atualizarAdvertencias();
+            atualizarProgresso();
             iniciarTimer();
+
+            setTimeout(() => {
+                editorCodeMirror.refresh();
+                editorCodeMirror.focus();
+            }, 200);
+
+            mostrarToast('Prova iniciada. Evite sair desta aba.', 'info');
         }
 
         function carregarQuestoes() {
             const container = document.getElementById('quiz-container');
-            container.innerHTML = questoes.map((q, index) => `
-                <div class="quiz-item">
-                    <p><strong>${index + 1}. ${q.pergunta}</strong></p>
-                    <div class="options-grid">
-                        ${Object.entries(q.opcoes).map(([key, val]) => `
-                            <button type="button" class="option-btn" data-questao="${q.id}" data-opcao="${key}" onclick="selecionarOpcao(this)">
-                                <strong>${key.toUpperCase()})</strong> ${val}
-                            </button>
-                        `).join('')}
+
+            container.innerHTML = questoesSelecionadas.map((q, index) => {
+                const opcoes = Object.entries(q.opcoes).sort(() => Math.random() - 0.5);
+
+                return `
+                    <div class="quiz-item">
+                        <div class="quiz-number">
+                            <i class="fas fa-circle-question"></i>
+                            Questão ${index + 1} • 10 pontos
+                        </div>
+
+                        <p><strong>${q.pergunta}</strong></p>
+
+                        <div class="options-grid">
+                            ${opcoes.map(([key, val]) => `
+                                <button type="button" class="option-btn" data-questao="${index}" data-opcao="${key}" onclick="selecionarOpcao(this)">
+                                    <strong>${key.toUpperCase()})</strong> ${val}
+                                </button>
+                            `).join('')}
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
+        }
+
+        function carregarDesafio() {
+            document.getElementById('mission-text').innerHTML = `
+                <strong><i class="fas fa-bullseye"></i> Missão prática: ${desafioSelecionado.titulo}</strong><br>
+                ${desafioSelecionado.descricao}<br><br>
+                Use <span class="code-chip">return</span> e finalize a instrução com <span class="code-chip">;</span>.
+            `;
+
+            editorCodeMirror.setValue(desafioSelecionado.codigo);
         }
 
         function selecionarOpcao(btn) {
             const questaoId = btn.getAttribute('data-questao');
             const opcao = btn.getAttribute('data-opcao');
-            
-            // Remove seleção anterior da mesma questão
+
             document.querySelectorAll(`.option-btn[data-questao="${questaoId}"]`).forEach(b => b.classList.remove('selected'));
-            
-            // Adiciona nova seleção
+
             btn.classList.add('selected');
             respostasObjetivas[questaoId] = opcao;
+            atualizarProgresso();
         }
 
-        function finalizarProva(porTempo = false) {
-            if (!porTempo && !confirm("Deseja realmente entregar a prova agora?")) return;
-            
+        function iniciarTimer() {
             clearInterval(intervaloTimer);
-            
-            // 1. Calcular Objetivas
-            let notaObj = 0;
-            questoes.forEach(q => {
-                if (respostasObjetivas[q.id] === q.correta) notaObj += 10;
-            });
 
-            // 2. Validar Prática (Lógica Simples de String/Regex)
-            let notaPrat = 0;
-            const codigo = editorCodeMirror.getValue().toLowerCase();
-            
-            // Verifica se retornou a multiplicação correta
-            if (codigo.includes("return") && (codigo.includes("base * altura") || codigo.includes("altura * base"))) {
-                notaPrat = 50;
-            } else if (codigo.includes("base * altura") || codigo.includes("altura * base")) {
-                notaPrat = 25; // Escreveu a lógica mas esqueceu o return
+            intervaloTimer = setInterval(() => {
+                tempoRestante--;
+
+                const mins = Math.floor(tempoRestante / 60);
+                const segs = tempoRestante % 60;
+                const display = document.getElementById('timer-display');
+
+                display.innerHTML = `<i class="fas fa-clock"></i> ${String(mins).padStart(2, '0')}:${String(segs).padStart(2, '0')}`;
+
+                display.classList.toggle('warning', tempoRestante <= 300 && tempoRestante > 60);
+                display.classList.toggle('danger', tempoRestante <= 60);
+
+                if (tempoRestante <= 0) {
+                    finalizarProva(true, 'tempo');
+                }
+            }, 1000);
+        }
+
+        function atualizarProgresso() {
+            const respondidas = Object.keys(respostasObjetivas).length;
+            const praticaTemCodigo = editorCodeMirror && editorCodeMirror.getValue().replace(/\s/g, '').length > desafioSelecionado?.codigo?.replace(/\s/g, '').length;
+            const total = respondidas + (praticaTemCodigo ? 1 : 0);
+            const percent = Math.round((total / 6) * 100);
+
+            document.getElementById('progress-fill').style.width = `${percent}%`;
+            document.getElementById('progress-percent').innerText = `${percent}%`;
+        }
+
+        function finalizarProva(porSistema = false, motivo = 'entrega') {
+            if (provaFinalizada) return;
+
+            if (!porSistema) {
+                if (!confirm("Deseja realmente entregar a avaliação agora?")) return;
             }
 
+            provaFinalizada = true;
+            provaEmAndamento = false;
+            clearInterval(intervaloTimer);
+
+            let notaObj = 0;
+
+            questoesSelecionadas.forEach((q, index) => {
+                if (respostasObjetivas[index] === q.correta) {
+                    notaObj += 10;
+                }
+            });
+
+            const notaPrat = validarPratica();
             const notaFinal = notaObj + notaPrat;
-            exibirResultado(notaFinal, notaObj, notaPrat);
+
+            exibirResultado(notaFinal, notaObj, notaPrat, motivo);
         }
 
-        function exibirResultado(total, obj, prat) {
-            document.getElementById('area-prova').style.display = 'none';
-            document.getElementById('resultado-prova').style.display = 'flex';
-            
+        function validarPratica() {
+            if (!editorCodeMirror || !desafioSelecionado) return 0;
+
+            const codigo = normalizarCodigo(editorCodeMirror.getValue());
+
+            const temReturn = codigo.includes('return');
+            const esperado = desafioSelecionado.esperado;
+            const esperadoInvertido = inverterExpressao(esperado);
+
+            if (temReturn && (codigo.includes(`return${esperado};`) || codigo.includes(`return(${esperado});`) || codigo.includes(`return${esperadoInvertido};`) || codigo.includes(`return(${esperadoInvertido});`))) {
+                return 50;
+            }
+
+            if (codigo.includes(esperado) || codigo.includes(esperadoInvertido)) {
+                return 25;
+            }
+
+            return 0;
+        }
+
+        function normalizarCodigo(codigo) {
+            return String(codigo)
+                .toLowerCase()
+                .replace(/\/\*[\s\S]*?\*\//g, '')
+                .replace(/\/\/.*$/gm, '')
+                .replace(/\s+/g, '');
+        }
+
+        function inverterExpressao(expr) {
+            const partes = expr.split('+');
+            if (partes.length === 2) return `${partes[1]}+${partes[0]}`;
+
+            const mult = expr.split('*');
+            if (mult.length === 2) return `${mult[1]}*${mult[0]}`;
+
+            return expr;
+        }
+
+        async function exibirResultado(total, obj, prat, motivo) {
+            mostrarTela('resultado-prova');
+
+            document.getElementById('nota-final').innerText = `${total}/100`;
+            document.getElementById('nota-obj').innerText = obj;
+            document.getElementById('nota-prat').innerText = prat;
+            document.getElementById('nota-warn').innerText = advertencias;
+
             const notaElement = document.getElementById('nota-final');
             const titulo = document.getElementById('resultado-titulo');
             const icone = document.getElementById('resultado-icone');
             const mensagem = document.getElementById('resultado-mensagem');
 
-            notaElement.innerText = `${total}/100`;
-            document.getElementById('nota-obj').innerText = obj;
-            document.getElementById('nota-prat').innerText = prat;
+            if (motivo === 'advertencia') {
+                titulo.innerText = "Tentativa encerrada por advertências";
+                icone.innerHTML = '<i class="fas fa-triangle-exclamation"></i>';
+                notaElement.className = "nota-destaque reprovado";
+                mensagem.innerText = "Você ultrapassou o limite de advertências por sair da aba. Volte para a unidade e tente novamente. As perguntas serão sorteadas de outra forma.";
+                return;
+            }
 
             if (total >= 80) {
-                titulo.innerText = "Parabéns! Você foi Aprovado!";
-                icone.innerHTML = "🏆";
-                icone.style.color = "#48bb78";
+                titulo.innerText = "Parabéns! Você foi aprovado!";
+                icone.innerHTML = '<i class="fas fa-trophy"></i>';
                 notaElement.className = "nota-destaque aprovado";
-                mensagem.innerText = "Excelente desempenho! Você demonstrou domínio dos conceitos básicos.";
-                
-                // --- ADICIONE ESTA LINHA ---
-                // Ela salva no navegador que a Unidade 2 agora está livre
-                localStorage.setItem('unidade2Liberada', 'true'); 
-                // ---------------------------
+                mensagem.innerText = "Excelente desempenho! Seu progresso será salvo no banco e a Unidade 2 continuará liberada.";
 
+                localStorage.setItem('u1_avaliacao_concluida', 'true');
+                localStorage.setItem('unidade1_concluida', 'true');
+                localStorage.setItem('unidade2Liberada', 'true');
+
+                await salvarAprovacaoBanco();
             } else {
-                titulo.innerText = "Não foi desta vez...";
-                // restante do código mantido...
-                icone.innerHTML = "📚";
-                icone.style.color = "#e53e3e";
+                titulo.innerText = motivo === 'tempo' ? "Tempo encerrado" : "Não foi desta vez";
+                icone.innerHTML = '<i class="fas fa-book-open"></i>';
                 notaElement.className = "nota-destaque reprovado";
-                mensagem.innerText = "Estude mais um pouco os conceitos de C e tente novamente.";
+                mensagem.innerText = "Revise o material e tente novamente. Na próxima tentativa, as perguntas serão sorteadas novamente.";
             }
+        }
+
+        async function salvarAprovacaoBanco() {
+            if (!usuario || !usuario.email) {
+                mostrarToast('Aprovação salva localmente, mas não encontrei e-mail para salvar no banco.', 'error');
+                return;
+            }
+
+            try {
+                await fetch(`${API_URL}/modulos/salvar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: usuario.email,
+                        modulo: 'unidade1',
+                        concluido: true
+                    })
+                });
+
+                await fetch(`${API_URL}/modulos/salvar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: usuario.email,
+                        modulo: 'mod1',
+                        concluido: true
+                    })
+                });
+
+                mostrarToast('Aprovação salva no banco com sucesso.', 'success');
+            } catch (error) {
+                console.error('Erro ao salvar aprovação no banco:', error);
+                mostrarToast('Não consegui salvar no banco. Verifique o servidor.', 'error');
+            }
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden && provaEmAndamento && !provaFinalizada) {
+                registrarAdvertencia();
+            }
+        });
+
+        window.addEventListener('blur', () => {
+            if (provaEmAndamento && !provaFinalizada) {
+                setTimeout(() => {
+                    if (document.hidden) return;
+                    registrarAdvertencia();
+                }, 250);
+            }
+        });
+
+        function registrarAdvertencia() {
+            if (!provaEmAndamento || provaFinalizada) return;
+
+            advertencias++;
+            atualizarAdvertencias();
+
+            if (advertencias >= 3) {
+                finalizarPorAdvertencia();
+                return;
+            }
+
+            document.getElementById('warning-modal-text').innerText =
+                `Você saiu da aba durante a prova. Advertência ${advertencias}/3. Se atingir 3 advertências, a tentativa será encerrada.`;
+
+            document.getElementById('warning-modal').classList.add('show');
+            mostrarToast(`Advertência ${advertencias}/3 registrada.`, 'error');
+        }
+
+        function finalizarPorAdvertencia() {
+            provaFinalizada = true;
+            provaEmAndamento = false;
+            clearInterval(intervaloTimer);
+            localStorage.removeItem('u1_avaliacao_concluida');
+
+            mostrarToast('Limite de advertências atingido. Voltando para a unidade.', 'error');
+
+            setTimeout(() => {
+                window.location.href = 'opcoes-unidade.html?tentativa=advertencia&t=' + Date.now();
+            }, 1800);
+        }
+
+        function fecharWarningModal() {
+            document.getElementById('warning-modal').classList.remove('show');
+        }
+
+        function atualizarAdvertencias() {
+            document.getElementById('warning-count').innerText = advertencias;
+
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById(`warn-${i}`).classList.toggle('active', i <= advertencias);
+            }
+        }
+
+        function confirmarSaida() {
+            if (provaEmAndamento && !provaFinalizada) {
+                if (!confirm("A prova está em andamento. Sair agora encerra a tentativa. Deseja sair?")) return;
+                provaEmAndamento = false;
+                provaFinalizada = true;
+                clearInterval(intervaloTimer);
+            }
+
+            window.location.href = 'opcoes-unidade.html';
+        }
+
+        function mostrarTela(id) {
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function sortearItens(lista, quantidade) {
+            return [...lista].sort(() => Math.random() - 0.5).slice(0, quantidade);
+        }
+
+        function toggleMenuAcessibilidade() {
+            const menu = document.getElementById('menu-acess');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function toggleAltoContraste() {
+            document.body.classList.toggle('high-contrast');
+            localStorage.setItem('acess_alto', document.body.classList.contains('high-contrast'));
+        }
+
+        function mudarFonte(delta) {
+            let scale = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--font-scale')) || 100;
+            scale += delta;
+            if (scale < 80) scale = 80;
+            if (scale > 140) scale = 140;
+            document.documentElement.style.setProperty('--font-scale', `${scale}%`);
+            localStorage.setItem('acess_escala_fonte', scale);
+        }
+
+        function restaurarAcessibilidade() {
+            if (localStorage.getItem('acess_alto') === 'true') {
+                document.body.classList.add('high-contrast');
+            }
+
+            const savedScale = localStorage.getItem('acess_escala_fonte');
+            if (savedScale) {
+                document.documentElement.style.setProperty('--font-scale', `${savedScale}%`);
+            }
+        }
+
+        function mostrarToast(mensagem, tipo = 'info') {
+            const toast = document.getElementById('toast');
+            const text = document.getElementById('toast-text');
+            const icon = toast.querySelector('i');
+
+            text.innerText = mensagem;
+            toast.className = `toast ${tipo}`;
+
+            if (tipo === 'success') icon.className = 'fas fa-circle-check';
+            else if (tipo === 'error') icon.className = 'fas fa-triangle-exclamation';
+            else icon.className = 'fas fa-circle-info';
+
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3800);
         }
     </script>
 </body>
