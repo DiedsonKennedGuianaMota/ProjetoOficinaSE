@@ -7,8 +7,9 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <title>Cynix - Home</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -30,9 +31,69 @@
             --danger: #e53e3e;
             --fire-color: #ffb84d;
             --font-scale: 100%;
+            --theme-name-color: rgba(232, 242, 255, 0.72);
         }
 
-        .high-contrast {
+        body.theme-halloween {
+            --primary-blue: #220d2b;
+            --accent-teal: #ff7a1a;
+            --accent-purple: #8f3cff;
+            --bg-color: #130816;
+            --card-bg: rgba(255, 126, 41, 0.10);
+            --card-bg-strong: rgba(255, 126, 41, 0.17);
+            --panel-bg: rgba(35, 16, 38, 0.96);
+            --text-main: #fff6ec;
+            --text-muted: #d9bda6;
+            --text-light: #fff6ec;
+            --border-color: rgba(255, 126, 41, 0.28);
+            --border-soft: rgba(255, 126, 41, 0.18);
+            --success: #a8ff60;
+            --danger: #ff4848;
+            --fire-color: #ffba3a;
+            --theme-name-color: #ffd1a9;
+        }
+
+        body.theme-space {
+            --primary-blue: #020617;
+            --accent-teal: #38bdf8;
+            --accent-purple: #d946ef;
+            --bg-color: #020617;
+            --card-bg: rgba(99, 102, 241, 0.10);
+            --card-bg-strong: rgba(14, 165, 233, 0.14);
+            --panel-bg: rgba(8, 17, 42, 0.96);
+            --text-main: #eef6ff;
+            --text-muted: #a7b6d6;
+            --text-light: #eef6ff;
+            --border-color: rgba(129, 140, 248, 0.24);
+            --border-soft: rgba(129, 140, 248, 0.16);
+            --success: #2dd4bf;
+            --danger: #fb7185;
+            --fire-color: #facc15;
+            --theme-name-color: #c8d4ff;
+        }
+
+        body.theme-pink {
+            --primary-blue: #7a174b;
+            --accent-teal: #ff5ea8;
+            --accent-purple: #c084fc;
+            --bg-color: #fff1f8;
+            --card-bg: rgba(255, 255, 255, 0.58);
+            --card-bg-strong: rgba(255, 255, 255, 0.78);
+            --panel-bg: rgba(255, 255, 255, 0.92);
+            --text-main: #4a1734;
+            --text-muted: #9b5278;
+            --text-light: #4a1734;
+            --white: #4a1734;
+            --border-color: rgba(244, 114, 182, 0.30);
+            --border-soft: rgba(244, 114, 182, 0.20);
+            --success: #35c78a;
+            --danger: #f43f5e;
+            --fire-color: #ff8a00;
+            --shadow: 0 24px 70px rgba(244, 114, 182, 0.20);
+            --theme-name-color: #9b5278;
+        }
+
+        body.high-contrast {
             --primary-blue: #000000;
             --accent-teal: #ffff00;
             --accent-purple: #00ebff;
@@ -43,9 +104,35 @@
             --text-main: #ffffff;
             --text-muted: #d9e1ef;
             --text-light: #ffffff;
+            --white: #ffffff;
             --border-color: rgba(255, 255, 255, 0.35);
             --border-soft: rgba(255, 255, 255, 0.22);
             --fire-color: #ff3f34;
+        }
+
+        body.color-deuteranopia { filter: saturate(.92) hue-rotate(-10deg); }
+        body.color-protanopia { filter: saturate(.85) sepia(.12); }
+        body.color-tritanopia { filter: saturate(.95) hue-rotate(22deg); }
+
+        body.reduce-motion *,
+        body.reduce-motion *::before,
+        body.reduce-motion *::after {
+            animation: none !important;
+            transition: none !important;
+            scroll-behavior: auto !important;
+        }
+
+        body.reading-mode {
+            letter-spacing: .01em;
+        }
+
+        body.focus-mode :focus {
+            outline: 4px solid var(--fire-color) !important;
+            outline-offset: 4px !important;
+        }
+
+        body.font-readable * {
+            font-family: 'Atkinson Hyperlegible', 'Poppins', sans-serif !important;
         }
 
         * {
@@ -64,9 +151,9 @@
             min-height: 100vh;
             color: var(--text-light);
             background:
-                radial-gradient(circle at 18% 16%, rgba(0, 184, 217, 0.28), transparent 28%),
-                radial-gradient(circle at 88% 9%, rgba(124, 58, 237, 0.25), transparent 30%),
-                linear-gradient(135deg, #06111f 0%, #0b1f36 52%, #071322 100%);
+                radial-gradient(circle at 18% 16%, color-mix(in srgb, var(--accent-teal) 28%, transparent), transparent 28%),
+                radial-gradient(circle at 88% 9%, color-mix(in srgb, var(--accent-purple) 25%, transparent), transparent 30%),
+                linear-gradient(135deg, var(--bg-color) 0%, color-mix(in srgb, var(--bg-color) 72%, var(--accent-teal)) 52%, var(--bg-color) 100%);
             overflow-x: hidden;
             padding-bottom: 70px;
             position: relative;
@@ -141,7 +228,7 @@
             padding: 14px 16px;
             border: 1px solid var(--border-color);
             border-radius: 24px;
-            background: rgba(255, 255, 255, 0.10);
+            background: var(--card-bg);
             backdrop-filter: blur(18px);
             display: flex;
             justify-content: space-between;
@@ -168,7 +255,7 @@
             font-weight: 800;
             font-size: 1.15rem;
             background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
-            box-shadow: 0 14px 32px rgba(0, 184, 217, 0.24);
+            box-shadow: 0 14px 32px color-mix(in srgb, var(--accent-teal) 24%, transparent);
             position: relative;
             overflow: hidden;
             flex: 0 0 auto;
@@ -192,7 +279,7 @@
 
         .brand-text span {
             display: block;
-            color: rgba(232, 242, 255, 0.72);
+            color: var(--theme-name-color);
             font-size: 0.77rem;
             margin-top: 3px;
         }
@@ -258,6 +345,21 @@
 
         .streak-badge i { animation: burn 1.5s infinite ease-in-out; }
 
+        .xp-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 6px;
+            background: color-mix(in srgb, var(--accent-teal) 16%, transparent);
+            color: var(--accent-teal);
+            padding: 6px 10px;
+            border: 1px solid color-mix(in srgb, var(--accent-teal) 22%, transparent);
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
         .btn {
             border: none;
             border-radius: 14px;
@@ -274,7 +376,7 @@
 
         .btn-auto { width: auto; }
         .btn-primary { background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple)); color: white; }
-        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px rgba(0,184,217,0.18); }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 26px color-mix(in srgb, var(--accent-teal) 18%, transparent); }
         .btn-logout { background: rgba(255,255,255,0.09); color: var(--text-light); border: 1px solid var(--border-color); }
         .btn-logout:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
         .btn-danger:hover { background: rgba(229,62,62,0.15); border-color: rgba(229,62,62,0.30); color: #ffd8d8; }
@@ -293,7 +395,7 @@
             padding: 22px;
             border-radius: 26px;
             border: 1px solid var(--border-color);
-            background: rgba(255, 255, 255, 0.09);
+            background: var(--card-bg);
             backdrop-filter: blur(16px);
             box-shadow: var(--shadow);
             margin-bottom: 20px;
@@ -309,7 +411,7 @@
         }
 
         .welcome-strip p {
-            color: rgba(232, 242, 255, 0.74);
+            color: var(--theme-name-color);
             max-width: 760px;
             line-height: 1.65;
             font-size: 0.95rem;
@@ -346,8 +448,8 @@
             position: absolute;
             inset: 0;
             background:
-                radial-gradient(circle at 4% 0%, rgba(0,184,217,0.13), transparent 35%),
-                radial-gradient(circle at 98% 15%, rgba(124,58,237,0.11), transparent 38%);
+                radial-gradient(circle at 4% 0%, color-mix(in srgb, var(--accent-teal) 13%, transparent), transparent 35%),
+                radial-gradient(circle at 98% 15%, color-mix(in srgb, var(--accent-purple) 11%, transparent), transparent 38%);
             pointer-events: none;
         }
 
@@ -360,7 +462,7 @@
             gap: 16px;
             margin-bottom: 22px;
             padding-bottom: 18px;
-            border-bottom: 1px solid rgba(16,37,66,0.10);
+            border-bottom: 1px solid color-mix(in srgb, var(--text-main) 10%, transparent);
         }
 
         .panel-title-badge {
@@ -369,9 +471,9 @@
             gap: 8px;
             padding: 8px 12px;
             border-radius: 999px;
-            color: #08748b;
-            background: rgba(0,184,217,0.10);
-            border: 1px solid rgba(0,184,217,0.16);
+            color: var(--accent-teal);
+            background: color-mix(in srgb, var(--accent-teal) 10%, transparent);
+            border: 1px solid color-mix(in srgb, var(--accent-teal) 16%, transparent);
             font-size: 0.78rem;
             font-weight: 800;
             margin-bottom: 10px;
@@ -379,13 +481,10 @@
 
         .panel-header h2 {
             font-size: clamp(1.55rem, 3vw, 2.4rem);
-            color: #13223a;
+            color: var(--text-main);
             letter-spacing: -0.055em;
             line-height: 1.05;
         }
-
-        .high-contrast .panel-header h2 { color: #ffffff; }
-        .high-contrast .panel-title-badge { color: #ffff00; background: rgba(255,255,0,0.12); border-color: rgba(255,255,0,0.30); }
 
         .panel-header p {
             margin-top: 8px;
@@ -396,11 +495,11 @@
         }
 
         .panel-side {
-            min-width: 210px;
+            min-width: 245px;
             border-radius: 20px;
             padding: 14px;
-            border: 1px solid rgba(16,37,66,0.10);
-            background: rgba(16,37,66,0.04);
+            border: 1px solid color-mix(in srgb, var(--text-main) 10%, transparent);
+            background: color-mix(in srgb, var(--text-main) 4%, transparent);
         }
 
         .panel-side strong {
@@ -416,15 +515,22 @@
             height: 9px;
             border-radius: 999px;
             overflow: hidden;
-            background: rgba(16,37,66,0.10);
+            background: color-mix(in srgb, var(--text-main) 10%, transparent);
             margin-top: 10px;
         }
 
         .progress-fill {
-            width: 32%;
+            width: 0%;
             height: 100%;
             border-radius: 999px;
             background: linear-gradient(90deg, var(--accent-teal), var(--accent-purple));
+        }
+
+        .progress-hint {
+            margin-top: 8px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            line-height: 1.45;
         }
 
         .dashboard-grid {
@@ -441,8 +547,8 @@
             border-radius: 24px;
             text-decoration: none;
             color: var(--text-main);
-            background: #ffffff;
-            border: 1px solid rgba(16,37,66,0.10);
+            background: color-mix(in srgb, var(--panel-bg) 88%, white);
+            border: 1px solid color-mix(in srgb, var(--text-main) 10%, transparent);
             box-shadow: 0 12px 34px rgba(16,37,66,0.08);
             display: flex;
             flex-direction: column;
@@ -460,18 +566,18 @@
             border-radius: 999px;
             right: -45px;
             bottom: -50px;
-            background: rgba(0,184,217,0.10);
+            background: color-mix(in srgb, var(--accent-teal) 10%, transparent);
             transition: transform 0.35s ease, background 0.35s ease;
         }
 
-        .control-card:nth-child(2)::after { background: rgba(124,58,237,0.10); }
+        .control-card:nth-child(2)::after { background: color-mix(in srgb, var(--accent-purple) 10%, transparent); }
         .control-card:nth-child(3)::after { background: rgba(56,161,105,0.12); }
         .control-card:nth-child(4)::after { background: rgba(255,184,77,0.12); }
 
         .control-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 20px 44px rgba(16,37,66,0.15);
-            border-color: rgba(0,184,217,0.28);
+            border-color: color-mix(in srgb, var(--accent-teal) 28%, transparent);
         }
 
         .control-card:hover::after { transform: scale(1.45); }
@@ -484,20 +590,20 @@
             place-items: center;
             color: #ffffff;
             background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
-            box-shadow: 0 12px 28px rgba(0,184,217,0.18);
+            box-shadow: 0 12px 28px color-mix(in srgb, var(--accent-teal) 18%, transparent);
             font-size: 1.35rem;
             margin-bottom: 16px;
             position: relative;
             z-index: 1;
         }
 
-        .control-card:nth-child(2) .control-icon { background: linear-gradient(135deg, #7c3aed, #4f46e5); }
-        .control-card:nth-child(3) .control-icon { background: linear-gradient(135deg, #38a169, #00b8d9); }
-        .control-card:nth-child(4) .control-icon { background: linear-gradient(135deg, #ffb84d, #7c3aed); }
+        .control-card:nth-child(2) .control-icon { background: linear-gradient(135deg, var(--accent-purple), #4f46e5); }
+        .control-card:nth-child(3) .control-icon { background: linear-gradient(135deg, var(--success), var(--accent-teal)); }
+        .control-card:nth-child(4) .control-icon { background: linear-gradient(135deg, var(--fire-color), var(--accent-purple)); }
 
         .control-card h3 {
             font-size: 1.2rem;
-            color: #122039;
+            color: var(--text-main);
             margin-bottom: 7px;
             position: relative;
             z-index: 1;
@@ -513,7 +619,7 @@
 
         .control-action {
             margin-top: 16px;
-            color: #08748b;
+            color: var(--accent-teal);
             font-weight: 800;
             font-size: 0.86rem;
             display: inline-flex;
@@ -524,17 +630,6 @@
         }
 
         .control-card:hover .control-action i { transform: translateX(4px); }
-
-        .high-contrast .control-card {
-            background: #161616;
-            color: #ffffff;
-            border-color: rgba(255,255,255,0.24);
-        }
-
-        .high-contrast .control-card h3,
-        .high-contrast .panel-side strong { color: #ffffff; }
-
-        .high-contrast .control-action { color: #ffff00; }
 
         .support-row {
             display: grid;
@@ -548,8 +643,8 @@
         .support-item {
             border-radius: 18px;
             padding: 14px;
-            background: rgba(16,37,66,0.04);
-            border: 1px solid rgba(16,37,66,0.08);
+            background: color-mix(in srgb, var(--text-main) 4%, transparent);
+            border: 1px solid color-mix(in srgb, var(--text-main) 8%, transparent);
             display: flex;
             align-items: center;
             gap: 10px;
@@ -558,12 +653,9 @@
         }
 
         .support-item i {
-            color: #08748b;
+            color: var(--accent-teal);
             font-size: 1rem;
         }
-
-        .high-contrast .support-item { background: rgba(255,255,255,0.07); border-color: rgba(255,255,255,0.18); }
-        .high-contrast .support-item i { color: #ffff00; }
 
         .floating-actions {
             position: fixed;
@@ -596,7 +688,7 @@
             border: 1px solid var(--border-color);
             border-radius: 20px;
             padding: 14px;
-            background: rgba(11, 31, 54, 0.96);
+            background: color-mix(in srgb, var(--bg-color) 96%, transparent);
             backdrop-filter: blur(18px);
             box-shadow: var(--shadow);
             display: none;
@@ -667,7 +759,7 @@
             border-radius: 20px;
             cursor: pointer;
             border: 3px solid transparent;
-            background: rgba(16,37,66,0.06);
+            background: color-mix(in srgb, var(--text-main) 6%, transparent);
             transition: transform 0.25s ease, border-color 0.25s ease;
         }
 
@@ -680,15 +772,43 @@
         .input-text {
             width: 100%;
             padding: 12px 13px;
-            border: 1px solid rgba(16,37,66,0.15);
+            border: 1px solid color-mix(in srgb, var(--text-main) 15%, transparent);
             border-radius: 14px;
             margin-bottom: 14px;
-            background: rgba(16,37,66,0.04);
+            background: color-mix(in srgb, var(--text-main) 4%, transparent);
             color: var(--text-main);
             outline: none;
         }
 
-        .input-text:focus { border-color: rgba(0,184,217,0.45); box-shadow: 0 0 0 4px rgba(0,184,217,0.09); }
+        .input-text:focus { border-color: color-mix(in srgb, var(--accent-teal) 45%, transparent); box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent-teal) 9%, transparent); }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 26px;
+            transform: translateX(-50%) translateY(22px);
+            opacity: 0;
+            pointer-events: none;
+            max-width: calc(100% - 34px);
+            padding: 14px 16px;
+            border-radius: 16px;
+            background: color-mix(in srgb, var(--bg-color) 96%, transparent);
+            color: var(--text-light);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            z-index: 120;
+            font-weight: 800;
+            transition: .3s ease;
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.ok { border-color: rgba(56,161,105,.45); }
+        .toast.err { border-color: rgba(229,62,62,.45); }
 
         @media (max-width: 980px) {
             .dashboard-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -719,15 +839,20 @@
                 <div class="brand-mark">CX</div>
                 <div class="brand-text">
                     <strong>Cynix</strong>
-                    <span>Aprendizagem de lógica em C</span>
+                    <span id="theme-label">Aprendizagem de lógica em C</span>
                 </div>
             </div>
 
             <div class="nav-profile">
                 <div class="profile-info">
                     <strong id="user-name">Carregando...</strong>
-                    <div class="streak-badge">
-                        <i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span>
+                    <div>
+                        <span class="streak-badge">
+                            <i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span>
+                        </span>
+                        <span class="xp-badge">
+                            <i class="fas fa-bolt"></i> <span id="user-xp">0 XP</span>
+                        </span>
                     </div>
                 </div>
                 <div class="avatar" id="user-avatar" onclick="abrirModalAvatar()" title="Alterar Avatar"></div>
@@ -740,8 +865,8 @@
         <main class="container">
             <section class="welcome-strip">
                 <div>
-                    <h1>Bem-vindo ao Cynix</h1>
-                    <p>Uma plataforma simples para estudar lógica de programação, acompanhar seu avanço e praticar com mais organização.</p>
+                    <h1 id="welcome-title">Bem-vindo ao Cynix</h1>
+                    <p id="welcome-text">Uma plataforma simples para estudar lógica de programação, acompanhar seu avanço e praticar com mais organização.</p>
                 </div>
                 <div class="mission-chip" id="missao-status">
                     <i class="fas fa-bullseye"></i> Continue sua trilha de hoje
@@ -757,8 +882,9 @@
                     </div>
 
                     <div class="panel-side">
-                        <strong><span>Progresso geral</span><span>32%</span></strong>
-                        <div class="progress-bar"><div class="progress-fill"></div></div>
+                        <strong><span>Progresso geral</span><span id="progress-geral-label">0%</span></strong>
+                        <div class="progress-bar"><div class="progress-fill" id="progress-geral-bar"></div></div>
+                        <div class="progress-hint" id="progress-geral-hint">Sincronizando com a tela de progresso...</div>
                     </div>
                 </div>
 
@@ -830,9 +956,9 @@
 
             <p>Escolha um avatar pronto:</p>
             <div class="avatar-presets">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Felix" class="preset-img" onclick="selecionarPreset(this.src)">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Ane" class="preset-img" onclick="selecionarPreset(this.src)">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Jack" class="preset-img" onclick="selecionarPreset(this.src)">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Felix" class="preset-img" onclick="selecionarPreset(this.src)" alt="Avatar robô Felix">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Ane" class="preset-img" onclick="selecionarPreset(this.src)" alt="Avatar robô Ane">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=Jack" class="preset-img" onclick="selecionarPreset(this.src)" alt="Avatar robô Jack">
             </div>
 
             <p>Ou cole a URL de uma imagem:</p>
@@ -848,12 +974,23 @@
         </div>
     </div>
 
+    <div class="toast" id="toast"></div>
+
     <script>
-        // URL da sua API no Render
-        const API_URL = 'https://algoritmolab.onrender.com/api';
+        const API_URL = `${window.location.origin}/api`;
 
         let usuarioLogadoData = null;
         let fotoSelecionadaTemp = "";
+        let progressoBanco = {};
+        let currentScale = 100;
+
+        function dataLocalISO() {
+            const hoje = new Date();
+            const ano = hoje.getFullYear();
+            const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+            const dia = String(hoje.getDate()).padStart(2, '0');
+            return `${ano}-${mes}-${dia}`;
+        }
 
         function limparSessaoLocal() {
             localStorage.removeItem('userData');
@@ -865,11 +1002,17 @@
             sessionStorage.setItem('logout_cynix_ok', 'true');
         }
 
-        // TRAVA DE SEGURANÇA: Garante autenticação
+        function salvarUserData() {
+            localStorage.setItem('userData', JSON.stringify(usuarioLogadoData));
+            if (usuarioLogadoData && usuarioLogadoData.nome) {
+                localStorage.setItem('userName', usuarioLogadoData.nome);
+            }
+        }
+
         function checkAuth() {
             const userString = localStorage.getItem('userData');
 
-            if (!userString) {
+            if (!userString || localStorage.getItem('userLogado') !== 'true') {
                 window.location.replace('index.html?logout=true&t=' + Date.now());
                 return;
             }
@@ -882,39 +1025,329 @@
                 return;
             }
 
-            if (!usuarioLogadoData || !usuarioLogadoData.nome) {
+            if (!usuarioLogadoData || !usuarioLogadoData.nome || !usuarioLogadoData.email) {
                 limparSessaoLocal();
                 window.location.replace('index.html?logout=true&t=' + Date.now());
                 return;
             }
 
+            aplicarPreferenciasGlobais();
+            contabilizarLoginDiario();
             renderizarDadosUsuario();
+            buscarProgressoBanco();
         }
 
-        // Atualiza a tela com as informações
+        function contabilizarLoginDiario() {
+            const hoje = dataLocalISO();
+            const chaveLogin = `cynix_login_diario_${usuarioLogadoData.email}`;
+            const ultimoLocal = localStorage.getItem(chaveLogin);
+            const ultimoUserData = usuarioLogadoData.ultimoLoginOfensiva || usuarioLogadoData.ultimaOfensivaLogin || usuarioLogadoData.lastDailyLogin;
+
+            if (ultimoLocal === hoje || ultimoUserData === hoje) {
+                localStorage.setItem(chaveLogin, hoje);
+                return;
+            }
+
+            const streakAtual = Number(usuarioLogadoData.streak || usuarioLogadoData.ofensiva || 0);
+            const xpAtual = Number(usuarioLogadoData.xp || 0);
+
+            usuarioLogadoData.streak = streakAtual + 1;
+            usuarioLogadoData.ofensiva = usuarioLogadoData.streak;
+            usuarioLogadoData.xp = xpAtual + 50;
+            usuarioLogadoData.ultimoLoginOfensiva = hoje;
+            usuarioLogadoData.ultimaOfensivaLogin = hoje;
+            usuarioLogadoData.lastDailyLogin = hoje;
+
+            localStorage.setItem(chaveLogin, hoje);
+            salvarUserData();
+            salvarLoginDiarioServidor();
+
+            mostrarToast('<i class="fas fa-fire"></i> Ofensiva diária garantida! +50 XP');
+        }
+
+        async function salvarLoginDiarioServidor() {
+            const payload = {
+                email: usuarioLogadoData.email,
+                streak: usuarioLogadoData.streak,
+                ofensiva: usuarioLogadoData.streak,
+                xp: usuarioLogadoData.xp,
+                xpGanho: 50,
+                xp_ganho: 50,
+                ultimoLoginOfensiva: usuarioLogadoData.ultimoLoginOfensiva,
+                ultima_ofensiva_login: usuarioLogadoData.ultimoLoginOfensiva
+            };
+
+            const rotas = [
+                `${API_URL}/usuarios/daily-login`,
+                `${API_URL}/usuarios/login-diario`,
+                `${API_URL}/usuarios/progresso-diario`,
+                `${API_URL}/usuarios/configuracoes`,
+                `${API_URL}/usuarios/atualizar`
+            ];
+
+            for (const rota of rotas) {
+                try {
+                    const response = await fetch(rota, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        const texto = await response.text();
+                        let data = {};
+
+                        try {
+                            data = texto ? JSON.parse(texto) : {};
+                        } catch (e) {
+                            data = {};
+                        }
+
+                        if (data.usuario) {
+                            usuarioLogadoData = { ...usuarioLogadoData, ...data.usuario };
+                            salvarUserData();
+                            renderizarDadosUsuario();
+                        }
+
+                        return true;
+                    }
+                } catch (error) {
+                    console.warn('Falha ao salvar login diário em:', rota, error);
+                }
+            }
+
+            return false;
+        }
+
         function renderizarDadosUsuario() {
             document.getElementById('user-name').innerText = usuarioLogadoData.nome;
             document.getElementById('user-streak').innerText = `${usuarioLogadoData.streak || 0} Dias`;
+            document.getElementById('user-xp').innerText = `${Number(usuarioLogadoData.xp || 0)} XP`;
+            document.getElementById('welcome-title').innerText = `Bem-vindo, ${primeiroNome(usuarioLogadoData.nome)}!`;
 
-            // Renderiza foto ou letra padrão
             const avatarDiv = document.getElementById('user-avatar');
+
             if (usuarioLogadoData.foto && usuarioLogadoData.foto !== "") {
-                avatarDiv.innerHTML = `<img src="${usuarioLogadoData.foto}" style="width:100%; height:100%; object-fit:cover;">`;
+                avatarDiv.innerHTML = `<img src="${usuarioLogadoData.foto}" style="width:100%; height:100%; object-fit:cover;" alt="Foto do usuário">`;
             } else {
                 avatarDiv.innerText = usuarioLogadoData.nome.charAt(0).toUpperCase();
             }
 
-            // Checa status da missão diária
-            const hoje = new Date().toDateString();
+            const hoje = dataLocalISO();
             const missaoStatus = document.getElementById('missao-status');
-            if (missaoStatus && usuarioLogadoData.lastCompletion === hoje) {
-                missaoStatus.innerHTML = '<i class="fas fa-check-circle" style="color:#86efac"></i> Ofensiva de hoje garantida';
+
+            if (missaoStatus && usuarioLogadoData.ultimoLoginOfensiva === hoje) {
+                missaoStatus.innerHTML = '<i class="fas fa-check-circle" style="color:#86efac"></i> Ofensiva de hoje garantida +50 XP';
+            } else {
+                missaoStatus.innerHTML = '<i class="fas fa-bullseye"></i> Continue sua trilha de hoje';
             }
         }
 
-        /* MODAL DE FOTO DE PERFIL */
-        function abrirModalAvatar() { document.getElementById('avatar-modal').style.display = 'flex'; }
-        function fecharModalAvatar() { document.getElementById('avatar-modal').style.display = 'none'; }
+        function primeiroNome(nome) {
+            return String(nome || 'estudante').trim().split(/\s+/)[0];
+        }
+
+        async function buscarProgressoBanco() {
+            try {
+                const response = await fetch(`${API_URL}/modulos/progresso?email=${encodeURIComponent(usuarioLogadoData.email)}`);
+
+                if (!response.ok) {
+                    throw new Error('Não foi possível buscar progresso.');
+                }
+
+                const data = await response.json();
+                progressoBanco = data.progresso || {};
+                usuarioLogadoData.progresso = progressoBanco;
+                salvarUserData();
+                atualizarProgressoHome();
+
+            } catch (error) {
+                console.warn('Falha ao buscar progresso. Usando dados locais.', error);
+                progressoBanco = usuarioLogadoData.progresso || {};
+                atualizarProgressoHome();
+            }
+        }
+
+        function normalizarBoolean(valor) {
+            return valor === true || valor === 1 || valor === '1' || valor === 'true';
+        }
+
+        function valorLocal(keys) {
+            return keys.some(k => localStorage.getItem(k) === 'true');
+        }
+
+        function valorBanco(keys) {
+            return keys.some(k => normalizarBoolean(progressoBanco[k]));
+        }
+
+        function diagnosticaOK() {
+            const nota = progressoBanco.nota_diagnostica;
+            const temNota = nota !== undefined && nota !== null && nota !== '';
+            return temNota || normalizarBoolean(progressoBanco.avaliacao_concluida) || normalizarBoolean(progressoBanco.avaliacao);
+        }
+
+        function etapaFeita(unidade, etapa) {
+            const cfg = {
+                1: {
+                    materialLocal: ['u1_material_concluido', 'material_unidade1_concluido', 'material_concluido'],
+                    videoLocal: ['video_concluido', 'video_u1_concluido'],
+                    apostilaLocal: ['apostila_concluida', 'apostila_u1_concluida'],
+                    exerciciosLocal: ['u1_exercicios_concluidos', 'exercicios_concluidos'],
+                    avaliacaoLocal: ['u1_avaliacao_concluida', 'unidade1_concluida'],
+                    materialBanco: ['u1_material_concluido', 'material_unidade1_concluido', 'material_concluido'],
+                    exerciciosBanco: ['u1_exercicios_concluidos', 'exercicios_concluidos'],
+                    avaliacaoBanco: ['unidade1_concluida', 'unidade1']
+                },
+                2: {
+                    materialLocal: ['u2_material_concluido'],
+                    videoLocal: ['video_u2_concluido'],
+                    apostilaLocal: ['apostila_u2_concluida'],
+                    exerciciosLocal: ['u2_exercicios_concluidos'],
+                    avaliacaoLocal: ['u2_avaliacao_concluida', 'unidade2_concluida'],
+                    materialBanco: ['u2_material_concluido'],
+                    exerciciosBanco: ['u2_exercicios_concluidos'],
+                    avaliacaoBanco: ['unidade2_concluida', 'unidade2']
+                },
+                3: {
+                    materialLocal: ['u3_material_concluido'],
+                    videoLocal: ['video_u3_concluido'],
+                    apostilaLocal: ['apostila_u3_concluida'],
+                    exerciciosLocal: ['u3_exercicios_concluidos'],
+                    avaliacaoLocal: ['u3_avaliacao_concluida', 'unidade3_concluida'],
+                    materialBanco: ['u3_material_concluido'],
+                    exerciciosBanco: ['u3_exercicios_concluidos'],
+                    avaliacaoBanco: ['unidade3_concluida', 'unidade3']
+                }
+            }[unidade];
+
+            if (!cfg) return false;
+
+            if (etapa === 'material') {
+                return valorLocal(cfg.materialLocal) ||
+                       valorBanco(cfg.materialBanco) ||
+                       (valorLocal(cfg.videoLocal) && valorLocal(cfg.apostilaLocal));
+            }
+
+            if (etapa === 'exercicios') {
+                return valorLocal(cfg.exerciciosLocal) || valorBanco(cfg.exerciciosBanco);
+            }
+
+            if (etapa === 'avaliacao') {
+                return valorLocal(cfg.avaliacaoLocal) || valorBanco(cfg.avaliacaoBanco);
+            }
+
+            return false;
+        }
+
+        function atualizarProgressoHome() {
+            const etapas = [
+                diagnosticaOK(),
+                etapaFeita(1, 'material'),
+                etapaFeita(1, 'exercicios'),
+                etapaFeita(1, 'avaliacao'),
+                etapaFeita(2, 'material'),
+                etapaFeita(2, 'exercicios'),
+                etapaFeita(2, 'avaliacao'),
+                etapaFeita(3, 'material'),
+                etapaFeita(3, 'exercicios'),
+                etapaFeita(3, 'avaliacao')
+            ];
+
+            const feitas = etapas.filter(Boolean).length;
+            const total = etapas.length;
+            const percent = Math.round((feitas / total) * 100);
+
+            document.getElementById('progress-geral-label').innerText = `${percent}%`;
+            document.getElementById('progress-geral-bar').style.width = `${percent}%`;
+            document.getElementById('progress-geral-hint').innerText = `${feitas}/${total} etapas concluídas, igual à tela de progresso.`;
+
+            const missaoStatus = document.getElementById('missao-status');
+            const etapaAtual = descobrirEtapaAtual();
+
+            if (missaoStatus && usuarioLogadoData.ultimoLoginOfensiva === dataLocalISO()) {
+                missaoStatus.innerHTML = `<i class="fas fa-check-circle" style="color:#86efac"></i> Ofensiva garantida • ${etapaAtual}`;
+            }
+        }
+
+        function descobrirEtapaAtual() {
+            if (!diagnosticaOK()) return 'faça a avaliação diagnóstica';
+
+            for (let u = 1; u <= 3; u++) {
+                if (!etapaFeita(u, 'material')) return `continue o material da Unidade ${u}`;
+                if (!etapaFeita(u, 'exercicios')) return `faça os exercícios da Unidade ${u}`;
+                if (!etapaFeita(u, 'avaliacao')) return `faça a avaliação da Unidade ${u}`;
+            }
+
+            return 'trilha de unidades concluída';
+        }
+
+        function aplicarPreferenciasGlobais() {
+            const cfg = usuarioLogadoData.configuracoes || JSON.parse(localStorage.getItem('cynix_configuracoes') || '{}');
+            const tema = localStorage.getItem('cynix_tema') || cfg.tema || 'default';
+
+            document.body.classList.remove(
+                'theme-halloween',
+                'theme-space',
+                'theme-pink',
+                'high-contrast',
+                'reduce-motion',
+                'reading-mode',
+                'focus-mode',
+                'font-readable',
+                'color-deuteranopia',
+                'color-protanopia',
+                'color-tritanopia'
+            );
+
+            if (tema === 'halloween') document.body.classList.add('theme-halloween');
+            if (tema === 'space') document.body.classList.add('theme-space');
+            if (tema === 'pink') document.body.classList.add('theme-pink');
+
+            const altoContraste = localStorage.getItem('acess_alto') === 'true' ||
+                                  localStorage.getItem('acess_alto_contraste') === 'true' ||
+                                  cfg.altoContraste === true;
+
+            const reduzirMovimento = localStorage.getItem('acess_reduzir_movimento') === 'true' || cfg.reduzirMovimento === true;
+            const modoLeitura = localStorage.getItem('acess_modo_leitura') === 'true' || cfg.modoLeitura === true;
+            const fonteLegivel = localStorage.getItem('acess_fonte_legivel') === 'true' || cfg.fonteLegivel === true;
+            const foco = localStorage.getItem('acess_foco') === 'true' || cfg.focoTeclado === true;
+            const filtroCor = localStorage.getItem('acess_filtro_cor') || cfg.filtroCor || 'none';
+
+            if (altoContraste) document.body.classList.add('high-contrast');
+            if (reduzirMovimento) document.body.classList.add('reduce-motion');
+            if (modoLeitura) document.body.classList.add('reading-mode');
+            if (fonteLegivel) document.body.classList.add('font-readable');
+            if (foco) document.body.classList.add('focus-mode');
+            if (filtroCor !== 'none') document.body.classList.add(`color-${filtroCor}`);
+
+            currentScale = parseInt(localStorage.getItem('acess_escala_fonte') || cfg.escalaFonte || 100);
+            document.documentElement.style.setProperty('--font-scale', `${currentScale}%`);
+
+            if (localStorage.getItem('acess_dislexia') === 'true') document.body.classList.add('dyslexic-font');
+            if (localStorage.getItem('acess_espacamento') === 'true') document.body.classList.add('spacing-increased');
+            if (localStorage.getItem('acess_links') === 'true') document.body.classList.add('highlight-links');
+
+            document.getElementById('theme-label').innerText = `Tema: ${nomeTema(tema)}`;
+        }
+
+        function nomeTema(tema) {
+            const nomes = {
+                default: 'Cynix Padrão',
+                halloween: 'Halloween',
+                space: 'Espaço Sideral',
+                pink: 'Rosa Doce'
+            };
+
+            return nomes[tema] || 'Cynix Padrão';
+        }
+
+        function abrirModalAvatar() {
+            document.getElementById('avatar-modal').style.display = 'flex';
+        }
+
+        function fecharModalAvatar() {
+            document.getElementById('avatar-modal').style.display = 'none';
+        }
 
         function selecionarPreset(src) {
             fotoSelecionadaTemp = src;
@@ -925,29 +1358,36 @@
 
         function carregarArquivoLocal(event) {
             const file = event.target.files[0];
+
+            if (!file) return;
+
+            if (file.size > 2 * 1024 * 1024) {
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> A imagem precisa ter até 2MB.', 'err');
+                return;
+            }
+
             const reader = new FileReader();
             reader.onloadend = function() {
-                fotoSelecionadaTemp = reader.result; // Converte imagem para String base64
-            }
-            if (file) reader.readAsDataURL(file);
+                fotoSelecionadaTemp = reader.result;
+            };
+
+            reader.readAsDataURL(file);
         }
 
-        // ENVIAR FOTO PARA O BACKEND
         async function salvarNovaFoto() {
             const urlInput = document.getElementById('avatar-url').value.trim();
             const novaFoto = urlInput || fotoSelecionadaTemp;
 
             if (!novaFoto) {
-                alert("Por favor, selecione ou informe uma imagem.");
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> Selecione ou informe uma imagem.', 'err');
                 return;
             }
 
             const btnSalvar = document.getElementById('btn-salvar-foto');
-            btnSalvar.innerText = "Salvando...";
+            btnSalvar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Salvando...';
             btnSalvar.disabled = true;
 
             try {
-                // Envia a foto e o email do usuário para a sua API no Render
                 const response = await fetch(`${API_URL}/update-photo`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -957,21 +1397,25 @@
                     })
                 });
 
-                if (response.ok) {
-                    // Atualiza a foto localmente
-                    usuarioLogadoData.foto = novaFoto;
-                    localStorage.setItem('userData', JSON.stringify(usuarioLogadoData));
-                    renderizarDadosUsuario();
-                    fecharModalAvatar();
-                } else {
-                    const data = await response.json();
-                    alert("Erro ao salvar: " + data.error);
+                if (!response.ok) {
+                    throw new Error('Servidor não salvou a foto.');
                 }
+
+                usuarioLogadoData.foto = novaFoto;
+                salvarUserData();
+                renderizarDadosUsuario();
+                fecharModalAvatar();
+                mostrarToast('<i class="fas fa-check-circle"></i> Foto atualizada.');
+
             } catch (error) {
-                console.error("Erro:", error);
-                alert("Erro de conexão com o servidor. Tente novamente.");
+                console.warn('Foto salva apenas localmente:', error);
+                usuarioLogadoData.foto = novaFoto;
+                salvarUserData();
+                renderizarDadosUsuario();
+                fecharModalAvatar();
+                mostrarToast('<i class="fas fa-check-circle"></i> Foto salva localmente.');
             } finally {
-                btnSalvar.innerText = "Salvar Foto";
+                btnSalvar.innerHTML = 'Salvar Foto';
                 btnSalvar.disabled = false;
                 document.getElementById('avatar-url').value = "";
                 fotoSelecionadaTemp = "";
@@ -979,20 +1423,18 @@
             }
         }
 
-        /* ==========================================
-           SISTEMA DE ACESSIBILIDADE APRIMORADO
-           ========================================== */
         function toggleMenuAcessibilidade() {
             const menu = document.getElementById('menu-acess');
             menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
         }
 
         function toggleAltoContraste() {
+            const ativo = !document.body.classList.contains('high-contrast');
             document.body.classList.toggle('high-contrast');
-            localStorage.setItem('acess_alto_contraste', document.body.classList.contains('high-contrast'));
+            localStorage.setItem('acess_alto', ativo);
+            localStorage.setItem('acess_alto_contraste', ativo);
         }
 
-        let currentScale = 100;
         function mudarFonte(delta) {
             currentScale += delta;
             if (currentScale < 80) currentScale = 80;
@@ -1016,47 +1458,37 @@
             localStorage.setItem('acess_links', document.body.classList.contains('highlight-links'));
         }
 
-        // =====================================
-        // DESLOGAR
-        // =====================================
         function fazerLogout() {
             const btnLogout = document.getElementById('btn-logout');
+
             if (btnLogout) {
                 btnLogout.disabled = true;
                 btnLogout.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saindo';
             }
 
-            // Apaga os registros de login antes de ir para o index.
             limparSessaoLocal();
             usuarioLogadoData = null;
-
-            // replace evita que o botão voltar retorne para a home logada.
-            // O parâmetro t evita cache e ajuda o index a entender que é logout real.
             window.location.replace('index.html?logout=true&t=' + Date.now());
         }
 
-        // Se a página voltar do cache do navegador após logout, sai novamente.
+        function mostrarToast(msg, tipo = 'ok') {
+            const toast = document.getElementById('toast');
+            toast.className = `toast show ${tipo}`;
+            toast.innerHTML = msg;
+
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 3300);
+        }
+
         window.addEventListener('pageshow', function(event) {
             if (event.persisted && !localStorage.getItem('userData')) {
                 window.location.replace('index.html?logout=true&t=' + Date.now());
             }
         });
 
-        // Executa ao inicializar a página para carregar dados e configurações salvas
         window.onload = function() {
             checkAuth();
-
-            // Restaura configurações de acessibilidade do LocalStorage
-            if (localStorage.getItem('acess_alto_contraste') === 'true') document.body.classList.add('high-contrast');
-            if (localStorage.getItem('acess_dislexia') === 'true') document.body.classList.add('dyslexic-font');
-            if (localStorage.getItem('acess_espacamento') === 'true') document.body.classList.add('spacing-increased');
-            if (localStorage.getItem('acess_links') === 'true') document.body.classList.add('highlight-links');
-
-            const savedScale = localStorage.getItem('acess_escala_fonte');
-            if (savedScale) {
-                currentScale = parseInt(savedScale);
-                document.documentElement.style.setProperty('--font-scale', `${currentScale}%`);
-            }
         };
     </script>
 </body>
