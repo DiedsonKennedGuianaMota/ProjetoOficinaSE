@@ -914,12 +914,34 @@
                 console.error('Erro ao buscar progresso:', error);
                 document.getElementById('sync-text').innerText = 'Erro ao sincronizar. Usando dados do login.';
 
+                const progressoLocal = userData.progresso || {};
+
                 progressoModulos = {
                     nota_diagnostica: userData.nota_diagnostica,
                     avaliacao_concluida: userData.avaliacao_concluida,
-                    mod1_concluido: userData.mod1_concluido,
-                    mod2_concluido: userData.mod2_concluido,
-                    certificado_liberado: userData.certificado_liberado
+
+                    unidade1_concluida:
+                        progressoLocal.unidade1_concluida === true ||
+                        progressoLocal.unidade1 === true ||
+                        localStorage.getItem('unidade1_concluida') === 'true',
+
+                    unidade2_concluida:
+                        progressoLocal.unidade2_concluida === true ||
+                        progressoLocal.unidade2 === true ||
+                        localStorage.getItem('unidade2_concluida') === 'true',
+
+                    unidade3_concluida:
+                        progressoLocal.unidade3_concluida === true ||
+                        progressoLocal.unidade3 === true ||
+                        localStorage.getItem('unidade3_concluida') === 'true',
+
+                    modulo2_concluido:
+                        progressoLocal.modulo2_concluido === true ||
+                        progressoLocal.modulo2 === true,
+
+                    certificado_liberado:
+                        userData.certificado_liberado === true ||
+                        progressoLocal.certificado === true
                 };
                 verificarBloqueios(progressoModulos);
                 mostrarToast('<i class="fas fa-triangle-exclamation"></i> Não consegui buscar o progresso no banco.', 'err');
@@ -947,17 +969,53 @@
         function verificarBloqueios(progresso) {
             limparEstadoVisual();
 
-            const notaDiagnostica = progresso ? progresso.nota_diagnostica : null;
+            progresso = progresso || {};
+
+            const notaDiagnostica = progresso.nota_diagnostica;
             const temNotaSalva = notaDiagnostica !== undefined && notaDiagnostica !== null && notaDiagnostica !== '';
-            const avaliacaoOK = temNotaSalva || normalizarBoolean(progresso.avaliacao_concluida);
-            const mod1OK = normalizarBoolean(progresso.mod1_concluido);
-            const mod2OK = normalizarBoolean(progresso.mod2_concluido);
-            const certificadoOK = normalizarBoolean(progresso.certificado_liberado) || (avaliacaoOK && mod1OK && mod2OK);
+            const avaliacaoOK =
+                temNotaSalva ||
+                normalizarBoolean(progresso.avaliacao_concluida) ||
+                normalizarBoolean(progresso.avaliacao);
+
+            /*
+                IMPORTANTE:
+                mod1_concluido e mod2_concluido NÃO são mais usados para dizer que o curso inteiro acabou.
+                No fluxo atual, eles podem ter sido usados apenas para liberar unidades.
+                Por isso, a conclusão do Módulo 1 depende das três unidades concluídas.
+            */
+            const unidade1OK =
+                normalizarBoolean(progresso.unidade1_concluida) ||
+                normalizarBoolean(progresso.unidade1);
+
+            const unidade2OK =
+                normalizarBoolean(progresso.unidade2_concluida) ||
+                normalizarBoolean(progresso.unidade2);
+
+            const unidade3OK =
+                normalizarBoolean(progresso.unidade3_concluida) ||
+                normalizarBoolean(progresso.unidade3);
+
+            const modulo1Completo = unidade1OK && unidade2OK && unidade3OK;
+
+            /*
+                Use modulo2_concluido/modulo2 para o módulo "Variáveis e Tipos".
+                Não use mod2_concluido aqui, porque no projeto ele foi usado para a Unidade 2.
+            */
+            const modulo2Completo =
+                normalizarBoolean(progresso.modulo2_concluido) ||
+                normalizarBoolean(progresso.modulo2);
+
+            const certificadoOK =
+                normalizarBoolean(progresso.certificado_liberado) &&
+                modulo1Completo &&
+                modulo2Completo;
 
             let etapasConcluidas = 0;
 
             if (avaliacaoOK) {
                 etapasConcluidas++;
+
                 document.getElementById('mod-0').classList.add('completed');
                 document.getElementById('status-0').innerHTML = `
                     <span class="status-pill ok"><i class="fas fa-check-circle"></i> Concluída</span>
@@ -966,35 +1024,54 @@
 
                 const mod1 = document.getElementById('mod-1');
                 mod1.classList.remove('locked');
+                mod1.setAttribute('href', 'unidades.html');
                 document.getElementById('title-1').innerHTML = 'Lógica de Programação';
-                document.getElementById('status-1').innerHTML = '<span class="status-pill next"><i class="fas fa-arrow-right"></i> Continuar</span>';
+
+                if (modulo1Completo) {
+                    document.getElementById('mod-1').classList.add('completed');
+                    document.getElementById('status-1').innerHTML =
+                        '<span class="status-pill ok"><i class="fas fa-check-circle"></i> Concluído</span>';
+                } else {
+                    const unidadesFeitas = [unidade1OK, unidade2OK, unidade3OK].filter(Boolean).length;
+                    document.getElementById('status-1').innerHTML =
+                        `<span class="status-pill next"><i class="fas fa-arrow-right"></i> Continuar</span>
+                         <span class="status-pill grade">${unidadesFeitas}/3 unidades</span>`;
+                }
             }
 
-            if (mod1OK) {
-                etapasConcluidas++;
-                document.getElementById('mod-1').classList.add('completed');
-                document.getElementById('status-1').innerHTML = '<span class="status-pill ok"><i class="fas fa-check-circle"></i> Concluído</span>';
+            if (unidade1OK) etapasConcluidas++;
+            if (unidade2OK) etapasConcluidas++;
+            if (unidade3OK) etapasConcluidas++;
 
+            if (modulo1Completo) {
                 const mod2 = document.getElementById('mod-2');
                 mod2.classList.remove('locked');
                 mod2.setAttribute('href', 'variaveis.html');
                 document.getElementById('title-2').innerHTML = 'Variáveis e Tipos';
-                document.getElementById('status-2').innerHTML = '<span class="status-pill next"><i class="fas fa-arrow-right"></i> Continuar</span>';
+                document.getElementById('status-2').innerHTML =
+                    '<span class="status-pill next"><i class="fas fa-arrow-right"></i> Iniciar</span>';
             }
 
-            if (mod2OK) {
-                etapasConcluidas++;
+            if (modulo2Completo) {
                 document.getElementById('mod-2').classList.add('completed');
-                document.getElementById('status-2').innerHTML = '<span class="status-pill ok"><i class="fas fa-check-circle"></i> Concluído</span>';
+                document.getElementById('status-2').innerHTML =
+                    '<span class="status-pill ok"><i class="fas fa-check-circle"></i> Concluído</span>';
             }
 
             if (certificadoOK) {
                 document.getElementById('mod-cert').classList.remove('locked');
                 document.getElementById('title-cert').innerHTML = 'Certificado Final';
-                document.getElementById('status-cert').innerHTML = '<span class="status-pill next"><i class="fas fa-medal"></i> Emitir</span>';
+                document.getElementById('status-cert').innerHTML =
+                    '<span class="status-pill next"><i class="fas fa-medal"></i> Emitir</span>';
             }
 
-            atualizarBarraProgresso(etapasConcluidas, 3);
+            /*
+                Barra geral:
+                4 etapas principais por enquanto:
+                1 avaliação diagnóstica + 3 unidades do Módulo 1.
+                Assim a tela nunca mostra 100% antes da Unidade 1, 2 e 3 estarem completas.
+            */
+            atualizarBarraProgresso(etapasConcluidas, 4);
         }
 
         function atualizarBarraProgresso(valor, total) {
