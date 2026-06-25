@@ -1020,7 +1020,7 @@
         <div class="fase-card" id="fase2">
             <div class="fase-header">
                 <h3><i class="fas fa-code"></i> Fase 2: Laboratório de programação em C</h3>
-                <span class="phase-badge"><i class="fas fa-laptop-code"></i> Execução local + validação</span>
+                <span class="phase-badge"><i class="fas fa-server"></i> Judge0 + validação</span>
             </div>
 
             <div class="lab-layout">
@@ -1161,6 +1161,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
 
     <script>
+        const API_URL = 'https://algoritmolab.onrender.com/api';
+
         const respostas = { q1: '', q2: '', q3: '', q4: '', q5: '', q6: '' };
         const gabaritoFase1 = { q1: 'b', q2: 'b', q3: 'a', q4: 'b', q5: 'c' };
 
@@ -1392,47 +1394,84 @@ int main() {
         }
 
         async function executarCodigoC(codigo) {
-            return executarSimuladorLocal(codigo);
-        }
-
-        function executarSimuladorLocal(codigo) {
             try {
-                const estrutura = validarEstruturaBasicaExecucao(codigo);
+                const response = await fetch(`${API_URL}/executar-codigo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        codigo,
+                        stdin: ''
+                    })
+                });
 
-                if (!estrutura.ok) {
-                    return {
-                        erro: true,
-                        stdout: '',
-                        saida: `> ERRO NO CÓDIGO\n> ${estrutura.msg}`
+                const texto = await response.text();
+                let data = {};
+
+                try {
+                    data = texto ? JSON.parse(texto) : {};
+                } catch (error) {
+                    data = {
+                        error: 'Resposta inválida do servidor.',
+                        details: texto
                     };
                 }
 
-                const resultado = interpretarProgramaC(codigo);
-
-                if (resultado.erro) {
+                if (!response.ok) {
                     return {
                         erro: true,
                         stdout: '',
-                        saida: `> ERRO NO CÓDIGO\n> ${resultado.msg}`
+                        saida:
+                            `> ERRO AO CHAMAR O SERVIDOR\n` +
+                            `> Status HTTP: ${response.status}\n` +
+                            `> ${data.error || 'Falha ao executar código.'}\n` +
+                            `${data.details ? '> Detalhes: ' + data.details : ''}`
+                    };
+                }
+
+                const stdout = data.stdout || '';
+                const stderr = data.stderr || '';
+                const compileOutput = data.compile_output || '';
+                const message = data.message || '';
+                const status = data.status || 'Status desconhecido';
+
+                if (data.erro) {
+                    return {
+                        erro: true,
+                        stdout,
+                        saida:
+                            `> JUDGE0 RETORNOU: ${status}\n` +
+                            `${compileOutput ? '> COMPILAÇÃO:\n' + compileOutput + '\n' : ''}` +
+                            `${stderr ? '> ERRO:\n' + stderr + '\n' : ''}` +
+                            `${message ? '> MENSAGEM:\n' + message + '\n' : ''}` +
+                            `${stdout ? '> SAÍDA:\n' + stdout : ''}`
                     };
                 }
 
                 return {
                     erro: false,
-                    stdout: resultado.stdout,
-                    saida: `> PROGRAMA EXECUTADO NO TERMINAL LOCAL\n${resultado.stdout || '(sem saída)'}`
+                    stdout,
+                    saida:
+                        `> PROGRAMA EXECUTADO NO JUDGE0\n` +
+                        `> Status: ${status}\n` +
+                        `${data.time ? '> Tempo: ' + data.time + 's\n' : ''}` +
+                        `${data.memory ? '> Memória: ' + data.memory + ' KB\n' : ''}` +
+                        `> SAÍDA:\n${stdout || '(sem saída)'}`
                 };
 
             } catch (error) {
                 return {
                     erro: true,
                     stdout: '',
-                    saida: `> ERRO INESPERADO\n> ${error.message}`
+                    saida:
+                        `> ERRO DE CONEXÃO\n` +
+                        `> Não foi possível chamar ${API_URL}/executar-codigo\n` +
+                        `> Confira se o server.js com a rota Judge0 está no Render.\n` +
+                        `> Detalhes: ${error.message}`
                 };
             }
         }
 
-        function validarEstruturaBasicaExecucao(codigo) {
+        function validarEstruturaDoCodigo(codigo) {
             const texto = codigo.toLowerCase();
 
             if (!texto.includes('#include') || !texto.includes('stdio.h')) {
@@ -1451,102 +1490,15 @@ int main() {
                 return { ok: false, msg: 'Faltou ponto e vírgula em alguma instrução.' };
             }
 
+            if (!texto.includes('a') || !texto.includes('b')) {
+                return { ok: false, msg: 'Use as variáveis a e b no programa.' };
+            }
+
+            if (!texto.includes('+')) {
+                return { ok: false, msg: 'Use o operador + para somar os valores.' };
+            }
+
             return { ok: true, msg: 'Estrutura básica válida.' };
-        }
-
-        function interpretarProgramaC(codigoOriginal) {
-            const codigo = removerComentarios(codigoOriginal);
-            const variaveis = {};
-
-            const declaracaoRegex = /\bint\s+([A-Za-z_]\w*)\s*(?:=\s*([^;]+))?;/g;
-            let declaracao;
-
-            while ((declaracao = declaracaoRegex.exec(codigo)) !== null) {
-                const nome = declaracao[1];
-                const expressao = declaracao[2];
-
-                if (expressao === undefined) {
-                    variaveis[nome] = 0;
-                } else {
-                    variaveis[nome] = avaliarExpressao(expressao, variaveis);
-                }
-            }
-
-            const atribuicaoRegex = /\b([A-Za-z_]\w*)\s*=\s*([^;]+);/g;
-            let atribuicao;
-
-            while ((atribuicao = atribuicaoRegex.exec(codigo)) !== null) {
-                const trechoAntes = codigo.slice(Math.max(0, atribuicao.index - 6), atribuicao.index);
-                const ehDeclaracaoInt = /int\s*$/.test(trechoAntes);
-
-                if (ehDeclaracaoInt) continue;
-
-                const nome = atribuicao[1];
-                const expressao = atribuicao[2];
-
-                variaveis[nome] = avaliarExpressao(expressao, variaveis);
-            }
-
-            const printfRegex = /printf\s*\(\s*"([^"]*)"\s*,\s*([^)]+)\)\s*;/g;
-            let printf;
-            let saida = '';
-
-            while ((printf = printfRegex.exec(codigo)) !== null) {
-                const formato = printf[1];
-                const expressao = printf[2];
-                const valor = avaliarExpressao(expressao, variaveis);
-
-                if (formato.includes('%d')) {
-                    saida += String(valor);
-                    if (formato.includes('\\n')) saida += '\n';
-                }
-            }
-
-            if (!saida) {
-                return {
-                    erro: true,
-                    msg: 'Não consegui encontrar um printf("%d", valor) válido para exibir um número.'
-                };
-            }
-
-            return {
-                erro: false,
-                stdout: saida
-            };
-        }
-
-        function removerComentarios(codigo) {
-            return codigo
-                .replace(/\/\*[\s\S]*?\*\//g, '')
-                .replace(/\/\/.*$/gm, '');
-        }
-
-        function avaliarExpressao(expressao, variaveis) {
-            let expr = String(expressao).trim();
-
-            if (!expr) {
-                throw new Error('Existe uma expressão vazia no código.');
-            }
-
-            expr = expr.replace(/\b[A-Za-z_]\w*\b/g, nome => {
-                if (Object.prototype.hasOwnProperty.call(variaveis, nome)) {
-                    return String(variaveis[nome]);
-                }
-
-                throw new Error(`A variável "${nome}" foi usada antes de receber valor.`);
-            });
-
-            if (!/^[0-9+\-*/%().\s]+$/.test(expr)) {
-                throw new Error('A expressão contém símbolos que este laboratório ainda não interpreta.');
-            }
-
-            const valor = Function(`"use strict"; return (${expr});`)();
-
-            if (!Number.isFinite(valor)) {
-                throw new Error('A expressão gerou um valor inválido.');
-            }
-
-            return Math.trunc(valor);
         }
 
         function mostrarResultadoExecucao(resultado) {
