@@ -995,6 +995,90 @@
         console.error('Erro de conexão ao buscar progresso:', error);
     }
 }
+        function aplicarProgressoNaTela(progresso) {
+    if (!progresso) return;
+
+    const unidade1OK =
+        progresso.unidade1_concluida === true ||
+        progresso.mod1_concluido === true ||
+        localStorage.getItem('unidade1_concluida') === 'true' ||
+        localStorage.getItem('unidade2Liberada') === 'true';
+
+    const unidade2OK =
+        progresso.unidade2_concluida === true ||
+        progresso.mod2_concluido === true ||
+        localStorage.getItem('unidade2_concluida') === 'true';
+
+    if (unidade1OK) {
+        localStorage.setItem('unidade1_concluida', 'true');
+        localStorage.setItem('unidade2Liberada', 'true');
+
+        liberarUnidade(
+            'card-unidade-2',
+            'unidade-2-conteudo.html',
+            'Unidade 2 liberada'
+        );
+
+        marcarUnidadeConcluida('card-unidade-1');
+    }
+
+    if (unidade2OK) {
+        localStorage.setItem('unidade2_concluida', 'true');
+
+        liberarUnidade(
+            'card-unidade-3',
+            'unidade-3-conteudo.html',
+            'Unidade 3 liberada'
+        );
+
+        marcarUnidadeConcluida('card-unidade-2');
+    }
+}
+
+function liberarUnidade(cardId, destino, textoStatus) {
+    const card = document.getElementById(cardId);
+
+    if (!card) {
+        console.warn(`Card não encontrado: ${cardId}`);
+        return;
+    }
+
+    card.classList.remove('locked');
+    card.classList.remove('bloqueado');
+    card.style.opacity = '1';
+    card.style.pointerEvents = 'auto';
+    card.style.cursor = 'pointer';
+
+    card.onclick = function () {
+        window.location.href = destino;
+    };
+
+    const iconeCadeado = card.querySelector('.fa-lock');
+    if (iconeCadeado) {
+        iconeCadeado.className = 'fas fa-unlock';
+    }
+
+    const status = card.querySelector('.status-unidade');
+    if (status) {
+        status.innerText = textoStatus;
+    }
+}
+
+function marcarUnidadeConcluida(cardId) {
+    const card = document.getElementById(cardId);
+
+    if (!card) return;
+
+    const check = card.querySelector('.fa-square');
+    if (check) {
+        check.className = 'fas fa-check-square';
+    }
+
+    const status = card.querySelector('.status-unidade');
+    if (status) {
+        status.innerText = 'Concluída';
+    }
+}
         function marcarUnidade(id, estado, href, icone, textoBadge) {
             const item = document.getElementById(`item-u${id}`);
             const circle = document.getElementById(`circle-u${id}`);
