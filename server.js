@@ -800,7 +800,6 @@ app.post('/api/update-progress', async (req, res) => {
 // ROTAS DE PROGRESSO DOS MÓDULOS E UNIDADES
 // ==========================================
 
-// Buscar progresso do usuário no banco
 app.get('/api/modulos/progresso', async (req, res) => {
     const { email } = req.query;
 
@@ -828,8 +827,11 @@ app.get('/api/modulos/progresso', async (req, res) => {
         const user = rows[0];
 
         let progressoExtra = {};
+
         try {
-            progressoExtra = user.progresso_modulos ? JSON.parse(user.progresso_modulos) : {};
+            progressoExtra = user.progresso_modulos
+                ? JSON.parse(user.progresso_modulos)
+                : {};
         } catch (e) {
             progressoExtra = {};
         }
@@ -855,7 +857,8 @@ app.get('/api/modulos/progresso', async (req, res) => {
 
                 unidade1_concluida: progressoExtra.unidade1 === true,
                 unidade2_concluida: progressoExtra.unidade2 === true,
-                unidade3_concluida: progressoExtra.unidade3 === true
+                unidade3_concluida: progressoExtra.unidade3 === true,
+                certificado_liberado: progressoExtra.certificado === true
             }
         });
 
@@ -865,8 +868,6 @@ app.get('/api/modulos/progresso', async (req, res) => {
     }
 });
 
-
-// Salvar progresso de módulo ou unidade
 app.post('/api/modulos/salvar', async (req, res) => {
     const { email, modulo, concluido } = req.body;
 
@@ -874,7 +875,7 @@ app.post('/api/modulos/salvar', async (req, res) => {
         return res.status(400).json({ error: 'E-mail e módulo são obrigatórios.' });
     }
 
-    const modulosPermitidos = [
+    const permitidos = [
         'avaliacao',
         'mod1',
         'mod2',
@@ -884,7 +885,7 @@ app.post('/api/modulos/salvar', async (req, res) => {
         'certificado'
     ];
 
-    if (!modulosPermitidos.includes(modulo)) {
+    if (!permitidos.includes(modulo)) {
         return res.status(400).json({ error: 'Módulo inválido.' });
     }
 
@@ -899,8 +900,11 @@ app.post('/api/modulos/salvar', async (req, res) => {
         }
 
         let progresso = {};
+
         try {
-            progresso = rows[0].progresso_modulos ? JSON.parse(rows[0].progresso_modulos) : {};
+            progresso = rows[0].progresso_modulos
+                ? JSON.parse(rows[0].progresso_modulos)
+                : {};
         } catch (e) {
             progresso = {};
         }
@@ -942,8 +946,6 @@ app.post('/api/modulos/salvar', async (req, res) => {
     }
 });
 
-
-// Zerar progresso
 app.post('/api/modulos/zerar', async (req, res) => {
     const { email } = req.body;
 
