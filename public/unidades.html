@@ -974,111 +974,93 @@
         }
 
         async function carregarProgressoBanco() {
-    if (!usuario || !usuario.email) return;
+            if (!usuario || !usuario.email) {
+                atualizarStatusSync('Usuário sem e-mail', 'erro');
+                return;
+            }
 
-    try {
-        const response = await fetch(`${API_URL}/modulos/progresso?email=${encodeURIComponent(usuario.email)}`);
+            atualizarStatusSync('Sincronizando...', 'load');
 
-        if (!response.ok) {
-            const textoErro = await response.text();
-            console.error('Erro ao buscar progresso. Resposta do servidor:', textoErro);
-            return;
+            try {
+                const response = await fetch(`${API_URL}/modulos/progresso?email=${encodeURIComponent(usuario.email)}`);
+
+                if (!response.ok) {
+                    const textoErro = await response.text();
+                    console.error('Erro ao buscar progresso. Resposta do servidor:', textoErro);
+                    throw new Error('Erro ao buscar progresso.');
+                }
+
+                const data = await response.json();
+                const progresso = data.progresso || {};
+
+                aplicarProgressoNaTela(progresso);
+
+                usuario.progresso = progresso;
+                localStorage.setItem('userData', JSON.stringify(usuario));
+
+                atualizarStatusSync('Salvo no banco', 'ok');
+
+            } catch (error) {
+                console.error('Erro ao buscar progresso:', error);
+
+                progressoUnidades = {
+                    unidade1_concluida:
+                        localStorage.getItem('unidade1_concluida') === 'true' ||
+                        localStorage.getItem('unidade2Liberada') === 'true',
+
+                    unidade2_concluida:
+                        localStorage.getItem('unidade2_concluida') === 'true',
+
+                    unidade3_concluida:
+                        localStorage.getItem('unidade3_concluida') === 'true'
+                };
+
+                verificarProgresso();
+                atualizarStatusSync('Usando dados locais', 'erro');
+            }
         }
 
-        const data = await response.json();
-
-        if (data.progresso) {
-            aplicarProgressoNaTela(data.progresso);
-        }
-
-    } catch (error) {
-        console.error('Erro de conexão ao buscar progresso:', error);
-    }
-}
         function aplicarProgressoNaTela(progresso) {
-    if (!progresso) return;
+            if (!progresso) progresso = {};
 
-    const unidade1OK =
-        progresso.unidade1_concluida === true ||
-        progresso.mod1_concluido === true ||
-        localStorage.getItem('unidade1_concluida') === 'true' ||
-        localStorage.getItem('unidade2Liberada') === 'true';
+            progressoUnidades = {
+                unidade1_concluida:
+                    progresso.unidade1_concluida === true ||
+                    progresso.mod1_concluido === true ||
+                    progresso.unidade1 === true ||
+                    progresso.mod1 === true ||
+                    localStorage.getItem('unidade1_concluida') === 'true' ||
+                    localStorage.getItem('unidade2Liberada') === 'true',
 
-    const unidade2OK =
-        progresso.unidade2_concluida === true ||
-        progresso.mod2_concluido === true ||
-        localStorage.getItem('unidade2_concluida') === 'true';
+                unidade2_concluida:
+                    progresso.unidade2_concluida === true ||
+                    progresso.mod2_concluido === true ||
+                    progresso.unidade2 === true ||
+                    progresso.mod2 === true ||
+                    localStorage.getItem('unidade2_concluida') === 'true',
 
-    if (unidade1OK) {
-        localStorage.setItem('unidade1_concluida', 'true');
-        localStorage.setItem('unidade2Liberada', 'true');
+                unidade3_concluida:
+                    progresso.unidade3_concluida === true ||
+                    progresso.unidade3 === true ||
+                    localStorage.getItem('unidade3_concluida') === 'true'
+            };
 
-        liberarUnidade(
-            'card-unidade-2',
-            'unidade-2-conteudo.html',
-            'Unidade 2 liberada'
-        );
+            if (progressoUnidades.unidade1_concluida) {
+                localStorage.setItem('unidade1_concluida', 'true');
+                localStorage.setItem('unidade2Liberada', 'true');
+            }
 
-        marcarUnidadeConcluida('card-unidade-1');
-    }
+            if (progressoUnidades.unidade2_concluida) {
+                localStorage.setItem('unidade2_concluida', 'true');
+            }
 
-    if (unidade2OK) {
-        localStorage.setItem('unidade2_concluida', 'true');
+            if (progressoUnidades.unidade3_concluida) {
+                localStorage.setItem('unidade3_concluida', 'true');
+            }
 
-        liberarUnidade(
-            'card-unidade-3',
-            'unidade-3-conteudo.html',
-            'Unidade 3 liberada'
-        );
+            verificarProgresso();
+        }
 
-        marcarUnidadeConcluida('card-unidade-2');
-    }
-}
-
-function liberarUnidade(cardId, destino, textoStatus) {
-    const card = document.getElementById(cardId);
-
-    if (!card) {
-        console.warn(`Card não encontrado: ${cardId}`);
-        return;
-    }
-
-    card.classList.remove('locked');
-    card.classList.remove('bloqueado');
-    card.style.opacity = '1';
-    card.style.pointerEvents = 'auto';
-    card.style.cursor = 'pointer';
-
-    card.onclick = function () {
-        window.location.href = destino;
-    };
-
-    const iconeCadeado = card.querySelector('.fa-lock');
-    if (iconeCadeado) {
-        iconeCadeado.className = 'fas fa-unlock';
-    }
-
-    const status = card.querySelector('.status-unidade');
-    if (status) {
-        status.innerText = textoStatus;
-    }
-}
-
-function marcarUnidadeConcluida(cardId) {
-    const card = document.getElementById(cardId);
-
-    if (!card) return;
-
-    const check = card.querySelector('.fa-square');
-    if (check) {
-        check.className = 'fas fa-check-square';
-    }
-
-    const status = card.querySelector('.status-unidade');
-    if (status) {
-        status.innerText = 'Concluída';
-    }
-}
         function marcarUnidade(id, estado, href, icone, textoBadge) {
             const item = document.getElementById(`item-u${id}`);
             const circle = document.getElementById(`circle-u${id}`);
@@ -1161,13 +1143,27 @@ function marcarUnidadeConcluida(cardId) {
                     throw new Error(data.error || 'Erro ao salvar progresso.');
                 }
 
+                const p = data.progresso || {};
+
                 progressoUnidades = {
-                    unidade1_concluida: !!data.progresso.unidade1_concluida,
-                    unidade2_concluida: !!data.progresso.unidade2_concluida,
-                    unidade3_concluida: !!data.progresso.unidade3_concluida
+                    unidade1_concluida:
+                        p.unidade1_concluida === true ||
+                        p.mod1_concluido === true ||
+                        p.unidade1 === true ||
+                        p.mod1 === true,
+
+                    unidade2_concluida:
+                        p.unidade2_concluida === true ||
+                        p.mod2_concluido === true ||
+                        p.unidade2 === true ||
+                        p.mod2 === true,
+
+                    unidade3_concluida:
+                        p.unidade3_concluida === true ||
+                        p.unidade3 === true
                 };
 
-                usuario.progresso = data.progresso;
+                usuario.progresso = p;
                 localStorage.setItem('userData', JSON.stringify(usuario));
 
                 verificarProgresso();
@@ -1203,11 +1199,17 @@ function marcarUnidadeConcluida(cardId) {
                     if (!response.ok) throw new Error('Falha ao resetar ' + unidade);
                 }
 
+                localStorage.removeItem('unidade1_concluida');
+                localStorage.removeItem('unidade2Liberada');
+                localStorage.removeItem('unidade2_concluida');
+                localStorage.removeItem('unidade3_concluida');
+
                 progressoUnidades = {
                     unidade1_concluida: false,
                     unidade2_concluida: false,
                     unidade3_concluida: false
                 };
+
                 verificarProgresso();
                 fecharConfiguracoes();
                 atualizarStatusSync('Salvo no banco', 'ok');
