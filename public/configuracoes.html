@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cynix - Configurações</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #07111f;
+            --bg-soft: #0b1b31;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-strong: rgba(255, 255, 255, 0.12);
+            --text-main: #f8fafc;
+            --text-muted: #aab7ca;
+            --primary-blue: #72e7ff;
+            --accent-teal: #5f7cff;
+            --accent-purple: #a855f7;
+            --success-green: #40d97a;
+            --warning: #ffcd4d;
+            --danger: #ff6b6b;
+            --gold: #f7c948;
+            --border-color: rgba(255, 255, 255, 0.14);
+            --shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
+            --font-scale: 100%;
+            --radius-lg: 30px;
+            --radius-md: 22px;
+        }
+
+        body.theme-halloween {
+            --bg-color: #130816;
+            --bg-soft: #211024;
+            --card-bg: rgba(255, 126, 41, 0.10);
+            --card-strong: rgba(255, 126, 41, 0.16);
+            --text-main: #fff6ec;
+            --text-muted: #d9bda6;
+            --primary-blue: #ff7a1a;
+            --accent-teal: #8f3cff;
+            --accent-purple: #ff3d81;
+            --success-green: #a8ff60;
+            --warning: #ffc247;
+            --danger: #ff4848;
+            --gold: #ffba3a;
+            --border-color: rgba(255, 126, 41, 0.28);
+        }
+
+        body.theme-space {
+            --bg-color: #020617;
+            --bg-soft: #08112a;
+            --card-bg: rgba(99, 102, 241, 0.10);
+            --card-strong: rgba(14, 165, 233, 0.14);
+            --text-main: #eef6ff;
+            --text-muted: #a7b6d6;
+            --primary-blue: #38bdf8;
+            --accent-teal: #818cf8;
+            --accent-purple: #d946ef;
+            --success-green: #2dd4bf;
+            --warning: #facc15;
+            --danger: #fb7185;
+            --gold: #e0e7ff;
+            --border-color: rgba(129, 140, 248, 0.24);
+        }
+
+        body.theme-pink {
+            --bg-color: #fff1f8;
+            --bg-soft: #ffe3f0;
+            --card-bg: rgba(255, 255, 255, 0.72);
+            --card-strong: rgba(255, 255, 255, 0.92);
+            --text-main: #4a1734;
+            --text-muted: #9b5278;
+            --primary-blue: #ff5ea8;
+            --accent-teal: #f472b6;
+            --accent-purple: #c084fc;
+            --success-green: #35c78a;
+            --warning: #ffb84d;
+            --danger: #f43f5e;
+            --gold: #ff85c8;
+            --border-color: rgba(244, 114, 182, 0.28);
+            --shadow: 0 22px 60px rgba(244, 114, 182, 0.22);
+        }
+
+        body.high-contrast {
+            --bg-color: #000000;
+            --bg-soft: #111111;
+            --card-bg: #1b1b1b;
+            --card-strong: #222222;
+            --text-main: #ffffff;
+            --text-muted: #d6d6d6;
+            --primary-blue: #00ebff;
+            --accent-teal: #ffff00;
+            --accent-purple: #ffffff;
+            --success-green: #00ff88;
+            --warning: #ffff00;
+            --danger: #ff4d4d;
+            --gold: #ffff00;
+            --border-color: #ffffff;
+        }
+
+        body.color-deuteranopia {
+            filter: saturate(.92) hue-rotate(-10deg);
+        }
+
+        body.color-protanopia {
+            filter: saturate(.85) sepia(.12);
+        }
+
+        body.color-tritanopia {
+            filter: saturate(.95) hue-rotate(22deg);
+        }
+
+        body.reduce-motion *,
+        body.reduce-motion *::before,
+        body.reduce-motion *::after {
+            animation: none !important;
+            transition: none !important;
+            scroll-behavior: auto !important;
+        }
+
+        body.reading-mode {
+            --card-bg: rgba(255,255,255,.12);
+            letter-spacing: .01em;
+        }
+
+        body.focus-mode :focus {
+            outline: 4px solid var(--warning) !important;
+            outline-offset: 4px !important;
+        }
+
+        body.font-readable * {
+            font-family: 'Atkinson Hyperlegible', 'Poppins', sans-serif !important;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html {
+            font-size: var(--font-scale);
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at 15% 5%, color-mix(in srgb, var(--primary-blue) 18%, transparent), transparent 32%),
+                radial-gradient(circle at 88% 18%, color-mix(in srgb, var(--accent-purple) 18%, transparent), transparent 34%),
+                radial-gradient(circle at 65% 95%, color-mix(in srgb, var(--success-green) 11%, transparent), transparent 30%),
+                linear-gradient(135deg, var(--bg-color) 0%, var(--bg-soft) 55%, var(--bg-color) 100%);
+            overflow-x: hidden;
+            padding-bottom: 96px;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,.82), transparent 85%);
+            z-index: -2;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 999px;
+            filter: blur(4px);
+            opacity: .55;
+            z-index: -1;
+            animation: floatOrb 8s ease-in-out infinite;
+        }
+
+        .orb.one { width: 160px; height: 160px; background: color-mix(in srgb, var(--accent-teal) 28%, transparent); top: 17%; left: -50px; }
+        .orb.two { width: 120px; height: 120px; background: color-mix(in srgb, var(--primary-blue) 24%, transparent); bottom: 14%; right: 6%; animation-delay: -2s; }
+        .orb.three { width: 110px; height: 110px; background: color-mix(in srgb, var(--accent-purple) 24%, transparent); top: 54%; left: 7%; animation-delay: -4s; }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-22px) translateX(14px); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(26px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-22px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 0 rgba(114, 231, 255, .0); }
+            50% { box-shadow: 0 0 28px color-mix(in srgb, var(--primary-blue) 28%, transparent); }
+        }
+
+        @keyframes pulseDot {
+            0% { transform: scale(.92); opacity: .7; }
+            50% { transform: scale(1.12); opacity: 1; }
+            100% { transform: scale(.92); opacity: .7; }
+        }
+
+        @keyframes shine {
+            from { transform: translateX(-120%) rotate(15deg); }
+            to { transform: translateX(170%) rotate(15deg); }
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            padding: 16px 6%;
+            background: color-mix(in srgb, var(--bg-color) 80%, transparent);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border-color);
+            animation: fadeDown .55s ease both;
+        }
+
+        .brand, .nav-profile, .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand {
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 15px;
+            display: grid;
+            place-items: center;
+            color: #07111f;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal), var(--accent-purple));
+            box-shadow: 0 12px 28px color-mix(in srgb, var(--accent-teal) 25%, transparent);
+            animation: glow 3.2s ease-in-out infinite;
+        }
+
+        .brand strong {
+            display: block;
+            font-size: 1.1rem;
+            letter-spacing: .3px;
+        }
+
+        .brand span {
+            color: var(--text-muted);
+            font-size: .78rem;
+        }
+
+        .nav-profile {
+            padding: 8px 11px;
+            border-radius: 18px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border: 2px solid color-mix(in srgb, var(--primary-blue) 40%, transparent);
+            background: linear-gradient(135deg, var(--accent-teal), var(--primary-blue));
+            color: white;
+            font-weight: 800;
+            box-shadow: 0 12px 26px rgba(0,0,0,.25);
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            max-width: 160px;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: .95rem;
+            font-weight: 800;
+        }
+
+        .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+            color: var(--warning);
+            font-size: .78rem;
+            font-weight: 800;
+        }
+
+        .btn {
+            border: 0;
+            outline: 0;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 11px 16px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: .9rem;
+            transition: .25s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            color: #07111f;
+            background: linear-gradient(135deg, var(--primary-blue), #8fffd2);
+            box-shadow: 0 14px 30px color-mix(in srgb, var(--primary-blue) 20%, transparent);
+        }
+
+        .btn-gold {
+            color: #241a00;
+            background: linear-gradient(135deg, var(--gold), #fff0a8);
+            box-shadow: 0 14px 30px color-mix(in srgb, var(--gold) 18%, transparent);
+        }
+
+        .btn-primary:hover, .btn-gold:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.07);
+        }
+
+        .btn-outline {
+            background: rgba(255,255,255,.07);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            border-color: color-mix(in srgb, var(--primary-blue) 48%, transparent);
+            background: color-mix(in srgb, var(--primary-blue) 10%, transparent);
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            color: #ffe5e5;
+            background: rgba(255,107,107,.14);
+            border: 1px solid rgba(255,107,107,.32);
+        }
+
+        .btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .container {
+            width: min(1180px, 92%);
+            margin: 0 auto;
+            padding: 34px 0;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 800;
+            margin-bottom: 18px;
+            opacity: .92;
+        }
+
+        .back-link:hover {
+            transform: translateX(-3px);
+            opacity: 1;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(310px, .75fr);
+            gap: 24px;
+            align-items: stretch;
+            background: linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            animation: fadeUp .6s ease both;
+        }
+
+        .hero::after {
+            content: "⚙";
+            position: absolute;
+            right: 32px;
+            top: 12px;
+            font-size: 7rem;
+            line-height: 1;
+            color: rgba(255,255,255,.055);
+            font-weight: 800;
+            pointer-events: none;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+            transform: translateX(-120%) rotate(15deg);
+            animation: shine 5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .hero > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            margin-bottom: 12px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            color: var(--primary-blue);
+            background: color-mix(in srgb, var(--primary-blue) 10%, transparent);
+            border: 1px solid color-mix(in srgb, var(--primary-blue) 24%, transparent);
+            font-size: .82rem;
+            font-weight: 800;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 4vw, 3.1rem);
+            line-height: 1.06;
+            margin-bottom: 12px;
+        }
+
+        .hero h1 span {
+            color: var(--primary-blue);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        .profile-card {
+            position: relative;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            padding: 24px;
+            border-radius: 24px;
+            border: 1px solid color-mix(in srgb, var(--primary-blue) 20%, transparent);
+            background: color-mix(in srgb, var(--bg-color) 50%, transparent);
+            overflow: hidden;
+        }
+
+        .profile-photo-large {
+            width: 132px;
+            height: 132px;
+            border-radius: 38px;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            color: white;
+            font-size: 3.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal), var(--accent-purple));
+            border: 3px solid rgba(255,255,255,.18);
+            box-shadow: 0 18px 45px rgba(0,0,0,.28);
+            margin-bottom: 14px;
+        }
+
+        .profile-photo-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sync-status {
+            margin-top: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: .82rem;
+            text-align: center;
+        }
+
+        .sync-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--success-green);
+            animation: pulseDot 1.8s ease-in-out infinite;
+            flex: 0 0 auto;
+        }
+
+        .sync-dot.loading { background: var(--primary-blue); }
+        .sync-dot.error { background: var(--danger); }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .mini-card {
+            padding: 14px;
+            border-radius: 18px;
+            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,.06);
+            color: var(--text-muted);
+        }
+
+        .mini-card strong {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            font-size: .9rem;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 18px;
+            margin: 34px 0 18px;
+            animation: fadeUp .7s ease both;
+        }
+
+        .section-head h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 4px;
+        }
+
+        .section-head p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            max-width: 720px;
+        }
+
+        .settings-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 390px;
+            gap: 18px;
+        }
+
+        .panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            box-shadow: 0 16px 35px rgba(0,0,0,.18);
+            padding: 22px;
+            animation: fadeUp .65s ease both;
+            overflow: hidden;
+        }
+
+        .panel-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 18px;
+        }
+
+        .panel-title h3 {
+            font-size: 1.15rem;
+        }
+
+        .panel-title h3 i {
+            color: var(--primary-blue);
+            margin-right: 7px;
+        }
+
+        .panel-title p {
+            color: var(--text-muted);
+            font-size: .88rem;
+            line-height: 1.55;
+            margin-top: 4px;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            white-space: nowrap;
+            font-size: .78rem;
+            font-weight: 800;
+        }
+
+        .badge.ok {
+            color: #c9ffdd;
+            border-color: rgba(64,217,122,.30);
+            background: rgba(64,217,122,.10);
+        }
+
+        .badge.next {
+            color: var(--primary-blue);
+            border-color: color-mix(in srgb, var(--primary-blue) 30%, transparent);
+            background: color-mix(in srgb, var(--primary-blue) 10%, transparent);
+        }
+
+        .badge.warn {
+            color: #ffedb5;
+            border-color: rgba(255,205,77,.30);
+            background: rgba(255,205,77,.10);
+        }
+
+        .form-grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .field-group {
+            display: grid;
+            gap: 8px;
+        }
+
+        .field-group label {
+            color: var(--text-muted);
+            font-size: .82rem;
+            font-weight: 800;
+        }
+
+        .input-text {
+            width: 100%;
+            padding: 13px 14px;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            background: rgba(255,255,255,.07);
+            outline: none;
+            font-size: .94rem;
+        }
+
+        .input-text:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary-blue) 10%, transparent);
+        }
+
+        .input-text:disabled {
+            opacity: .72;
+            cursor: not-allowed;
+            background: rgba(255,255,255,.04);
+        }
+
+        .helper-text {
+            color: var(--text-muted);
+            font-size: .78rem;
+            line-height: 1.45;
+        }
+
+        .upload-zone {
+            position: relative;
+            display: grid;
+            place-items: center;
+            gap: 10px;
+            min-height: 160px;
+            border: 2px dashed color-mix(in srgb, var(--primary-blue) 32%, transparent);
+            border-radius: 22px;
+            background: color-mix(in srgb, var(--primary-blue) 7%, transparent);
+            cursor: pointer;
+            text-align: center;
+            color: var(--text-muted);
+            padding: 18px;
+        }
+
+        .upload-zone input {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-zone i {
+            font-size: 2.2rem;
+            color: var(--primary-blue);
+        }
+
+        .password-strength {
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.09);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        .password-strength span {
+            display: block;
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background: var(--danger);
+            transition: .3s ease;
+        }
+
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .theme-card {
+            position: relative;
+            min-height: 140px;
+            border-radius: 22px;
+            padding: 16px;
+            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,.06);
+            cursor: pointer;
+            overflow: hidden;
+            transition: .25s ease;
+        }
+
+        .theme-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .theme-card.active {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--primary-blue) 15%, transparent);
+        }
+
+        .theme-card::after {
+            content: "";
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            right: -40px;
+            top: -35px;
+            border-radius: 50%;
+            background: var(--theme-gradient);
+            opacity: .72;
+        }
+
+        .theme-card h4 {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 6px;
+        }
+
+        .theme-card p {
+            position: relative;
+            z-index: 2;
+            color: var(--text-muted);
+            font-size: .78rem;
+            line-height: 1.45;
+            max-width: 150px;
+        }
+
+        .theme-default { --theme-gradient: linear-gradient(135deg, #72e7ff, #5f7cff, #a855f7); }
+        .theme-halloween-card { --theme-gradient: linear-gradient(135deg, #ff7a1a, #8f3cff, #ff3d81); }
+        .theme-space-card { --theme-gradient: linear-gradient(135deg, #020617, #38bdf8, #d946ef); }
+        .theme-pink-card { --theme-gradient: linear-gradient(135deg, #ff5ea8, #fbcfe8, #c084fc); }
+
+        .access-list {
+            display: grid;
+            gap: 11px;
+        }
+
+        .switch-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 14px;
+            align-items: center;
+            padding: 14px;
+            border-radius: 18px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .switch-row strong {
+            display: block;
+            margin-bottom: 3px;
+            font-size: .9rem;
+        }
+
+        .switch-row span {
+            color: var(--text-muted);
+            font-size: .78rem;
+            line-height: 1.4;
+        }
+
+        .switch {
+            width: 56px;
+            height: 31px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.14);
+            border: 1px solid var(--border-color);
+            position: relative;
+            cursor: pointer;
+            flex: 0 0 auto;
+        }
+
+        .switch::before {
+            content: "";
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: 21px;
+            height: 21px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            transition: .25s ease;
+        }
+
+        .switch.active {
+            background: color-mix(in srgb, var(--success-green) 25%, transparent);
+            border-color: color-mix(in srgb, var(--success-green) 40%, transparent);
+        }
+
+        .switch.active::before {
+            left: 29px;
+            background: var(--success-green);
+        }
+
+        .select-box {
+            width: 100%;
+            padding: 13px 14px;
+            border-radius: 16px;
+            color: var(--text-main);
+            background: rgba(255,255,255,.07);
+            border: 1px solid var(--border-color);
+            outline: none;
+        }
+
+        .select-box option {
+            color: #111827;
+        }
+
+        .range-row {
+            display: grid;
+            grid-template-columns: 1fr 72px;
+            gap: 12px;
+            align-items: center;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: var(--primary-blue);
+        }
+
+        .streak-card {
+            position: relative;
+            padding: 20px;
+            border-radius: 24px;
+            background:
+                radial-gradient(circle at 100% 0%, rgba(255,205,77,.18), transparent 34%),
+                rgba(255,255,255,.06);
+            border: 1px solid color-mix(in srgb, var(--warning) 25%, transparent);
+            overflow: hidden;
+        }
+
+        .streak-main {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .streak-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 26px;
+            display: grid;
+            place-items: center;
+            font-size: 2.4rem;
+            color: #2b1c00;
+            background: linear-gradient(135deg, var(--warning), #fff2a9);
+            box-shadow: 0 16px 34px color-mix(in srgb, var(--warning) 22%, transparent);
+        }
+
+        .streak-main h4 {
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+        }
+
+        .streak-main p {
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-size: .86rem;
+        }
+
+        .streak-stats {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .stat-box {
+            padding: 12px;
+            border-radius: 16px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-box small {
+            color: var(--text-muted);
+            font-weight: 800;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-box strong {
+            font-size: 1.25rem;
+            color: var(--warning);
+        }
+
+        .floating-actions {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .btn-floating {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 1px solid color-mix(in srgb, var(--primary-blue) 34%, transparent);
+            background: linear-gradient(135deg, var(--accent-teal), var(--primary-blue));
+            color: #07111f;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            font-size: 1.3rem;
+            box-shadow: 0 18px 40px rgba(0,0,0,.32);
+            transition: .25s ease;
+        }
+
+        .btn-floating:hover {
+            transform: translateY(-3px) rotate(4deg);
+        }
+
+        .menu-acessibilidade {
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            width: 230px;
+            padding: 14px;
+            border-radius: 20px;
+            background: color-mix(in srgb, var(--bg-color) 90%, transparent);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .menu-acessibilidade.active {
+            display: flex;
+            animation: fadeUp .25s ease both;
+        }
+
+        .menu-title {
+            color: var(--text-muted);
+            font-size: .78rem;
+            font-weight: 800;
+            text-align: center;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%) translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            padding: 12px 16px;
+            border-radius: 14px;
+            background: color-mix(in srgb, var(--bg-color) 94%, transparent);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            z-index: 120;
+            font-weight: 800;
+            max-width: calc(100% - 32px);
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.ok { border-color: rgba(64,217,122,.45); }
+        .toast.err { border-color: rgba(255,107,107,.45); }
+
+        @media (max-width: 1040px) {
+            .hero,
+            .settings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-grid,
+            .streak-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 720px) {
+            .navbar {
+                padding: 14px 4%;
+                flex-wrap: wrap;
+            }
+
+            .brand span {
+                display: none;
+            }
+
+            .nav-profile {
+                width: 100%;
+                justify-content: flex-start;
+                order: 3;
+            }
+
+            .nav-actions {
+                margin-left: auto;
+                flex-wrap: wrap;
+            }
+
+            .hero {
+                padding: 22px;
+            }
+
+            .themes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .panel {
+                padding: 18px;
+            }
+
+            .streak-main {
+                grid-template-columns: 1fr;
+            }
+
+            .floating-actions {
+                right: 16px;
+                bottom: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+
+    <header class="navbar">
+        <a href="home.html" class="brand" aria-label="Ir para a página inicial">
+            <div class="brand-icon"><i class="fas fa-sliders"></i></div>
+            <div>
+                <strong>Cynix</strong>
+                <span>Configurações da conta</span>
+            </div>
+        </a>
+
+        <div class="nav-actions">
+            <button class="btn btn-outline" onclick="sincronizarTudo()">
+                <i class="fas fa-cloud-arrow-up"></i>
+                Sincronizar
+            </button>
+            <button class="btn btn-danger" onclick="fazerLogout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Sair
+            </button>
+        </div>
+
+        <div class="nav-profile">
+            <div class="avatar" id="user-avatar">...</div>
+            <div>
+                <span class="user-name" id="user-name">Carregando...</span>
+                <span class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <a href="home.html" class="back-link"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
+
+        <section class="hero">
+            <div>
+                <span class="hero-kicker"><i class="fas fa-user-gear"></i> Configurações pessoais</span>
+                <h1>Personalize sua experiência no <span>Cynix</span></h1>
+                <p>
+                    Atualize sua foto, altere sua senha, escolha temas especiais, configure acessibilidade e proteja sua ofensiva.
+                    Nome e e-mail ficam bloqueados para preservar os certificados e a identificação no banco.
+                </p>
+
+                <div class="summary-grid">
+                    <div class="mini-card">
+                        <strong><i class="fas fa-id-card"></i> Nome do certificado</strong>
+                        <span id="summary-nome">Carregando...</span>
+                    </div>
+                    <div class="mini-card">
+                        <strong><i class="fas fa-palette"></i> Tema ativo</strong>
+                        <span id="summary-tema">Padrão Cynix</span>
+                    </div>
+                    <div class="mini-card">
+                        <strong><i class="fas fa-shield-halved"></i> Escudos</strong>
+                        <span id="summary-shields">0 disponíveis</span>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="profile-card">
+                <div class="profile-photo-large" id="profile-photo-large">...</div>
+                <strong id="profile-name">Carregando...</strong>
+                <span class="helper-text" id="profile-email">email@exemplo.com</span>
+
+                <div class="sync-status">
+                    <span class="sync-dot loading" id="sync-dot"></span>
+                    <span id="sync-text">Carregando configurações...</span>
+                </div>
+            </aside>
+        </section>
+
+        <section class="section-head">
+            <div>
+                <h2><i class="fas fa-user-lock"></i> Conta e segurança</h2>
+                <p>Nome e e-mail ficam bloqueados. A foto é salva localmente e sincronizada com o servidor quando houver rota disponível.</p>
+            </div>
+        </section>
+
+        <section class="settings-grid">
+            <div class="panel">
+                <div class="panel-title">
+                    <div>
+                        <h3><i class="fas fa-id-badge"></i> Dados do estudante</h3>
+                        <p>O nome precisa estar completo porque aparece nos certificados emitidos pela plataforma.</p>
+                    </div>
+                    <span class="badge next"><i class="fas fa-lock"></i> Protegido</span>
+                </div>
+
+                <div class="form-grid">
+                    <div class="field-group">
+                        <label>Nome completo usado no certificado</label>
+                        <input type="text" class="input-text" id="nome-completo" disabled>
+                        <span class="helper-text" id="nome-alerta">Nome bloqueado para manter a validade dos certificados.</span>
+                    </div>
+
+                    <div class="field-group">
+                        <label>E-mail da conta</label>
+                        <input type="email" class="input-text" id="email-conta" disabled>
+                        <span class="helper-text">O e-mail identifica seu progresso no banco de dados.</span>
+                    </div>
+
+                    <label class="upload-zone">
+                        <input type="file" accept="image/png,image/jpeg,image/webp" id="foto-input" onchange="alterarFoto(event)">
+                        <i class="fas fa-cloud-arrow-up"></i>
+                        <strong>Enviar nova foto de perfil</strong>
+                        <span>PNG, JPG ou WEBP. A imagem será aplicada nas telas que usam userData.</span>
+                    </label>
+
+                    <button class="btn btn-primary" onclick="salvarFotoPerfil()">
+                        <i class="fas fa-save"></i>
+                        Salvar foto
+                    </button>
+                </div>
+            </div>
+
+            <aside class="panel">
+                <div class="panel-title">
+                    <div>
+                        <h3><i class="fas fa-key"></i> Alterar senha</h3>
+                        <p>A nova senha precisa ter pelo menos 6 caracteres.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="field-group">
+                        <label>Senha atual</label>
+                        <input type="password" class="input-text" id="senha-atual" placeholder="Digite sua senha atual">
+                    </div>
+
+                    <div class="field-group">
+                        <label>Nova senha</label>
+                        <input type="password" class="input-text" id="nova-senha" placeholder="Digite a nova senha" oninput="avaliarForcaSenha()">
+                        <div class="password-strength"><span id="senha-strength"></span></div>
+                        <span class="helper-text" id="senha-feedback">Digite uma nova senha.</span>
+                    </div>
+
+                    <div class="field-group">
+                        <label>Confirmar nova senha</label>
+                        <input type="password" class="input-text" id="confirmar-senha" placeholder="Repita a nova senha">
+                    </div>
+
+                    <button class="btn btn-primary" onclick="alterarSenha()">
+                        <i class="fas fa-shield-halved"></i>
+                        Atualizar senha
+                    </button>
+                </div>
+            </aside>
+        </section>
+
+        <section class="section-head">
+            <div>
+                <h2><i class="fas fa-fire"></i> Ofensiva e proteção</h2>
+                <p>Compre escudos de ofensiva usando moedas da plataforma. Um escudo ajuda a recuperar ou proteger sua sequência.</p>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="streak-card">
+                <div class="streak-main">
+                    <div class="streak-icon"><i class="fas fa-shield-heart"></i></div>
+                    <div>
+                        <h4>Escudo de Ofensiva</h4>
+                        <p>
+                            Se você perdeu sua ofensiva, pode usar um escudo para recuperar o último backup salvo.
+                            Se ainda não perdeu, ele fica guardado para proteger sua sequência.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="streak-stats">
+                    <div class="stat-box">
+                        <small>Ofensiva atual</small>
+                        <strong id="streak-atual">0</strong>
+                    </div>
+                    <div class="stat-box">
+                        <small>Escudos</small>
+                        <strong id="shields-atual">0</strong>
+                    </div>
+                    <div class="stat-box">
+                        <small>Moedas</small>
+                        <strong id="moedas-atual">0</strong>
+                    </div>
+                </div>
+
+                <div class="summary-grid">
+                    <button class="btn btn-gold" onclick="comprarEscudo()">
+                        <i class="fas fa-coins"></i>
+                        Comprar escudo por 50 moedas
+                    </button>
+                    <button class="btn btn-primary" onclick="usarEscudoAgora()">
+                        <i class="fas fa-fire-flame-curved"></i>
+                        Usar escudo para recuperar ofensiva
+                    </button>
+                    <button class="btn btn-outline" onclick="salvarBackupOfensiva()">
+                        <i class="fas fa-bookmark"></i>
+                        Salvar backup da ofensiva atual
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-head">
+            <div>
+                <h2><i class="fas fa-palette"></i> Temas do site</h2>
+                <p>Escolha uma identidade visual. A preferência fica salva no navegador e em userData para as outras telas reutilizarem.</p>
+            </div>
+        </section>
+
+        <section class="panel">
+            <div class="themes-grid">
+                <article class="theme-card theme-default" data-theme="default" onclick="selecionarTema('default')">
+                    <h4><i class="fas fa-code"></i> Cynix Padrão</h4>
+                    <p>Azul, roxo e clima tecnológico.</p>
+                </article>
+
+                <article class="theme-card theme-halloween-card" data-theme="halloween" onclick="selecionarTema('halloween')">
+                    <h4><i class="fas fa-ghost"></i> Halloween</h4>
+                    <p>Laranja, roxo, neon e clima sombrio.</p>
+                </article>
+
+                <article class="theme-card theme-space-card" data-theme="space" onclick="selecionarTema('space')">
+                    <h4><i class="fas fa-meteor"></i> Espaço Sideral</h4>
+                    <p>Galáxias, estrelas e tons cósmicos.</p>
+                </article>
+
+                <article class="theme-card theme-pink-card" data-theme="pink" onclick="selecionarTema('pink')">
+                    <h4><i class="fas fa-heart"></i> Rosa Doce</h4>
+                    <p>Rosa, fofo, candy e confortável.</p>
+                </article>
+            </div>
+        </section>
+
+        <section class="section-head">
+            <div>
+                <h2><i class="fas fa-universal-access"></i> Preferências de acessibilidade</h2>
+                <p>Configurações visuais, leitura, movimento, foco e filtros de cor para adaptar a plataforma ao usuário.</p>
+            </div>
+        </section>
+
+        <section class="settings-grid">
+            <div class="panel">
+                <div class="panel-title">
+                    <div>
+                        <h3><i class="fas fa-eye"></i> Visual e leitura</h3>
+                        <p>Essas opções são aplicadas imediatamente nesta tela e ficam salvas para uso global.</p>
+                    </div>
+                </div>
+
+                <div class="access-list">
+                    <div class="switch-row">
+                        <div>
+                            <strong>Alto contraste</strong>
+                            <span>Melhora a distinção entre fundo, texto e botões.</span>
+                        </div>
+                        <button class="switch" id="sw-contraste" onclick="toggleConfig('altoContraste')"></button>
+                    </div>
+
+                    <div class="switch-row">
+                        <div>
+                            <strong>Reduzir animações</strong>
+                            <span>Diminui movimento e efeitos visuais para evitar desconforto.</span>
+                        </div>
+                        <button class="switch" id="sw-movimento" onclick="toggleConfig('reduzirMovimento')"></button>
+                    </div>
+
+                    <div class="switch-row">
+                        <div>
+                            <strong>Modo leitura</strong>
+                            <span>Melhora espaçamento visual e deixa os cards mais nítidos.</span>
+                        </div>
+                        <button class="switch" id="sw-leitura" onclick="toggleConfig('modoLeitura')"></button>
+                    </div>
+
+                    <div class="switch-row">
+                        <div>
+                            <strong>Fonte mais legível</strong>
+                            <span>Usa uma fonte mais amigável para leitura prolongada.</span>
+                        </div>
+                        <button class="switch" id="sw-fonte" onclick="toggleConfig('fonteLegivel')"></button>
+                    </div>
+
+                    <div class="switch-row">
+                        <div>
+                            <strong>Foco de teclado destacado</strong>
+                            <span>Ajuda quem navega usando Tab e teclado.</span>
+                        </div>
+                        <button class="switch" id="sw-foco" onclick="toggleConfig('focoTeclado')"></button>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="panel">
+                <div class="panel-title">
+                    <div>
+                        <h3><i class="fas fa-sliders"></i> Ajustes finos</h3>
+                        <p>Tamanho de texto, filtros de cor e leitura em voz alta.</p>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="field-group">
+                        <label>Tamanho do texto</label>
+                        <div class="range-row">
+                            <input type="range" id="font-range" min="84" max="140" value="100" oninput="alterarEscalaFonte(this.value)">
+                            <span class="badge next" id="font-value">100%</span>
+                        </div>
+                    </div>
+
+                    <div class="field-group">
+                        <label>Filtro para daltonismo / cor</label>
+                        <select class="select-box" id="filtro-cor" onchange="alterarFiltroCor(this.value)">
+                            <option value="none">Sem filtro</option>
+                            <option value="deuteranopia">Deuteranopia</option>
+                            <option value="protanopia">Protanopia</option>
+                            <option value="tritanopia">Tritanopia</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-outline" onclick="lerResumoAcessibilidade()">
+                        <i class="fas fa-volume-high"></i>
+                        Ler resumo em voz alta
+                    </button>
+
+                    <button class="btn btn-primary" onclick="salvarPreferencias()">
+                        <i class="fas fa-save"></i>
+                        Salvar preferências
+                    </button>
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <div class="floating-actions">
+        <div class="menu-acessibilidade" id="menu-acess">
+            <div class="menu-title">Acessibilidade rápida</div>
+            <button class="btn btn-primary" onclick="toggleConfig('altoContraste')"><i class="fas fa-adjust"></i> Alto Contraste</button>
+            <button class="btn btn-outline" onclick="mudarFonte(2)"><i class="fas fa-font"></i><i class="fas fa-plus"></i> Aumentar Texto</button>
+            <button class="btn btn-outline" onclick="mudarFonte(-2)"><i class="fas fa-font"></i><i class="fas fa-minus"></i> Diminuir Texto</button>
+        </div>
+
+        <button class="btn-floating" onclick="toggleMenuAcessibilidade()" title="Acessibilidade">
+            <i class="fas fa-universal-access"></i>
+        </button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const API_URL = `${window.location.origin}/api`;
+        const PRECO_ESCUDO = 50;
+
+        let userData = null;
+        let fotoTemporaria = null;
+
+        let configuracoes = {
+            tema: 'default',
+            altoContraste: false,
+            reduzirMovimento: false,
+            modoLeitura: false,
+            fonteLegivel: false,
+            focoTeclado: false,
+            escalaFonte: 100,
+            filtroCor: 'none'
+        };
+
+        function carregarPerfil() {
+            if (localStorage.getItem('userLogado') !== 'true') {
+                window.location.replace('index.html');
+                return;
+            }
+
+            const cacheUsuario = localStorage.getItem('userData');
+
+            if (!cacheUsuario) {
+                window.location.replace('index.html');
+                return;
+            }
+
+            try {
+                userData = JSON.parse(cacheUsuario);
+            } catch (error) {
+                localStorage.removeItem('userData');
+                localStorage.removeItem('userLogado');
+                window.location.replace('index.html');
+                return;
+            }
+
+            if (!userData || !userData.email) {
+                window.location.replace('index.html');
+                return;
+            }
+
+            carregarConfiguracoesLocais();
+            renderizarPerfil();
+            aplicarConfiguracoes();
+            atualizarPainelOfensiva();
+            atualizarSync('Configurações carregadas', 'ok');
+        }
+
+        function carregarConfiguracoesLocais() {
+            const salvas = userData.configuracoes || JSON.parse(localStorage.getItem('cynix_configuracoes') || '{}');
+
+            configuracoes = {
+                tema: localStorage.getItem('cynix_tema') || salvas.tema || 'default',
+                altoContraste: localStorage.getItem('acess_alto') === 'true' || !!salvas.altoContraste,
+                reduzirMovimento: localStorage.getItem('acess_reduzir_movimento') === 'true' || !!salvas.reduzirMovimento,
+                modoLeitura: localStorage.getItem('acess_modo_leitura') === 'true' || !!salvas.modoLeitura,
+                fonteLegivel: localStorage.getItem('acess_fonte_legivel') === 'true' || !!salvas.fonteLegivel,
+                focoTeclado: localStorage.getItem('acess_foco') === 'true' || !!salvas.focoTeclado,
+                escalaFonte: parseInt(localStorage.getItem('acess_escala_fonte') || salvas.escalaFonte || 100, 10),
+                filtroCor: localStorage.getItem('acess_filtro_cor') || salvas.filtroCor || 'none'
+            };
+
+            if (!localStorage.getItem('cynix_moedas')) {
+                const moedasIniciais = Number(userData.moedas ?? 100);
+                localStorage.setItem('cynix_moedas', String(moedasIniciais));
+            }
+
+            if (!localStorage.getItem('cynix_streak_shields')) {
+                localStorage.setItem('cynix_streak_shields', String(userData.streakShields || userData.streak_shields || 0));
+            }
+
+            salvarBackupOfensiva(false);
+        }
+
+        function renderizarPerfil() {
+            const nome = userData.nome || 'Estudante';
+            const email = userData.email || '';
+
+            document.getElementById('user-name').innerText = nome;
+            document.getElementById('user-streak').innerText = `${userData.streak || 0} Dias`;
+            document.getElementById('profile-name').innerText = nome;
+            document.getElementById('profile-email').innerText = email;
+            document.getElementById('summary-nome').innerText = nome;
+            document.getElementById('nome-completo').value = nome;
+            document.getElementById('email-conta').value = email;
+
+            const alerta = document.getElementById('nome-alerta');
+
+            if (nome.trim().split(/\s+/).length < 2) {
+                alerta.innerHTML = '<i class="fas fa-triangle-exclamation"></i> O nome parece incompleto. Ele aparece no certificado. Peça ajuste administrativo se necessário.';
+                alerta.style.color = 'var(--warning)';
+            } else {
+                alerta.innerHTML = '<i class="fas fa-check-circle"></i> Nome completo detectado para uso nos certificados.';
+                alerta.style.color = 'var(--success-green)';
+            }
+
+            atualizarAvatar(userData.foto);
+        }
+
+        function atualizarAvatar(foto) {
+            const pequenos = [document.getElementById('user-avatar')];
+            const grande = document.getElementById('profile-photo-large');
+            const nome = userData.nome || 'C';
+
+            pequenos.forEach(el => {
+                if (!el) return;
+
+                if (foto) {
+                    el.innerHTML = `<img src="${foto}" alt="Foto do usuário">`;
+                } else {
+                    el.innerText = nome.charAt(0).toUpperCase();
+                }
+            });
+
+            if (foto) {
+                grande.innerHTML = `<img src="${foto}" alt="Foto do usuário">`;
+            } else {
+                grande.innerText = nome.charAt(0).toUpperCase();
+            }
+        }
+
+        function alterarFoto(event) {
+            const arquivo = event.target.files[0];
+
+            if (!arquivo) return;
+
+            if (!arquivo.type.startsWith('image/')) {
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> Envie um arquivo de imagem válido.', 'err');
+                return;
+            }
+
+            if (arquivo.size > 2 * 1024 * 1024) {
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> A imagem precisa ter até 2MB.', 'err');
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                fotoTemporaria = reader.result;
+                atualizarAvatar(fotoTemporaria);
+                mostrarToast('<i class="fas fa-image"></i> Prévia carregada. Clique em salvar foto.');
+            };
+
+            reader.readAsDataURL(arquivo);
+        }
+
+        async function salvarFotoPerfil() {
+            if (!fotoTemporaria) {
+                mostrarToast('<i class="fas fa-circle-info"></i> Escolha uma nova foto antes de salvar.', 'err');
+                return;
+            }
+
+            userData.foto = fotoTemporaria;
+            salvarUserDataLocal();
+            fotoTemporaria = null;
+
+            await salvarConfiguracoesServidor();
+            mostrarToast('<i class="fas fa-check-circle"></i> Foto atualizada com sucesso.');
+        }
+
+        function avaliarForcaSenha() {
+            const senha = document.getElementById('nova-senha').value;
+            const barra = document.getElementById('senha-strength');
+            const feedback = document.getElementById('senha-feedback');
+
+            let pontos = 0;
+            if (senha.length >= 6) pontos++;
+            if (senha.length >= 10) pontos++;
+            if (/[A-Z]/.test(senha)) pontos++;
+            if (/[0-9]/.test(senha)) pontos++;
+            if (/[^A-Za-z0-9]/.test(senha)) pontos++;
+
+            const percent = Math.min(100, pontos * 20);
+            barra.style.width = percent + '%';
+
+            if (pontos <= 2) {
+                barra.style.background = 'var(--danger)';
+                feedback.innerText = 'Senha fraca. Use mais caracteres, números ou símbolos.';
+            } else if (pontos <= 4) {
+                barra.style.background = 'var(--warning)';
+                feedback.innerText = 'Senha média. Dá para melhorar com símbolo ou letra maiúscula.';
+            } else {
+                barra.style.background = 'var(--success-green)';
+                feedback.innerText = 'Senha forte.';
+            }
+        }
+
+        async function alterarSenha() {
+            const atual = document.getElementById('senha-atual').value.trim();
+            const nova = document.getElementById('nova-senha').value.trim();
+            const confirmar = document.getElementById('confirmar-senha').value.trim();
+
+            if (!atual || !nova || !confirmar) {
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> Preencha todos os campos de senha.', 'err');
+                return;
+            }
+
+            if (nova.length < 6) {
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> A nova senha precisa ter pelo menos 6 caracteres.', 'err');
+                return;
+            }
+
+            if (nova !== confirmar) {
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> A confirmação da senha não confere.', 'err');
+                return;
+            }
+
+            atualizarSync('Enviando alteração de senha...', 'loading');
+
+            const payload = {
+                email: userData.email,
+                senhaAtual: atual,
+                senha_atual: atual,
+                novaSenha: nova,
+                nova_senha: nova
+            };
+
+            const rotas = [
+                `${API_URL}/usuarios/alterar-senha`,
+                `${API_URL}/auth/alterar-senha`,
+                `${API_URL}/alterar-senha`,
+                `/alterar_senha.php`
+            ];
+
+            const resposta = await tentarPostRotas(rotas, payload);
+
+            if (resposta.ok) {
+                document.getElementById('senha-atual').value = '';
+                document.getElementById('nova-senha').value = '';
+                document.getElementById('confirmar-senha').value = '';
+                avaliarForcaSenha();
+                atualizarSync('Senha atualizada', 'ok');
+                mostrarToast('<i class="fas fa-check-circle"></i> Senha alterada com sucesso.');
+                return;
+            }
+
+            atualizarSync('Senha não atualizada', 'error');
+            mostrarToast('<i class="fas fa-triangle-exclamation"></i> Não consegui alterar a senha no servidor. Confira se a rota existe.', 'err');
+        }
+
+        function selecionarTema(tema) {
+            configuracoes.tema = tema;
+            aplicarConfiguracoes();
+            salvarPreferencias(false);
+            mostrarToast('<i class="fas fa-palette"></i> Tema aplicado.');
+        }
+
+        function aplicarConfiguracoes() {
+            document.body.classList.remove(
+                'theme-halloween',
+                'theme-space',
+                'theme-pink',
+                'high-contrast',
+                'reduce-motion',
+                'reading-mode',
+                'focus-mode',
+                'font-readable',
+                'color-deuteranopia',
+                'color-protanopia',
+                'color-tritanopia'
+            );
+
+            if (configuracoes.tema === 'halloween') document.body.classList.add('theme-halloween');
+            if (configuracoes.tema === 'space') document.body.classList.add('theme-space');
+            if (configuracoes.tema === 'pink') document.body.classList.add('theme-pink');
+
+            if (configuracoes.altoContraste) document.body.classList.add('high-contrast');
+            if (configuracoes.reduzirMovimento) document.body.classList.add('reduce-motion');
+            if (configuracoes.modoLeitura) document.body.classList.add('reading-mode');
+            if (configuracoes.focoTeclado) document.body.classList.add('focus-mode');
+            if (configuracoes.fonteLegivel) document.body.classList.add('font-readable');
+
+            if (configuracoes.filtroCor && configuracoes.filtroCor !== 'none') {
+                document.body.classList.add(`color-${configuracoes.filtroCor}`);
+            }
+
+            document.documentElement.style.setProperty('--font-scale', `${configuracoes.escalaFonte}%`);
+
+            document.querySelectorAll('.theme-card').forEach(card => {
+                card.classList.toggle('active', card.dataset.theme === configuracoes.tema);
+            });
+
+            atualizarSwitches();
+            document.getElementById('font-range').value = configuracoes.escalaFonte;
+            document.getElementById('font-value').innerText = `${configuracoes.escalaFonte}%`;
+            document.getElementById('filtro-cor').value = configuracoes.filtroCor;
+            document.getElementById('summary-tema').innerText = nomeTema(configuracoes.tema);
+        }
+
+        function atualizarSwitches() {
+            document.getElementById('sw-contraste').classList.toggle('active', configuracoes.altoContraste);
+            document.getElementById('sw-movimento').classList.toggle('active', configuracoes.reduzirMovimento);
+            document.getElementById('sw-leitura').classList.toggle('active', configuracoes.modoLeitura);
+            document.getElementById('sw-fonte').classList.toggle('active', configuracoes.fonteLegivel);
+            document.getElementById('sw-foco').classList.toggle('active', configuracoes.focoTeclado);
+        }
+
+        function toggleConfig(chave) {
+            configuracoes[chave] = !configuracoes[chave];
+            aplicarConfiguracoes();
+            salvarPreferencias(false);
+        }
+
+        function alterarEscalaFonte(valor) {
+            configuracoes.escalaFonte = parseInt(valor, 10);
+            aplicarConfiguracoes();
+            salvarPreferencias(false);
+        }
+
+        function mudarFonte(delta) {
+            configuracoes.escalaFonte += delta;
+            if (configuracoes.escalaFonte < 84) configuracoes.escalaFonte = 84;
+            if (configuracoes.escalaFonte > 140) configuracoes.escalaFonte = 140;
+            aplicarConfiguracoes();
+            salvarPreferencias(false);
+        }
+
+        function alterarFiltroCor(valor) {
+            configuracoes.filtroCor = valor;
+            aplicarConfiguracoes();
+            salvarPreferencias(false);
+        }
+
+        async function salvarPreferencias(exibirToast = true) {
+            localStorage.setItem('cynix_tema', configuracoes.tema);
+            localStorage.setItem('acess_alto', configuracoes.altoContraste);
+            localStorage.setItem('acess_reduzir_movimento', configuracoes.reduzirMovimento);
+            localStorage.setItem('acess_modo_leitura', configuracoes.modoLeitura);
+            localStorage.setItem('acess_fonte_legivel', configuracoes.fonteLegivel);
+            localStorage.setItem('acess_foco', configuracoes.focoTeclado);
+            localStorage.setItem('acess_escala_fonte', configuracoes.escalaFonte);
+            localStorage.setItem('acess_filtro_cor', configuracoes.filtroCor);
+            localStorage.setItem('cynix_configuracoes', JSON.stringify(configuracoes));
+
+            userData.configuracoes = configuracoes;
+            salvarUserDataLocal();
+
+            await salvarConfiguracoesServidor();
+
+            if (exibirToast) {
+                mostrarToast('<i class="fas fa-check-circle"></i> Preferências salvas.');
+            }
+        }
+
+        function nomeTema(tema) {
+            const nomes = {
+                default: 'Cynix Padrão',
+                halloween: 'Halloween',
+                space: 'Espaço Sideral',
+                pink: 'Rosa Doce'
+            };
+
+            return nomes[tema] || 'Cynix Padrão';
+        }
+
+        function atualizarPainelOfensiva() {
+            const streak = Number(userData.streak || 0);
+            const shields = Number(localStorage.getItem('cynix_streak_shields') || 0);
+            const moedas = Number(localStorage.getItem('cynix_moedas') || 0);
+
+            document.getElementById('streak-atual').innerText = streak;
+            document.getElementById('shields-atual').innerText = shields;
+            document.getElementById('moedas-atual').innerText = moedas;
+            document.getElementById('summary-shields').innerText = `${shields} disponíveis`;
+            document.getElementById('user-streak').innerText = `${streak} Dias`;
+        }
+
+        async function comprarEscudo() {
+            let moedas = Number(localStorage.getItem('cynix_moedas') || 0);
+            let shields = Number(localStorage.getItem('cynix_streak_shields') || 0);
+
+            if (moedas < PRECO_ESCUDO) {
+                mostrarToast('<i class="fas fa-coins"></i> Moedas insuficientes para comprar o escudo.', 'err');
+                return;
+            }
+
+            moedas -= PRECO_ESCUDO;
+            shields += 1;
+
+            localStorage.setItem('cynix_moedas', String(moedas));
+            localStorage.setItem('cynix_streak_shields', String(shields));
+
+            userData.moedas = moedas;
+            userData.streakShields = shields;
+            userData.streak_shields = shields;
+            salvarUserDataLocal();
+
+            atualizarPainelOfensiva();
+            await salvarConfiguracoesServidor();
+
+            mostrarToast('<i class="fas fa-shield-heart"></i> Escudo de ofensiva comprado.');
+        }
+
+        async function usarEscudoAgora() {
+            let shields = Number(localStorage.getItem('cynix_streak_shields') || 0);
+
+            if (shields <= 0) {
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> Você não possui escudos disponíveis.', 'err');
+                return;
+            }
+
+            const backup = Number(localStorage.getItem('cynix_streak_backup') || 0);
+
+            if (backup <= 0) {
+                mostrarToast('<i class="fas fa-circle-info"></i> Nenhum backup de ofensiva encontrado.', 'err');
+                return;
+            }
+
+            const atual = Number(userData.streak || 0);
+
+            if (atual >= backup) {
+                mostrarToast('<i class="fas fa-fire"></i> Sua ofensiva atual já está protegida. O escudo ficará guardado.');
+                return;
+            }
+
+            shields -= 1;
+            userData.streak = backup;
+            userData.streakShields = shields;
+            userData.streak_shields = shields;
+
+            localStorage.setItem('cynix_streak_shields', String(shields));
+            salvarUserDataLocal();
+            atualizarPainelOfensiva();
+
+            await salvarConfiguracoesServidor();
+
+            mostrarToast('<i class="fas fa-fire-flame-curved"></i> Ofensiva recuperada com escudo.');
+        }
+
+        function salvarBackupOfensiva(exibir = true) {
+            const atual = Number(userData?.streak || 0);
+            const backup = Number(localStorage.getItem('cynix_streak_backup') || 0);
+
+            if (atual > backup) {
+                localStorage.setItem('cynix_streak_backup', String(atual));
+            }
+
+            if (exibir) {
+                mostrarToast('<i class="fas fa-bookmark"></i> Backup da ofensiva salvo.');
+            }
+        }
+
+        function lerResumoAcessibilidade() {
+            const texto = 'Configurações de acessibilidade do Cynix. Você pode alterar contraste, reduzir animações, ativar modo leitura, destacar foco de teclado, mudar o tamanho do texto e aplicar filtros de cor.';
+
+            if (!('speechSynthesis' in window)) {
+                mostrarToast('<i class="fas fa-volume-xmark"></i> Seu navegador não suporta leitura em voz alta.', 'err');
+                return;
+            }
+
+            window.speechSynthesis.cancel();
+
+            const utterance = new SpeechSynthesisUtterance(texto);
+            utterance.lang = 'pt-BR';
+            utterance.rate = 0.95;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        async function sincronizarTudo() {
+            await salvarPreferencias(false);
+            await salvarConfiguracoesServidor();
+            mostrarToast('<i class="fas fa-cloud-arrow-up"></i> Configurações sincronizadas.');
+        }
+
+        async function salvarConfiguracoesServidor() {
+            atualizarSync('Sincronizando com servidor...', 'loading');
+
+            const payload = {
+                email: userData.email,
+                foto: userData.foto || null,
+                configuracoes,
+                tema: configuracoes.tema,
+                acessibilidade: configuracoes,
+                streak: userData.streak || 0,
+                ofensiva: userData.streak || 0,
+                streakShields: Number(localStorage.getItem('cynix_streak_shields') || 0),
+                streak_shields: Number(localStorage.getItem('cynix_streak_shields') || 0),
+                moedas: Number(localStorage.getItem('cynix_moedas') || 0)
+            };
+
+            const rotas = [
+                `${API_URL}/usuarios/configuracoes`,
+                `${API_URL}/configuracoes/salvar`,
+                `${API_URL}/usuarios/atualizar`,
+                `${API_URL}/perfil/atualizar`
+            ];
+
+            const resposta = await tentarPostRotas(rotas, payload);
+
+            if (resposta.ok) {
+                atualizarSync('Sincronizado com servidor', 'ok');
+            } else {
+                atualizarSync('Salvo localmente', 'error');
+            }
+
+            return resposta.ok;
+        }
+
+        async function tentarPostRotas(rotas, payload) {
+            for (const rota of rotas) {
+                try {
+                    const response = await fetch(rota, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    const texto = await response.text();
+                    let data = {};
+
+                    try {
+                        data = texto ? JSON.parse(texto) : {};
+                    } catch (error) {
+                        data = { raw: texto };
+                    }
+
+                    if (response.ok) {
+                        return { ok: true, rota, data };
+                    }
+                } catch (error) {
+                    console.warn('Falha na rota:', rota, error);
+                }
+            }
+
+            return { ok: false };
+        }
+
+        function salvarUserDataLocal() {
+            localStorage.setItem('userData', JSON.stringify(userData));
+            renderizarPerfil();
+        }
+
+        function atualizarSync(texto, tipo) {
+            const dot = document.getElementById('sync-dot');
+            const sync = document.getElementById('sync-text');
+
+            sync.innerText = texto;
+            dot.className = 'sync-dot';
+
+            if (tipo === 'loading') dot.classList.add('loading');
+            if (tipo === 'error') dot.classList.add('error');
+        }
+
+        function mostrarToast(msg, tipo = 'ok') {
+            const toast = document.getElementById('toast');
+            toast.className = `toast show ${tipo}`;
+            toast.innerHTML = msg;
+            setTimeout(() => { toast.className = 'toast'; }, 3300);
+        }
+
+        function toggleMenuAcessibilidade() {
+            document.getElementById('menu-acess').classList.toggle('active');
+        }
+
+        function fazerLogout() {
+            localStorage.removeItem('userData');
+            localStorage.setItem('userLogado', 'false');
+            window.location.href = 'index.html';
+        }
+
+        window.onload = () => {
+            carregarPerfil();
+        };
+    </script>
+</body>
+</html>
