@@ -1020,7 +1020,7 @@
         <div class="fase-card" id="fase2">
             <div class="fase-header">
                 <h3><i class="fas fa-code"></i> Fase 2: Laboratório de programação em C</h3>
-                <span class="phase-badge"><i class="fas fa-server"></i> Execução real + validação</span>
+                <span class="phase-badge"><i class="fas fa-laptop-code"></i> Execução local + validação</span>
             </div>
 
             <div class="lab-layout">
@@ -1057,7 +1057,7 @@
 
                         <textarea id="editor-c"></textarea>
 
-                        <div class="console-output" id="console-fase2">&gt; Terminal pronto.
+                        <div class="console-output" id="console-fase2">&gt; Terminal local pronto.
 &gt; Escreva seu código e clique em "Rodar código" ou "Validar desafio".</div>
                     </div>
 
@@ -1392,93 +1392,47 @@ int main() {
         }
 
         async function executarCodigoC(codigo) {
+            return executarSimuladorLocal(codigo);
+        }
+
+        function executarSimuladorLocal(codigo) {
             try {
-                const response = await fetch('https://emkc.org/api/v2/piston/execute', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        language: 'c',
-                        version: '10.2.0',
-                        files: [
-                            {
-                                name: 'main.c',
-                                content: codigo
-                            }
-                        ],
-                        stdin: '',
-                        args: [],
-                        compile_timeout: 10000,
-                        run_timeout: 3000
-                    })
-                });
+                const estrutura = validarEstruturaBasicaExecucao(codigo);
 
-                if (!response.ok) {
-                    throw new Error('API indisponível');
-                }
-
-                const data = await response.json();
-
-                const compileOutput = data.compile ? (data.compile.output || data.compile.stderr || '') : '';
-                const runStdout = data.run ? (data.run.stdout || '') : '';
-                const runStderr = data.run ? (data.run.stderr || '') : '';
-                const runOutput = data.run ? (data.run.output || '') : '';
-
-                if (compileOutput || runStderr) {
+                if (!estrutura.ok) {
                     return {
                         erro: true,
-                        stdout: runStdout,
-                        saida: `> ERRO DE COMPILAÇÃO/EXECUÇÃO\\n${compileOutput || runStderr || runOutput}`
+                        stdout: '',
+                        saida: `> ERRO NO CÓDIGO\n> ${estrutura.msg}`
+                    };
+                }
+
+                const resultado = interpretarProgramaC(codigo);
+
+                if (resultado.erro) {
+                    return {
+                        erro: true,
+                        stdout: '',
+                        saida: `> ERRO NO CÓDIGO\n> ${resultado.msg}`
                     };
                 }
 
                 return {
                     erro: false,
-                    stdout: runStdout,
-                    saida: `> PROGRAMA EXECUTADO\\n${runOutput || runStdout || '(sem saída)'}`
+                    stdout: resultado.stdout,
+                    saida: `> PROGRAMA EXECUTADO NO TERMINAL LOCAL\n${resultado.stdout || '(sem saída)'}`
                 };
+
             } catch (error) {
-                return executarSimuladorLocal(codigo);
-            }
-        }
-
-        function executarSimuladorLocal(codigo) {
-            const estrutura = validarEstruturaDoCodigo(codigo);
-
-            if (!estrutura.ok) {
                 return {
                     erro: true,
                     stdout: '',
-                    saida: `> SIMULADOR LOCAL ATIVO\\n> ${estrutura.msg}`
+                    saida: `> ERRO INESPERADO\n> ${error.message}`
                 };
             }
-
-            const codigoLimpo = codigo.replace(/\\s+/g, '').toLowerCase();
-            const temSoma =
-                codigoLimpo.includes('soma=a+b;') ||
-                codigoLimpo.includes('soma=b+a;') ||
-                codigoLimpo.includes('intsoma=a+b;') ||
-                codigoLimpo.includes('intsoma=b+a;') ||
-                codigoLimpo.includes('printf("%d\\\\n",a+b);') ||
-                codigoLimpo.includes('printf("%d",a+b);') ||
-                codigoLimpo.includes('printf("%d\\\\n",b+a);') ||
-                codigoLimpo.includes('printf("%d",b+a);');
-
-            if (temSoma) {
-                return {
-                    erro: false,
-                    stdout: '15',
-                    saida: '> SIMULADOR LOCAL ATIVO\\n> Saída simulada: 15\\n> A lógica de soma foi encontrada.'
-                };
-            }
-
-            return {
-                erro: false,
-                stdout: '0',
-                saida: '> SIMULADOR LOCAL ATIVO\\n> Saída simulada: 0\\n> Ainda não encontrei a soma de a + b no seu código.'
-            };
         }
 
-        function validarEstruturaDoCodigo(codigo) {
+        function validarEstruturaBasicaExecucao(codigo) {
             const texto = codigo.toLowerCase();
 
             if (!texto.includes('#include') || !texto.includes('stdio.h')) {
@@ -1497,15 +1451,102 @@ int main() {
                 return { ok: false, msg: 'Faltou ponto e vírgula em alguma instrução.' };
             }
 
-            if (!texto.includes('a') || !texto.includes('b')) {
-                return { ok: false, msg: 'Use as variáveis a e b no programa.' };
-            }
-
-            if (!texto.includes('+')) {
-                return { ok: false, msg: 'Use o operador + para somar os valores.' };
-            }
-
             return { ok: true, msg: 'Estrutura básica válida.' };
+        }
+
+        function interpretarProgramaC(codigoOriginal) {
+            const codigo = removerComentarios(codigoOriginal);
+            const variaveis = {};
+
+            const declaracaoRegex = /\bint\s+([A-Za-z_]\w*)\s*(?:=\s*([^;]+))?;/g;
+            let declaracao;
+
+            while ((declaracao = declaracaoRegex.exec(codigo)) !== null) {
+                const nome = declaracao[1];
+                const expressao = declaracao[2];
+
+                if (expressao === undefined) {
+                    variaveis[nome] = 0;
+                } else {
+                    variaveis[nome] = avaliarExpressao(expressao, variaveis);
+                }
+            }
+
+            const atribuicaoRegex = /\b([A-Za-z_]\w*)\s*=\s*([^;]+);/g;
+            let atribuicao;
+
+            while ((atribuicao = atribuicaoRegex.exec(codigo)) !== null) {
+                const trechoAntes = codigo.slice(Math.max(0, atribuicao.index - 6), atribuicao.index);
+                const ehDeclaracaoInt = /int\s*$/.test(trechoAntes);
+
+                if (ehDeclaracaoInt) continue;
+
+                const nome = atribuicao[1];
+                const expressao = atribuicao[2];
+
+                variaveis[nome] = avaliarExpressao(expressao, variaveis);
+            }
+
+            const printfRegex = /printf\s*\(\s*"([^"]*)"\s*,\s*([^)]+)\)\s*;/g;
+            let printf;
+            let saida = '';
+
+            while ((printf = printfRegex.exec(codigo)) !== null) {
+                const formato = printf[1];
+                const expressao = printf[2];
+                const valor = avaliarExpressao(expressao, variaveis);
+
+                if (formato.includes('%d')) {
+                    saida += String(valor);
+                    if (formato.includes('\\n')) saida += '\n';
+                }
+            }
+
+            if (!saida) {
+                return {
+                    erro: true,
+                    msg: 'Não consegui encontrar um printf("%d", valor) válido para exibir um número.'
+                };
+            }
+
+            return {
+                erro: false,
+                stdout: saida
+            };
+        }
+
+        function removerComentarios(codigo) {
+            return codigo
+                .replace(/\/\*[\s\S]*?\*\//g, '')
+                .replace(/\/\/.*$/gm, '');
+        }
+
+        function avaliarExpressao(expressao, variaveis) {
+            let expr = String(expressao).trim();
+
+            if (!expr) {
+                throw new Error('Existe uma expressão vazia no código.');
+            }
+
+            expr = expr.replace(/\b[A-Za-z_]\w*\b/g, nome => {
+                if (Object.prototype.hasOwnProperty.call(variaveis, nome)) {
+                    return String(variaveis[nome]);
+                }
+
+                throw new Error(`A variável "${nome}" foi usada antes de receber valor.`);
+            });
+
+            if (!/^[0-9+\-*/%().\s]+$/.test(expr)) {
+                throw new Error('A expressão contém símbolos que este laboratório ainda não interpreta.');
+            }
+
+            const valor = Function(`"use strict"; return (${expr});`)();
+
+            if (!Number.isFinite(valor)) {
+                throw new Error('A expressão gerou um valor inválido.');
+            }
+
+            return Math.trunc(valor);
         }
 
         function mostrarResultadoExecucao(resultado) {
