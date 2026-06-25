@@ -3,319 +3,1108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trilha de Módulos - ALGORITMOLAB</title>
+    <title>Cynix - Módulos</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        /* ==========================================
-           1. VARIÁVEIS E ACESSIBILIDADE 
-           ========================================== */
         :root {
-            --primary-blue: #1c3d5a;
-            --accent-teal: #2b6cb0;
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --text-main: #333333;
-            --text-muted: #718096;
-            --border-color: #e2e8f0;
-            --fire-color: #ff9f43;
-            --success-green: #48bb78;
+            --bg-color: #07111f;
+            --bg-soft: #0b1b31;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-strong: rgba(255, 255, 255, 0.12);
+            --text-main: #f8fafc;
+            --text-muted: #aab7ca;
+            --primary-blue: #72e7ff;
+            --accent-teal: #5f7cff;
+            --accent-purple: #a855f7;
+            --success-green: #40d97a;
+            --warning: #ffcd4d;
+            --danger: #ff6b6b;
+            --border-color: rgba(255, 255, 255, 0.14);
+            --shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
             --font-scale: 100%;
         }
 
         .high-contrast {
+            --bg-color: #000000;
+            --bg-soft: #111111;
+            --card-bg: #1b1b1b;
+            --card-strong: #222222;
+            --text-main: #ffffff;
+            --text-muted: #d6d6d6;
             --primary-blue: #00ebff;
             --accent-teal: #ffff00;
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-main: #ffffff;
-            --text-muted: #a0aec0;
-            --border-color: #4a5568;
+            --accent-purple: #ffffff;
+            --success-green: #00ff88;
+            --warning: #ffff00;
+            --border-color: #ffffff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: background 0.3s, color 0.3s; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background .25s ease, color .25s ease, border-color .25s ease, transform .25s ease, opacity .25s ease;
+        }
+
         html { font-size: var(--font-scale); }
-        body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 80px; }
 
-        @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        body {
+            min-height: 100vh;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at 15% 5%, rgba(114, 231, 255, .18), transparent 32%),
+                radial-gradient(circle at 88% 18%, rgba(168, 85, 247, .18), transparent 34%),
+                linear-gradient(135deg, #07111f 0%, #0a1830 55%, #070d18 100%);
+            overflow-x: hidden;
+            padding-bottom: 90px;
+        }
 
-        /* ==========================================
-           2. HEADER E NAV
-           ========================================== */
-        .navbar { 
-            background: var(--card-bg); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 1px solid var(--border-color);
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,.8), transparent 85%);
+            z-index: -2;
         }
-        .nav-profile { display: flex; align-items: center; gap: 15px; }
-        .avatar { 
-            width: 50px; height: 50px; background: var(--accent-teal); color: white; border-radius: 50%; 
-            display: flex; justify-content: center; align-items: center; font-size: 1.3rem; font-weight: 700; 
-            border: 3px solid var(--border-color); overflow: hidden;
+
+        .orb {
+            position: fixed;
+            border-radius: 999px;
+            filter: blur(4px);
+            opacity: .55;
+            z-index: -1;
+            animation: floatOrb 8s ease-in-out infinite;
         }
+
+        .orb.one { width: 160px; height: 160px; background: rgba(95, 124, 255, .22); top: 17%; left: -50px; }
+        .orb.two { width: 120px; height: 120px; background: rgba(114, 231, 255, .18); bottom: 14%; right: 6%; animation-delay: -2s; }
+        .orb.three { width: 90px; height: 90px; background: rgba(168, 85, 247, .20); top: 54%; left: 7%; animation-delay: -4s; }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-22px) translateX(14px); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(26px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 0 rgba(114, 231, 255, .0); }
+            50% { box-shadow: 0 0 28px rgba(114, 231, 255, .22); }
+        }
+
+        @keyframes pulseDot {
+            0% { transform: scale(.92); opacity: .7; }
+            50% { transform: scale(1.12); opacity: 1; }
+            100% { transform: scale(.92); opacity: .7; }
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            padding: 16px 6%;
+            background: rgba(7, 17, 31, .76);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 15px;
+            display: grid;
+            place-items: center;
+            color: white;
+            background: linear-gradient(135deg, var(--primary-blue), var(--accent-teal), var(--accent-purple));
+            box-shadow: 0 12px 28px rgba(95, 124, 255, .28);
+        }
+
+        .brand strong {
+            display: block;
+            font-size: 1.1rem;
+            letter-spacing: .3px;
+        }
+
+        .brand span {
+            color: var(--text-muted);
+            font-size: .78rem;
+        }
+
+        .nav-profile {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border: 2px solid rgba(114, 231, 255, .38);
+            background: linear-gradient(135deg, var(--accent-teal), var(--primary-blue));
+            color: white;
+            font-weight: 800;
+            box-shadow: 0 12px 26px rgba(0,0,0,.25);
+        }
+
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .streak-badge { display: inline-flex; align-items: center; gap: 5px; color: var(--fire-color); font-weight: 700; font-size: 0.9rem; }
 
-        .btn { padding: 10px 20px; border-radius: 10px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; font-size: 0.95rem; text-decoration: none; }
-        .btn-primary { background: var(--accent-teal); color: white; }
-        .btn-outline { background: transparent; color: var(--primary-blue); border: 2px solid var(--primary-blue); }
+        .user-name { font-size: .98rem; font-weight: 700; display: block; }
+        .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+            color: var(--warning);
+            font-size: .82rem;
+            font-weight: 700;
+        }
 
-        /* ==========================================
-           3. TRILHA DE MÓDULOS
-           ========================================== */
-        .container { max-width: 850px; margin: 0 auto; padding: 40px 20px; }
-        .module-list { display: flex; flex-direction: column; gap: 20px; margin-top: 30px; }
+        .btn {
+            border: 0;
+            outline: 0;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 11px 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: .92rem;
+        }
+
+        .btn-primary {
+            color: #07111f;
+            background: linear-gradient(135deg, var(--primary-blue), #8fffd2);
+            box-shadow: 0 14px 30px rgba(114, 231, 255, .22);
+        }
+
+        .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.07); }
+
+        .btn-outline {
+            background: rgba(255,255,255,.07);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            border-color: rgba(114, 231, 255, .48);
+            background: rgba(114, 231, 255, .10);
+            transform: translateY(-2px);
+        }
+
+        .container {
+            width: min(1120px, 92%);
+            margin: 0 auto;
+            padding: 34px 0;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 700;
+            margin-bottom: 18px;
+            opacity: .92;
+        }
+
+        .back-link:hover { transform: translateX(-3px); opacity: 1; }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 1.4fr .8fr;
+            gap: 24px;
+            align-items: stretch;
+            background: linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            animation: fadeUp .6s ease both;
+        }
+
+        .hero::after {
+            content: "</>";
+            position: absolute;
+            right: 28px;
+            top: 12px;
+            font-size: 6rem;
+            line-height: 1;
+            color: rgba(255,255,255,.045);
+            font-weight: 800;
+        }
+
+        .hero-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            margin-bottom: 12px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            color: var(--primary-blue);
+            background: rgba(114, 231, 255, .10);
+            border: 1px solid rgba(114, 231, 255, .22);
+            font-size: .82rem;
+            font-weight: 800;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 4vw, 3.1rem);
+            line-height: 1.06;
+            margin-bottom: 12px;
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 680px;
+        }
+
+        .progress-card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 16px;
+            min-height: 210px;
+            padding: 22px;
+            border-radius: 24px;
+            border: 1px solid rgba(114, 231, 255, .18);
+            background: rgba(7, 17, 31, .42);
+            overflow: hidden;
+        }
+
+        .progress-card::before {
+            content: "";
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(114,231,255,.18), transparent 68%);
+            right: -70px;
+            top: -70px;
+        }
+
+        .progress-number {
+            font-size: 3rem;
+            font-weight: 800;
+            letter-spacing: -2px;
+        }
+
+        .progress-number span { color: var(--primary-blue); }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.10);
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-teal), var(--success-green));
+            transition: width .7s ease;
+        }
+
+        .sync-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: .82rem;
+        }
+
+        .sync-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--success-green);
+            animation: pulseDot 1.8s ease-in-out infinite;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 18px;
+            margin: 34px 0 18px;
+            animation: fadeUp .7s ease both;
+        }
+
+        .section-head h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 4px;
+        }
+
+        .section-head p { color: var(--text-muted); line-height: 1.6; }
+
+        .module-list {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .module-list::before {
+            content: "";
+            position: absolute;
+            left: 35px;
+            top: 20px;
+            bottom: 20px;
+            width: 2px;
+            background: linear-gradient(to bottom, rgba(114,231,255,.5), rgba(255,255,255,.10));
+            z-index: 0;
+        }
 
         .module-card {
-            background: var(--card-bg); display: flex; align-items: center; gap: 20px; padding: 25px; 
-            border-radius: 15px; border-left: 8px solid var(--accent-teal); text-decoration: none; color: inherit;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.04); animation: slideInUp 0.5s ease-out backwards;
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 72px 1fr auto;
+            gap: 20px;
+            align-items: center;
+            min-height: 116px;
+            padding: 20px;
+            border-radius: 24px;
+            color: inherit;
+            text-decoration: none;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 16px 35px rgba(0,0,0,.18);
+            overflow: hidden;
+            animation: fadeUp .55s ease backwards;
         }
 
-        .module-card:hover:not(.locked) { transform: translateX(8px); background: #f8fafc; }
-
-        .module-card.locked { 
-            border-left-color: #cbd5e0; opacity: 0.6; cursor: not-allowed; pointer-events: none; filter: grayscale(1); 
+        .module-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(114,231,255,.12), transparent 42%);
+            opacity: .65;
+            pointer-events: none;
         }
 
-        .module-card.completed { border-left-color: var(--success-green); }
+        .module-card:hover:not(.locked) {
+            transform: translateY(-5px) scale(1.01);
+            border-color: rgba(114, 231, 255, .52);
+            background: var(--card-strong);
+            animation: glow 1.8s ease-in-out infinite;
+        }
 
-        .module-number { font-size: 2.5rem; font-weight: 800; color: var(--accent-teal); min-width: 60px; text-align: center; }
-        .module-info h3 { font-size: 1.2rem; color: var(--primary-blue); margin-bottom: 5px; }
-        .module-info p { font-size: 0.9rem; color: var(--text-muted); }
+        .module-card.locked {
+            opacity: .58;
+            cursor: not-allowed;
+            pointer-events: none;
+            filter: grayscale(.75);
+        }
 
-        /* ==========================================
-           4. ACESSIBILIDADE E FLOATING
-           ========================================== */
-        .floating-actions { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 10px; z-index: 99; }
-        .btn-floating { width: 55px; height: 55px; border-radius: 50%; background: var(--primary-blue); color: white; box-shadow: 0 5px 15px rgba(0,0,0,0.2); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
-        
+        .module-card.completed {
+            border-color: rgba(64, 217, 122, .55);
+            background: linear-gradient(135deg, rgba(64,217,122,.13), rgba(255,255,255,.07));
+        }
+
+        .module-number {
+            position: relative;
+            width: 62px;
+            height: 62px;
+            border-radius: 20px;
+            display: grid;
+            place-items: center;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #07111f;
+            background: linear-gradient(135deg, var(--primary-blue), #8fffd2);
+            box-shadow: 0 13px 28px rgba(114,231,255,.20);
+        }
+
+        .module-card.completed .module-number {
+            background: linear-gradient(135deg, var(--success-green), #c8ffdd);
+        }
+
+        .module-info h3 {
+            position: relative;
+            z-index: 1;
+            color: var(--text-main);
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+        }
+
+        .module-info p {
+            position: relative;
+            z-index: 1;
+            color: var(--text-muted);
+            line-height: 1.5;
+            font-size: .92rem;
+        }
+
+        .module-tags {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: .74rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+            background: rgba(114, 231, 255, .10);
+            border: 1px solid rgba(114, 231, 255, .16);
+        }
+
+        .module-status {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            min-width: 135px;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+            border: 1px solid var(--border-color);
+            white-space: nowrap;
+            font-size: .78rem;
+        }
+
+        .status-pill.ok { color: var(--success-green); border-color: rgba(64,217,122,.30); background: rgba(64,217,122,.10); }
+        .status-pill.lock { color: var(--text-muted); }
+        .status-pill.next { color: var(--primary-blue); border-color: rgba(114,231,255,.30); background: rgba(114,231,255,.10); }
+        .status-pill.grade { color: var(--warning); border-color: rgba(255,205,77,.30); background: rgba(255,205,77,.10); }
+
+        .quick-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 20px;
+        }
+
+        .mini-card {
+            padding: 15px;
+            border-radius: 18px;
+            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,.06);
+            color: var(--text-muted);
+            animation: fadeUp .7s ease both;
+        }
+
+        .mini-card strong {
+            display: block;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .floating-actions {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .btn-floating {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 1px solid rgba(114,231,255,.34);
+            background: linear-gradient(135deg, var(--accent-teal), var(--primary-blue));
+            color: white;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            font-size: 1.3rem;
+            box-shadow: 0 18px 40px rgba(0,0,0,.32);
+        }
+
+        .btn-floating:hover { transform: translateY(-3px) rotate(4deg); }
+
         .menu-acessibilidade {
-            position: absolute; bottom: 65px; right: 0; background: var(--card-bg); border: 1px solid var(--border-color);
-            padding: 15px; border-radius: 15px; box-shadow: 0 5px 25px rgba(0,0,0,0.15); display: none; flex-direction: column; gap: 10px; width: 200px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            width: 230px;
+            padding: 14px;
+            border-radius: 20px;
+            background: rgba(7,17,31,.90);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
         }
 
-        /* ==========================================
-           5. MODAL DE CONFIGURAÇÕES
-           ========================================== */
-        .modal-overlay { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
-            display: none; justify-content: center; align-items: center; z-index: 100; 
+        .menu-acessibilidade.active { display: flex; animation: fadeUp .25s ease both; }
+        .menu-title { color: var(--text-muted); font-size: .78rem; font-weight: 800; text-align: center; padding-bottom: 6px; border-bottom: 1px solid var(--border-color); }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(0,0,0,.62);
+            backdrop-filter: blur(8px);
+            z-index: 100;
         }
-        .modal-card { background: var(--card-bg); padding: 30px; border-radius: 20px; width: 90%; max-width: 400px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
-        .input-text { width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 8px; margin-bottom: 15px; background: var(--bg-color); color: var(--text-main); }
-        
-        .grade-badge {
-            background: #e2e8f0; color: var(--text-main); padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; margin-left: 10px; display: inline-block;
+
+        .modal-card {
+            width: min(440px, 100%);
+            border-radius: 24px;
+            padding: 24px;
+            background: #0d1c32;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            animation: fadeUp .3s ease both;
+        }
+
+        .modal-card h3 { margin-bottom: 15px; }
+        .modal-card p { color: var(--text-muted); line-height: 1.6; font-size: .92rem; margin-bottom: 14px; }
+
+        .input-text {
+            width: 100%;
+            padding: 12px 14px;
+            margin: 8px 0 16px;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            background: rgba(255,255,255,.07);
+            outline: none;
+        }
+
+        .input-text:focus { border-color: var(--primary-blue); box-shadow: 0 0 0 4px rgba(114,231,255,.10); }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%) translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            padding: 12px 16px;
+            border-radius: 14px;
+            background: rgba(7,17,31,.92);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            z-index: 120;
+            font-weight: 700;
+        }
+
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.ok { border-color: rgba(64,217,122,.45); }
+        .toast.err { border-color: rgba(255,107,107,.45); }
+
+        @media (max-width: 860px) {
+            .navbar { padding: 14px 4%; }
+            .brand span { display: none; }
+            .hero { grid-template-columns: 1fr; padding: 24px; }
+            .section-head { flex-direction: column; align-items: flex-start; }
+            .quick-info { grid-template-columns: 1fr; }
+            .module-card { grid-template-columns: 58px 1fr; gap: 14px; }
+            .module-status { grid-column: 1 / -1; justify-content: flex-start; margin-left: 72px; }
+            .module-number { width: 54px; height: 54px; border-radius: 18px; }
+            .module-list::before { left: 27px; }
+        }
+
+        @media (max-width: 560px) {
+            .nav-profile > div:last-child { display: none; }
+            .container { width: min(94%, 1120px); padding-top: 24px; }
+            .hero h1 { font-size: 2rem; }
+            .module-status { margin-left: 0; }
+            .module-card { padding: 16px; }
+            .floating-actions { right: 16px; bottom: 16px; }
         }
     </style>
 </head>
 <body>
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
 
     <header class="navbar">
+        <a href="home.html" class="brand" aria-label="Ir para a página inicial">
+            <div class="brand-icon"><i class="fas fa-code"></i></div>
+            <div>
+                <strong>Cynix</strong>
+                <span>Trilha de lógica e programação em C</span>
+            </div>
+        </a>
+
         <div class="nav-profile">
             <div class="avatar" id="user-avatar">...</div>
             <div>
-                <strong id="user-name">Carregando...</strong>
-                <div class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></div>
+                <span class="user-name" id="user-name">Carregando...</span>
+                <span class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></span>
             </div>
+            <button class="btn btn-outline" onclick="abrirConfiguracoes()"><i class="fas fa-sliders-h"></i> Ajustes</button>
         </div>
-        <button class="btn btn-outline" onclick="abrirConfiguracoes()"><i class="fas fa-cog"></i> Configurações</button>
     </header>
 
     <main class="container">
-        <a href="home.html" style="text-decoration: none; color: var(--accent-teal); font-weight: 600;"><i class="fas fa-arrow-left"></i> Voltar ao Início</a>
-        
-        <h2 style="margin-top: 20px;"><i class="fas fa-map"></i> Sua Trilha de Aprendizado</h2>
-        <p style="color: var(--text-muted);">Conclua as etapas para desbloquear o próximo nível e o seu certificado.</p>
+        <a href="home.html" class="back-link"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
 
-        <div class="module-list">
-            <a href="avaliacao-diagnostica.html" class="module-card" id="mod-0">
+        <section class="hero">
+            <div>
+                <span class="hero-kicker"><i class="fas fa-route"></i> Módulos do Cynix</span>
+                <h1>Sua trilha de aprendizado</h1>
+                <p>Avance por etapas curtas, pratique com calma e acompanhe seu caminho. O desbloqueio dos módulos agora é carregado diretamente do banco de dados, evitando perda de progresso ao trocar de navegador ou computador.</p>
+
+                <div class="quick-info">
+                    <div class="mini-card" style="animation-delay: .10s;">
+                        <strong><i class="fas fa-database"></i> Progresso salvo</strong>
+                        Banco de dados
+                    </div>
+                    <div class="mini-card" style="animation-delay: .18s;">
+                        <strong><i class="fas fa-lock-open"></i> Desbloqueio</strong>
+                        Por conclusão
+                    </div>
+                    <div class="mini-card" style="animation-delay: .26s;">
+                        <strong><i class="fas fa-certificate"></i> Finalização</strong>
+                        Certificado ao concluir
+                    </div>
+                </div>
+            </div>
+
+            <aside class="progress-card">
+                <div>
+                    <div class="sync-status"><span class="sync-dot"></span> <span id="sync-text">Buscando progresso no banco...</span></div>
+                    <div class="progress-number"><span id="percentual-geral">0</span>%</div>
+                    <p style="color: var(--text-muted);">da trilha concluída</p>
+                </div>
+                <div class="progress-bar" aria-label="Progresso geral da trilha">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </aside>
+        </section>
+
+        <section class="section-head">
+            <div>
+                <h2><i class="fas fa-layer-group"></i> Painel de Módulos</h2>
+                <p>Comece pela avaliação diagnóstica. Depois disso, os próximos módulos serão liberados conforme seu desempenho.</p>
+            </div>
+            <button class="btn btn-primary" onclick="buscarProgressoModulosBanco()"><i class="fas fa-rotate"></i> Atualizar progresso</button>
+        </section>
+
+        <section class="module-list" aria-label="Lista de módulos">
+            <a href="avaliacao-diagnostica.html" class="module-card" id="mod-0" style="animation-delay: .08s;">
                 <div class="module-number">0</div>
                 <div class="module-info">
                     <h3 id="title-0">Avaliação Diagnóstica</h3>
-                    <p>Obrigatório para iniciar a jornada.</p>
+                    <p>Primeiro passo para entender seu nível inicial e liberar a trilha de estudos.</p>
+                    <div class="module-tags">
+                        <span class="tag">início</span>
+                        <span class="tag">diagnóstico</span>
+                    </div>
                 </div>
-                <div id="status-0" style="margin-left: auto; display: flex; align-items: center;">
-                    <i class="fas fa-chevron-right"></i>
+                <div class="module-status" id="status-0">
+                    <span class="status-pill next"><i class="fas fa-arrow-right"></i> Iniciar</span>
                 </div>
             </a>
 
-            <a href="unidades.html" class="module-card locked" id="mod-1">
+            <a href="unidades.html" class="module-card locked" id="mod-1" style="animation-delay: .16s;">
                 <div class="module-number">1</div>
                 <div class="module-info">
                     <h3 id="title-1">Lógica de Programação <i class="fas fa-lock"></i></h3>
-                    <p>Fundamentos e Pensamento Computacional.</p>
+                    <p>Fundamentos, sequência lógica, entrada, processamento e saída.</p>
+                    <div class="module-tags">
+                        <span class="tag">algoritmos</span>
+                        <span class="tag">base</span>
+                    </div>
                 </div>
-                <div id="status-1" style="margin-left: auto;"></div>
+                <div class="module-status" id="status-1">
+                    <span class="status-pill lock"><i class="fas fa-lock"></i> Bloqueado</span>
+                </div>
             </a>
 
-            <a href="#" class="module-card locked" id="mod-2">
+            <a href="#" class="module-card locked" id="mod-2" style="animation-delay: .24s;">
                 <div class="module-number">2</div>
                 <div class="module-info">
                     <h3 id="title-2">Variáveis e Tipos <i class="fas fa-lock"></i></h3>
-                    <p>Armazenamento e manipulação de dados.</p>
+                    <p>Armazenamento de informações, tipos de dados e uso de variáveis em C.</p>
+                    <div class="module-tags">
+                        <span class="tag">C</span>
+                        <span class="tag">variáveis</span>
+                    </div>
                 </div>
-                <div id="status-2" style="margin-left: auto;"></div>
+                <div class="module-status" id="status-2">
+                    <span class="status-pill lock"><i class="fas fa-lock"></i> Bloqueado</span>
+                </div>
             </a>
 
-            <div class="module-card locked" id="mod-cert" style="border-left-color: #ffd700;">
+            <a href="certificados.html" class="module-card locked" id="mod-cert" style="animation-delay: .32s;">
                 <div class="module-number"><i class="fas fa-certificate"></i></div>
                 <div class="module-info">
-                    <h3>Certificado Final</h3>
-                    <p>Disponível após todos os módulos concluídos.</p>
+                    <h3 id="title-cert">Certificado Final <i class="fas fa-lock"></i></h3>
+                    <p>Disponível quando todos os módulos principais forem concluídos.</p>
+                    <div class="module-tags">
+                        <span class="tag">conclusão</span>
+                        <span class="tag">certificado</span>
+                    </div>
                 </div>
-                <div style="margin-left: auto;"><i class="fas fa-lock"></i></div>
-            </div>
-        </div>
+                <div class="module-status" id="status-cert">
+                    <span class="status-pill lock"><i class="fas fa-lock"></i> Bloqueado</span>
+                </div>
+            </a>
+        </section>
     </main>
 
     <div class="floating-actions">
         <div class="menu-acessibilidade" id="menu-acess">
+            <div class="menu-title">Acessibilidade</div>
             <button class="btn btn-primary" onclick="toggleAltoContraste()"><i class="fas fa-adjust"></i> Alto Contraste</button>
-            <button class="btn btn-outline" style="background:var(--card-bg)" onclick="mudarFonte(2)"><i class="fas fa-font"></i><i class="fas fa-plus"></i> Aumentar Texto</button>
-            <button class="btn btn-outline" style="background:var(--card-bg)" onclick="mudarFonte(-2)"><i class="fas fa-font"></i><i class="fas fa-minus"></i> Diminuir Texto</button>
+            <button class="btn btn-outline" onclick="mudarFonte(2)"><i class="fas fa-font"></i><i class="fas fa-plus"></i> Aumentar Texto</button>
+            <button class="btn btn-outline" onclick="mudarFonte(-2)"><i class="fas fa-font"></i><i class="fas fa-minus"></i> Diminuir Texto</button>
         </div>
-        <button class="btn-floating" onclick="toggleMenuAcessibilidade()">
+        <button class="btn-floating" onclick="toggleMenuAcessibilidade()" title="Acessibilidade">
             <i class="fas fa-universal-access"></i>
         </button>
     </div>
 
     <div class="modal-overlay" id="config-modal">
         <div class="modal-card">
-            <h3 style="margin-bottom: 15px; color: var(--primary-blue);"><i class="fas fa-cog"></i> Configurações</h3>
-            
-            <label style="font-size: 0.85rem; font-weight: 600; color: var(--text-muted);">Alterar Nome de Usuário (Apenas Local):</label>
+            <h3><i class="fas fa-sliders-h"></i> Ajustes da Trilha</h3>
+            <p>O nome pode ser ajustado localmente para exibição nesta tela. O progresso dos módulos é consultado e zerado no banco de dados.</p>
+
+            <label style="font-size: .84rem; font-weight: 800; color: var(--text-muted);">Nome exibido nesta tela</label>
             <input type="text" id="edit-nome" class="input-text" placeholder="Seu nome">
 
-            <div style="padding-top: 15px; border-top: 1px solid var(--border-color); margin-top: 10px;">
-                <button class="btn" style="background: #e53e3e; color: white; width: 100%; margin-bottom: 10px;" onclick="zerarProgresso()">
-                    <i class="fas fa-sync-alt"></i> Zerar Todo o Meu Progresso
-                </button>
-            </div>
+            <button class="btn" style="background: var(--danger); color: white; width: 100%; margin-bottom: 12px;" onclick="zerarProgresso()">
+                <i class="fas fa-sync-alt"></i> Zerar progresso no banco
+            </button>
 
-            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <div style="display:flex; justify-content:flex-end; gap:10px; flex-wrap:wrap;">
                 <button class="btn btn-outline" onclick="fecharConfiguracoes()">Cancelar</button>
                 <button class="btn btn-primary" onclick="salvarConfiguracoes()">Salvar</button>
             </div>
         </div>
     </div>
 
-   <script>
-        let userData = null;
+    <div class="toast" id="toast"></div>
 
-        // --- 1. CARREGAR PERFIL DO BANCO DE DADOS (VIA LOGIN) ---
+    <script>
+        const API_URL = 'https://algoritmolab.onrender.com/api';
+
+        let userData = null;
+        let progressoModulos = null;
+        let scale = 100;
+
+        function normalizarBoolean(valor) {
+            return valor === true || valor === 1 || valor === '1' || valor === 'true';
+        }
+
+        function mostrarToast(msg, tipo = 'ok') {
+            const toast = document.getElementById('toast');
+            toast.className = `toast show ${tipo}`;
+            toast.innerHTML = msg;
+            setTimeout(() => { toast.className = 'toast'; }, 2800);
+        }
+
         function carregarPerfil() {
             if (localStorage.getItem('userLogado') !== 'true') {
-                window.location.href = 'index.html';
+                window.location.replace('index.html');
                 return;
             }
 
-            userData = JSON.parse(localStorage.getItem('userData'));
-
-            if (userData) {
-                document.getElementById('user-name').innerText = userData.nome;
-                document.getElementById('user-streak').innerText = `${userData.streak || 0} Dias`;
-                
-                const avatarDiv = document.getElementById('user-avatar');
-                if (userData.foto) {
-                    avatarDiv.innerHTML = `<img src="${userData.foto}">`;
-                } else {
-                    avatarDiv.innerText = userData.nome.charAt(0).toUpperCase();
-                }
+            const cacheUsuario = localStorage.getItem('userData');
+            if (!cacheUsuario) {
+                window.location.replace('index.html');
+                return;
             }
-            verificarBloqueios();
+
+            try {
+                userData = JSON.parse(cacheUsuario);
+            } catch (error) {
+                localStorage.removeItem('userData');
+                localStorage.removeItem('userLogado');
+                window.location.replace('index.html');
+                return;
+            }
+
+            if (!userData || !userData.email) {
+                window.location.replace('index.html');
+                return;
+            }
+
+            renderizarPerfil();
+            buscarProgressoModulosBanco();
         }
 
-        // --- 2. LÓGICA DE BLOQUEIO POR ETAPAS ---
-        function verificarBloqueios() {
-            if (!userData) return;
+        function renderizarPerfil() {
+            document.getElementById('user-name').innerText = userData.nome || 'Estudante';
+            document.getElementById('user-streak').innerText = `${userData.streak || 0} Dias`;
 
-            const notaDiagnostica = userData.nota_diagnostica;
+            const avatarDiv = document.getElementById('user-avatar');
+            if (userData.foto) {
+                avatarDiv.innerHTML = `<img src="${userData.foto}" alt="Avatar do usuário">`;
+            } else {
+                avatarDiv.innerText = (userData.nome || 'C').charAt(0).toUpperCase();
+            }
+        }
 
-            // CORREÇÃO: Como o banco não tem a coluna "avaliacao_concluida",
-            // agora nós verificamos se o usuário TEM UMA NOTA salva. Se tiver nota (mesmo que seja 0), a avaliação tá feita!
-            const temNotaSalva = (notaDiagnostica !== undefined && notaDiagnostica !== null && notaDiagnostica !== '');
-            const avaliacaoOK = temNotaSalva || userData.avaliacao_concluida === true || userData.avaliacao_concluida === 'true' || userData.avaliacao_concluida === 1;
-            
-            const mod1OK = userData.mod1_concluido === true || userData.mod1_concluido === 'true' || userData.mod1_concluido === 1;
+        async function buscarProgressoModulosBanco() {
+            if (!userData || !userData.email) return;
 
-            // Se terminou a Avaliação -> Mostra nota e Libera Unidade 1
-            if (avaliacaoOK) {
-                document.getElementById('mod-0').classList.add('completed');
-                
-                let htmlStatus = '<i class="fas fa-check-circle" style="color:var(--success-green); font-size: 1.5rem;"></i>';
-                if(temNotaSalva) {
-                    htmlStatus += `<span class="grade-badge">Nota: ${notaDiagnostica}</span>`;
+            document.getElementById('sync-text').innerText = 'Buscando progresso no banco...';
+
+            try {
+                const response = await fetch(`${API_URL}/modulos/progresso?email=${encodeURIComponent(userData.email)}`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Não foi possível buscar o progresso.');
                 }
-                document.getElementById('status-0').innerHTML = htmlStatus;
-                
-                // Destrava Modulo 1
+
+                progressoModulos = data.progresso;
+                document.getElementById('sync-text').innerText = 'Progresso sincronizado com o banco';
+                verificarBloqueios(progressoModulos);
+            } catch (error) {
+                console.error('Erro ao buscar progresso:', error);
+                document.getElementById('sync-text').innerText = 'Erro ao sincronizar. Usando dados do login.';
+
+                progressoModulos = {
+                    nota_diagnostica: userData.nota_diagnostica,
+                    avaliacao_concluida: userData.avaliacao_concluida,
+                    mod1_concluido: userData.mod1_concluido,
+                    mod2_concluido: userData.mod2_concluido,
+                    certificado_liberado: userData.certificado_liberado
+                };
+                verificarBloqueios(progressoModulos);
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> Não consegui buscar o progresso no banco.', 'err');
+            }
+        }
+
+        function limparEstadoVisual() {
+            ['mod-0', 'mod-1', 'mod-2', 'mod-cert'].forEach(id => {
+                const item = document.getElementById(id);
+                item.classList.remove('completed');
+                if (id !== 'mod-0') item.classList.add('locked');
+            });
+
+            document.getElementById('mod-2').setAttribute('href', '#');
+            document.getElementById('mod-cert').setAttribute('href', 'certificados.html');
+            document.getElementById('title-1').innerHTML = 'Lógica de Programação <i class="fas fa-lock"></i>';
+            document.getElementById('title-2').innerHTML = 'Variáveis e Tipos <i class="fas fa-lock"></i>';
+            document.getElementById('title-cert').innerHTML = 'Certificado Final <i class="fas fa-lock"></i>';
+            document.getElementById('status-0').innerHTML = '<span class="status-pill next"><i class="fas fa-arrow-right"></i> Iniciar</span>';
+            document.getElementById('status-1').innerHTML = '<span class="status-pill lock"><i class="fas fa-lock"></i> Bloqueado</span>';
+            document.getElementById('status-2').innerHTML = '<span class="status-pill lock"><i class="fas fa-lock"></i> Bloqueado</span>';
+            document.getElementById('status-cert').innerHTML = '<span class="status-pill lock"><i class="fas fa-lock"></i> Bloqueado</span>';
+        }
+
+        function verificarBloqueios(progresso) {
+            limparEstadoVisual();
+
+            const notaDiagnostica = progresso ? progresso.nota_diagnostica : null;
+            const temNotaSalva = notaDiagnostica !== undefined && notaDiagnostica !== null && notaDiagnostica !== '';
+            const avaliacaoOK = temNotaSalva || normalizarBoolean(progresso.avaliacao_concluida);
+            const mod1OK = normalizarBoolean(progresso.mod1_concluido);
+            const mod2OK = normalizarBoolean(progresso.mod2_concluido);
+            const certificadoOK = normalizarBoolean(progresso.certificado_liberado) || (avaliacaoOK && mod1OK && mod2OK);
+
+            let etapasConcluidas = 0;
+
+            if (avaliacaoOK) {
+                etapasConcluidas++;
+                document.getElementById('mod-0').classList.add('completed');
+                document.getElementById('status-0').innerHTML = `
+                    <span class="status-pill ok"><i class="fas fa-check-circle"></i> Concluída</span>
+                    ${temNotaSalva ? `<span class="status-pill grade">Nota: ${notaDiagnostica}</span>` : ''}
+                `;
+
                 const mod1 = document.getElementById('mod-1');
                 mod1.classList.remove('locked');
-                document.getElementById('title-1').innerHTML = "Lógica de Programação";
+                document.getElementById('title-1').innerHTML = 'Lógica de Programação';
+                document.getElementById('status-1').innerHTML = '<span class="status-pill next"><i class="fas fa-arrow-right"></i> Continuar</span>';
             }
 
-            // Se terminou Unidade 1 -> Libera Unidade 2
             if (mod1OK) {
+                etapasConcluidas++;
                 document.getElementById('mod-1').classList.add('completed');
-                document.getElementById('status-1').innerHTML = '<i class="fas fa-check-circle" style="color:var(--success-green); font-size: 1.5rem;"></i>';
-                
-                // Destrava Modulo 2
+                document.getElementById('status-1').innerHTML = '<span class="status-pill ok"><i class="fas fa-check-circle"></i> Concluído</span>';
+
                 const mod2 = document.getElementById('mod-2');
                 mod2.classList.remove('locked');
                 mod2.setAttribute('href', 'variaveis.html');
-                document.getElementById('title-2').innerHTML = "Variáveis e Tipos";
+                document.getElementById('title-2').innerHTML = 'Variáveis e Tipos';
+                document.getElementById('status-2').innerHTML = '<span class="status-pill next"><i class="fas fa-arrow-right"></i> Continuar</span>';
+            }
+
+            if (mod2OK) {
+                etapasConcluidas++;
+                document.getElementById('mod-2').classList.add('completed');
+                document.getElementById('status-2').innerHTML = '<span class="status-pill ok"><i class="fas fa-check-circle"></i> Concluído</span>';
+            }
+
+            if (certificadoOK) {
+                document.getElementById('mod-cert').classList.remove('locked');
+                document.getElementById('title-cert').innerHTML = 'Certificado Final';
+                document.getElementById('status-cert').innerHTML = '<span class="status-pill next"><i class="fas fa-medal"></i> Emitir</span>';
+            }
+
+            atualizarBarraProgresso(etapasConcluidas, 3);
+        }
+
+        function atualizarBarraProgresso(valor, total) {
+            const percentual = Math.round((valor / total) * 100);
+            document.getElementById('percentual-geral').innerText = percentual;
+            document.getElementById('progress-fill').style.width = `${percentual}%`;
+        }
+
+        async function salvarProgressoModulo(modulo, concluido = true) {
+            if (!userData || !userData.email) return;
+
+            try {
+                const response = await fetch(`${API_URL}/modulos/salvar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: userData.email,
+                        modulo,
+                        concluido
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Erro ao salvar progresso.');
+
+                progressoModulos = data.progresso;
+                verificarBloqueios(progressoModulos);
+                mostrarToast('<i class="fas fa-check-circle"></i> Progresso salvo no banco.');
+            } catch (error) {
+                console.error('Erro ao salvar módulo:', error);
+                mostrarToast('<i class="fas fa-circle-xmark"></i> Erro ao salvar progresso no banco.', 'err');
             }
         }
 
-        // --- 3. CONFIGURAÇÕES ---
         function abrirConfiguracoes() {
-            if(userData) document.getElementById('edit-nome').value = userData.nome;
+            if (userData) document.getElementById('edit-nome').value = userData.nome || '';
             document.getElementById('config-modal').style.display = 'flex';
         }
-        function fecharConfiguracoes() { document.getElementById('config-modal').style.display = 'none'; }
+
+        function fecharConfiguracoes() {
+            document.getElementById('config-modal').style.display = 'none';
+        }
 
         function salvarConfiguracoes() {
             const novoNome = document.getElementById('edit-nome').value.trim();
             if (novoNome && userData) {
                 userData.nome = novoNome;
                 localStorage.setItem('userData', JSON.stringify(userData));
-                window.location.reload();
+                renderizarPerfil();
+                mostrarToast('<i class="fas fa-check-circle"></i> Nome atualizado nesta tela.');
+            }
+            fecharConfiguracoes();
+        }
+
+        async function zerarProgresso() {
+            if (!confirm('Deseja realmente zerar seu progresso? Essa ação será aplicada no banco de dados.')) return;
+            if (!userData || !userData.email) return;
+
+            try {
+                const response = await fetch(`${API_URL}/modulos/zerar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: userData.email })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Erro ao zerar progresso.');
+
+                progressoModulos = data.progresso;
+                verificarBloqueios(progressoModulos);
+                fecharConfiguracoes();
+                mostrarToast('<i class="fas fa-check-circle"></i> Progresso zerado no banco.');
+            } catch (error) {
+                console.error('Erro ao zerar progresso:', error);
+                mostrarToast('<i class="fas fa-circle-xmark"></i> Erro ao zerar progresso no banco.', 'err');
             }
         }
 
-        function zerarProgresso() {
-            if (confirm("Deseja realmente resetar? Você terá que fazer a avaliação de novo.")) {
-                if (userData) {
-                    userData.avaliacao_concluida = false;
-                    userData.nota_diagnostica = null;
-                    userData.mod1_concluido = false;
-                    localStorage.setItem('userData', JSON.stringify(userData));
-                }
-                location.reload();
-            }
-        }
-
-        // --- 4. ACESSIBILIDADE ---
         function toggleMenuAcessibilidade() {
-            const m = document.getElementById('menu-acess');
-            m.style.display = m.style.display === 'flex' ? 'none' : 'flex';
+            const menu = document.getElementById('menu-acess');
+            menu.classList.toggle('active');
         }
+
         function toggleAltoContraste() {
             document.body.classList.toggle('high-contrast');
             localStorage.setItem('acess_alto', document.body.classList.contains('high-contrast'));
         }
-        let scale = 100;
-        function mudarFonte(d) {
-            scale += d;
+
+        function mudarFonte(delta) {
+            scale += delta;
+            if (scale < 84) scale = 84;
+            if (scale > 140) scale = 140;
             document.documentElement.style.setProperty('--font-scale', `${scale}%`);
+            localStorage.setItem('acess_escala_fonte', scale);
         }
+
+        window.salvarProgressoModulo = salvarProgressoModulo;
 
         window.onload = () => {
             carregarPerfil();
-            if(localStorage.getItem('acess_alto') === 'true') document.body.classList.add('high-contrast');
+
+            if (localStorage.getItem('acess_alto') === 'true') {
+                document.body.classList.add('high-contrast');
+            }
+
+            const escalaSalva = localStorage.getItem('acess_escala_fonte');
+            if (escalaSalva) {
+                scale = parseInt(escalaSalva, 10);
+                document.documentElement.style.setProperty('--font-scale', `${scale}%`);
+            }
         };
     </script>
 </body>
