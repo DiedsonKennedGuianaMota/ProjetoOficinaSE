@@ -1,0 +1,1953 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cynix - Avaliação Final Unidade 2</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+
+    <style>
+        :root {
+            --primary-blue: #10243b;
+            --accent-teal: #23b7d9;
+            --accent-purple: #7c5cff;
+            --bg-color: #07111f;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-solid: #10243b;
+            --text-main: #f8fafc;
+            --text-muted: #9fb0c8;
+            --border-color: rgba(255,255,255,0.13);
+            --fire-color: #ffb547;
+            --success-green: #42d392;
+            --warning-yellow: #f6c35b;
+            --danger-red: #ff5c7a;
+            --console-bg: #050915;
+            --font-scale: 100%;
+            --shadow: 0 24px 70px rgba(0,0,0,0.35);
+        }
+
+        .high-contrast {
+            --primary-blue: #000000;
+            --accent-teal: #ffff00;
+            --accent-purple: #00ebff;
+            --bg-color: #000000;
+            --card-bg: #1e1e1e;
+            --card-solid: #1e1e1e;
+            --text-main: #ffffff;
+            --text-muted: #e2e8f0;
+            --border-color: #ffff00;
+            --success-green: #00ff7f;
+            --warning-yellow: #ffff00;
+            --danger-red: #ff4d4d;
+            --console-bg: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-size: var(--font-scale);
+        }
+
+        body {
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at 12% 10%, rgba(35,183,217,.22), transparent 26%),
+                radial-gradient(circle at 88% 16%, rgba(124,92,255,.22), transparent 28%),
+                radial-gradient(circle at 55% 96%, rgba(66,211,146,.13), transparent 30%),
+                linear-gradient(135deg, #060d18 0%, var(--bg-color) 48%, #0b1829 100%);
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 390px;
+            height: 390px;
+            border-radius: 50%;
+            filter: blur(25px);
+            opacity: .22;
+            pointer-events: none;
+            z-index: -1;
+            animation: floatGlow 9s ease-in-out infinite alternate;
+        }
+
+        body::before {
+            background: var(--accent-teal);
+            left: -190px;
+            top: 120px;
+        }
+
+        body::after {
+            background: var(--accent-purple);
+            right: -160px;
+            bottom: 40px;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes floatGlow {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(40px, -32px) scale(1.08); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(26px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseGlow {
+            0%,100% { transform: scale(1); box-shadow: 0 0 0 rgba(35,183,217,0); }
+            50% { transform: scale(1.04); box-shadow: 0 0 28px rgba(35,183,217,.30); }
+        }
+
+        @keyframes shine {
+            from { transform: translateX(-130%) rotate(15deg); }
+            to { transform: translateX(170%) rotate(15deg); }
+        }
+
+        .app {
+            width: 100%;
+            height: 100vh;
+            display: grid;
+            grid-template-rows: 76px minmax(0, 1fr);
+        }
+
+        .navbar {
+            z-index: 20;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 12px 4%;
+            background: rgba(7, 17, 31, .76);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 12px 40px rgba(0,0,0,.18);
+        }
+
+        .brand-area,
+        .nav-profile,
+        .nav-actions,
+        .timer-box,
+        .warning-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--danger-red), var(--accent-purple));
+            color: white;
+            font-size: 1.35rem;
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .brand-text strong {
+            display: block;
+            font-weight: 800;
+            letter-spacing: .5px;
+        }
+
+        .brand-text span {
+            display: block;
+            color: var(--text-muted);
+            font-size: .76rem;
+        }
+
+        .top-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            justify-content: center;
+            min-width: 0;
+        }
+
+        .timer-box,
+        .warning-box {
+            padding: 9px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,.07);
+            font-weight: 800;
+            font-size: .85rem;
+            white-space: nowrap;
+        }
+
+        .timer-box {
+            color: #d7f7ff;
+            border-color: rgba(35,183,217,.28);
+        }
+
+        .warning-box {
+            color: #ffe1a6;
+            border-color: rgba(255,181,71,.32);
+        }
+
+        .warning-box.danger {
+            color: #ffd6dd;
+            border-color: rgba(255,92,122,.45);
+            background: rgba(255,92,122,.13);
+        }
+
+        .nav-profile {
+            padding: 7px 10px;
+            border-radius: 18px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+            max-width: 270px;
+        }
+
+        .avatar {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: white;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            border: 2px solid rgba(255,255,255,.18);
+            overflow: hidden;
+            flex: 0 0 auto;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #user-name {
+            display: block;
+            max-width: 135px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 800;
+            font-size: .9rem;
+        }
+
+        .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--fire-color);
+            font-weight: 800;
+            font-size: .72rem;
+        }
+
+        .btn {
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 14px;
+            padding: 10px 15px;
+            font-size: .86rem;
+            font-weight: 800;
+            transition: .25s ease;
+            color: var(--text-main);
+            white-space: nowrap;
+        }
+
+        .btn-outline {
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            transform: translateY(-2px);
+            border-color: rgba(35,183,217,.75);
+            background: rgba(35,183,217,.12);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: white;
+            box-shadow: 0 14px 35px rgba(35,183,217,.22);
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, var(--success-green), #20b987);
+            color: white;
+        }
+
+        .btn-danger {
+            background: rgba(255,92,122,.16);
+            border: 1px solid rgba(255,92,122,.34);
+            color: #ffd6dd;
+        }
+
+        .btn:disabled {
+            opacity: .55;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .main-area {
+            min-height: 0;
+            height: 100%;
+            padding: 18px 22px;
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr);
+            gap: 14px;
+        }
+
+        .exam-header {
+            position: relative;
+            padding: 16px 18px;
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            background:
+                linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04)),
+                radial-gradient(circle at 90% 12%, rgba(35,183,217,.20), transparent 28%),
+                radial-gradient(circle at 8% 100%, rgba(124,92,255,.18), transparent 30%);
+            box-shadow: 0 14px 35px rgba(0,0,0,.22);
+            overflow: hidden;
+            animation: slideUp .45s ease both;
+        }
+
+        .exam-header::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
+            transform: translateX(-130%) rotate(15deg);
+            animation: shine 5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .exam-header-content {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .exam-header h1 {
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            line-height: 1.12;
+            margin-bottom: 6px;
+        }
+
+        .exam-header h1 span {
+            color: var(--accent-teal);
+        }
+
+        .exam-header p {
+            color: var(--text-muted);
+            font-size: .88rem;
+            line-height: 1.5;
+        }
+
+        .progress-panel {
+            padding: 12px;
+            border-radius: 18px;
+            background: rgba(0,0,0,.18);
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            font-weight: 800;
+            font-size: .82rem;
+        }
+
+        #progress-percent {
+            color: var(--accent-teal);
+        }
+
+        .progress-bar {
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--accent-teal), var(--success-green));
+            box-shadow: 0 0 18px rgba(35,183,217,.35);
+            transition: .45s ease;
+        }
+
+        .workspace {
+            min-height: 0;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 250px minmax(0, 1fr);
+            gap: 14px;
+        }
+
+        .side-panel,
+        .screen-card {
+            min-height: 0;
+            border-radius: 24px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            box-shadow: 0 18px 45px rgba(0,0,0,.22);
+            overflow: hidden;
+        }
+
+        .side-panel {
+            padding: 14px;
+            display: grid;
+            grid-template-rows: auto auto minmax(0, 1fr);
+            gap: 12px;
+        }
+
+        .sync-status {
+            padding: 10px 12px;
+            border-radius: 16px;
+            background: rgba(66, 211, 146, .10);
+            color: #bbf7d0;
+            border: 1px solid rgba(66, 211, 146, .22);
+            font-weight: 800;
+            font-size: .78rem;
+        }
+
+        .step-list {
+            display: grid;
+            gap: 8px;
+        }
+
+        .step-chip {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            padding: 10px;
+            border-radius: 16px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: .8rem;
+            font-weight: 800;
+        }
+
+        .step-chip.active {
+            color: white;
+            border-color: rgba(35,183,217,.55);
+            background: rgba(35,183,217,.14);
+        }
+
+        .step-chip.done {
+            color: #bbf7d0;
+            border-color: rgba(66,211,146,.35);
+            background: rgba(66,211,146,.10);
+        }
+
+        .rules-box {
+            min-height: 0;
+            padding: 13px;
+            border-radius: 18px;
+            background: rgba(0,0,0,.16);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: .78rem;
+            line-height: 1.5;
+        }
+
+        .rules-box strong {
+            display: block;
+            color: var(--text-main);
+            margin-bottom: 6px;
+        }
+
+        .screen-card {
+            position: relative;
+            padding: 18px;
+        }
+
+        .exam-screen {
+            display: none;
+            height: 100%;
+            min-height: 0;
+            animation: slideUp .35s ease both;
+        }
+
+        .exam-screen.active {
+            display: grid;
+        }
+
+        .screen-questions {
+            grid-template-rows: auto minmax(0, 1fr) auto;
+            gap: 13px;
+        }
+
+        .screen-lab {
+            grid-template-rows: auto minmax(0, 1fr) auto;
+            gap: 12px;
+        }
+
+        .screen-result {
+            place-items: center;
+        }
+
+        .screen-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .screen-title h2 {
+            font-size: 1.25rem;
+        }
+
+        .screen-title h2 i {
+            color: var(--accent-teal);
+            margin-right: 7px;
+        }
+
+        .screen-title p {
+            color: var(--text-muted);
+            font-size: .82rem;
+            margin-top: 2px;
+        }
+
+        .question-box {
+            min-height: 0;
+            display: grid;
+            grid-template-rows: auto auto minmax(0, 1fr);
+            gap: 12px;
+            padding: 18px;
+            border-radius: 22px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .question-number {
+            color: #c7f5ff;
+            font-weight: 800;
+            font-size: .85rem;
+        }
+
+        .question-text {
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            line-height: 1.55;
+            font-weight: 700;
+        }
+
+        .options-grid {
+            min-height: 0;
+            display: grid;
+            gap: 10px;
+            align-content: start;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            cursor: pointer;
+            background: rgba(255,255,255,.06);
+            color: var(--text-main);
+            text-align: left;
+            font-size: .9rem;
+            line-height: 1.4;
+            transition: .22s ease;
+        }
+
+        .option-btn:hover {
+            border-color: rgba(35,183,217,.7);
+            background: rgba(35,183,217,.12);
+            transform: translateX(4px);
+        }
+
+        .option-btn.selected {
+            background: linear-gradient(135deg, rgba(35,183,217,.85), rgba(124,92,255,.85));
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 12px 28px rgba(35,183,217,.18);
+        }
+
+        .screen-actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .question-dots {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.18);
+            border: 1px solid rgba(255,255,255,.12);
+        }
+
+        .dot.active {
+            background: var(--accent-teal);
+            box-shadow: 0 0 12px rgba(35,183,217,.48);
+        }
+
+        .dot.answered {
+            background: var(--success-green);
+        }
+
+        .lab-layout {
+            min-height: 0;
+            display: grid;
+            grid-template-columns: 320px minmax(0, 1fr);
+            gap: 14px;
+        }
+
+        .mission-card {
+            min-height: 0;
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr);
+            gap: 12px;
+            padding: 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .mission-card h3 {
+            font-size: 1rem;
+        }
+
+        .mission-card h3 i {
+            color: var(--accent-teal);
+            margin-right: 7px;
+        }
+
+        .mission-content {
+            min-height: 0;
+            color: var(--text-muted);
+            font-size: .84rem;
+            line-height: 1.55;
+            overflow: hidden;
+        }
+
+        .mission-content ul {
+            margin: 10px 0 0 18px;
+        }
+
+        .mission-content li {
+            margin-bottom: 5px;
+        }
+
+        .code-chip {
+            display: inline-flex;
+            padding: 2px 7px;
+            border-radius: 8px;
+            background: rgba(0,0,0,.24);
+            border: 1px solid rgba(255,255,255,.10);
+            font-family: 'Fira Code', monospace;
+            color: #f8f8f2;
+        }
+
+        .ide-area {
+            min-height: 0;
+            display: grid;
+            grid-template-rows: minmax(0, 1fr) 112px;
+            gap: 10px;
+        }
+
+        .ide-container {
+            min-height: 0;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,.12);
+            background: #282a36;
+            box-shadow: 0 20px 42px rgba(0,0,0,.30);
+        }
+
+        .ide-header {
+            height: 38px;
+            background: #1e2030;
+            padding: 10px 13px;
+            color: #f8f8f2;
+            font-size: .78rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Fira Code', monospace;
+            border-bottom: 1px solid rgba(255,255,255,.10);
+        }
+
+        .ide-header span,
+        .ide-header strong {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .CodeMirror {
+            height: calc(100% - 38px) !important;
+            min-height: 250px;
+            font-family: 'Fira Code', monospace;
+            font-size: .86rem;
+            line-height: 1.45;
+        }
+
+        .CodeMirror-scroll {
+            min-height: 250px;
+        }
+
+        .console-output {
+            min-height: 0;
+            overflow: hidden;
+            background: var(--console-bg);
+            color: #9fffbf;
+            padding: 12px;
+            font-family: 'Fira Code', monospace;
+            font-size: .78rem;
+            line-height: 1.45;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 18px;
+            white-space: pre-wrap;
+        }
+
+        .lab-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .lab-actions .btn {
+            flex: 1;
+            min-width: 170px;
+        }
+
+        .result-box {
+            text-align: center;
+            max-width: 720px;
+            padding: 28px;
+        }
+
+        .result-icon {
+            width: 104px;
+            height: 104px;
+            display: grid;
+            place-items: center;
+            border-radius: 32px;
+            margin: 0 auto 18px;
+            font-size: 4.1rem;
+            color: white;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            box-shadow: 0 26px 60px rgba(35,183,217,.24);
+            animation: pulseGlow 2.6s ease-in-out infinite;
+        }
+
+        .result-icon.fail {
+            background: linear-gradient(135deg, var(--danger-red), var(--warning-yellow));
+        }
+
+        .result-box h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .result-box p {
+            color: var(--text-muted);
+            line-height: 1.65;
+            margin-bottom: 18px;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            margin: 18px 0;
+        }
+
+        .score-card {
+            padding: 13px;
+            border-radius: 18px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .score-card small {
+            display: block;
+            color: var(--text-muted);
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .score-card strong {
+            font-size: 1.35rem;
+            color: var(--accent-teal);
+        }
+
+        .modal-blocker {
+            position: fixed;
+            inset: 0;
+            display: none;
+            place-items: center;
+            background: rgba(0,0,0,.70);
+            backdrop-filter: blur(8px);
+            z-index: 200;
+            padding: 20px;
+        }
+
+        .modal-blocker.active {
+            display: grid;
+        }
+
+        .modal-card {
+            width: min(520px, 100%);
+            padding: 26px;
+            border-radius: 28px;
+            background:
+                linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04)),
+                var(--card-solid);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            text-align: center;
+            animation: slideUp .28s ease both;
+        }
+
+        .modal-card i.big {
+            font-size: 3.5rem;
+            color: var(--warning-yellow);
+            margin-bottom: 15px;
+        }
+
+        .modal-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.45rem;
+        }
+
+        .modal-card p {
+            color: var(--text-muted);
+            line-height: 1.65;
+            margin-bottom: 18px;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%) translateY(30px);
+            min-width: min(470px, calc(100% - 40px));
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(16,36,59,.97);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            box-shadow: var(--shadow);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 230;
+            opacity: 0;
+            transition: .35s ease;
+            line-height: 1.45;
+        }
+
+        .toast.show {
+            display: flex;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.success i { color: var(--success-green); }
+        .toast.error i { color: var(--danger-red); }
+        .toast.info i { color: var(--accent-teal); }
+
+        @media (max-width: 980px) {
+            html, body {
+                overflow: auto;
+            }
+
+            .app {
+                height: auto;
+                min-height: 100vh;
+                grid-template-rows: auto auto;
+            }
+
+            .navbar,
+            .exam-header-content,
+            .workspace,
+            .lab-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar {
+                flex-wrap: wrap;
+            }
+
+            .top-status {
+                order: 3;
+                width: 100%;
+                justify-content: flex-start;
+                flex-wrap: wrap;
+            }
+
+            .workspace {
+                height: auto;
+            }
+
+            .screen-card,
+            .side-panel {
+                min-height: auto;
+            }
+
+            .exam-screen {
+                min-height: 640px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <header class="navbar">
+            <div class="brand-area">
+                <div class="brand-logo">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <div class="brand-text">
+                    <strong>Avaliação U2</strong>
+                    <span>Estruturas Condicionais</span>
+                </div>
+            </div>
+
+            <div class="top-status">
+                <div class="timer-box">
+                    <i class="fas fa-clock"></i>
+                    <span id="timer">60:00</span>
+                </div>
+
+                <div class="warning-box" id="warning-box">
+                    <i class="fas fa-eye"></i>
+                    Advertências: <span id="warning-count">0</span>/3
+                </div>
+            </div>
+
+            <div class="nav-profile">
+                <div class="avatar" id="user-avatar">A</div>
+                <div>
+                    <strong id="user-name">Carregando...</strong>
+                    <div class="streak-badge">
+                        <i class="fas fa-fire"></i>
+                        <span id="user-streak">0 Dias</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <button class="btn btn-outline" onclick="confirmarSaida()">
+                    <i class="fas fa-door-open"></i>
+                    Sair
+                </button>
+            </div>
+        </header>
+
+        <main class="main-area">
+            <section class="exam-header">
+                <div class="exam-header-content">
+                    <div>
+                        <h1>Prova final sobre <span>if, else e decisões em C</span></h1>
+                        <p>
+                            Responda as questões e conclua o desafio prático validado no Judge0.
+                            A tela não possui rolagem para manter o aluno focado em uma etapa por vez.
+                        </p>
+                    </div>
+
+                    <div class="progress-panel">
+                        <div class="progress-head">
+                            <span>Progresso da avaliação</span>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progress-fill"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="workspace">
+                <aside class="side-panel">
+                    <div class="sync-status" id="sync-status">
+                        <i class="fas fa-cloud"></i>
+                        Aguardando início
+                    </div>
+
+                    <div class="step-list">
+                        <div class="step-chip active" id="step-questoes">
+                            <i class="fas fa-list-check"></i>
+                            Questões objetivas
+                        </div>
+                        <div class="step-chip" id="step-pratica">
+                            <i class="fas fa-code"></i>
+                            Prática Judge0
+                        </div>
+                        <div class="step-chip" id="step-resultado">
+                            <i class="fas fa-award"></i>
+                            Resultado
+                        </div>
+                    </div>
+
+                    <div class="rules-box">
+                        <strong><i class="fas fa-triangle-exclamation"></i> Regras da avaliação</strong>
+                        Tempo total: 60 minutos.<br>
+                        Não troque de aba ou janela.<br>
+                        Com 3 advertências, a tentativa será encerrada.<br>
+                        Nota mínima: 80 pontos.<br>
+                        A prática é validada pelo Judge0.
+                    </div>
+                </aside>
+
+                <section class="screen-card">
+                    <div class="exam-screen screen-questions active" id="screen-questoes">
+                        <div class="screen-title">
+                            <div>
+                                <h2><i class="fas fa-brain"></i> Parte 1: questões objetivas</h2>
+                                <p>São 5 questões. Cada uma vale 10 pontos.</p>
+                            </div>
+                            <span class="timer-box"><i class="fas fa-question"></i> <span id="q-indicator">1/5</span></span>
+                        </div>
+
+                        <div class="question-box">
+                            <div class="question-number" id="question-number">Questão 1</div>
+                            <div class="question-text" id="question-text">Carregando questão...</div>
+                            <div class="options-grid" id="options-grid"></div>
+                        </div>
+
+                        <div class="screen-actions">
+                            <button class="btn btn-outline" id="btn-prev" onclick="voltarQuestao()">
+                                <i class="fas fa-chevron-left"></i>
+                                Anterior
+                            </button>
+
+                            <div class="question-dots" id="question-dots"></div>
+
+                            <button class="btn btn-primary" id="btn-next" onclick="avancarQuestao()">
+                                Próxima
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="exam-screen screen-lab" id="screen-pratica">
+                        <div class="screen-title">
+                            <div>
+                                <h2><i class="fas fa-code"></i> Parte 2: desafio prático</h2>
+                                <p>Vale 50 pontos. O programa será testado automaticamente no Judge0.</p>
+                            </div>
+                            <span class="timer-box"><i class="fas fa-server"></i> Judge0</span>
+                        </div>
+
+                        <div class="lab-layout">
+                            <aside class="mission-card">
+                                <h3><i class="fas fa-bullseye"></i> Missão</h3>
+                                <div class="mission-content">
+                                    Faça um programa em C que leia uma idade inteira e mostre:
+                                    <ul>
+                                        <li><span class="code-chip">Maior</span>, se a idade for maior ou igual a 18.</li>
+                                        <li><span class="code-chip">Menor</span>, se a idade for menor que 18.</li>
+                                    </ul>
+                                    O programa precisa usar <span class="code-chip">if</span> e <span class="code-chip">else</span>.<br><br>
+                                    Testes automáticos:<br>
+                                    <span class="code-chip">20 → Maior</span><br>
+                                    <span class="code-chip">18 → Maior</span><br>
+                                    <span class="code-chip">17 → Menor</span>
+                                </div>
+                            </aside>
+
+                            <div class="ide-area">
+                                <div class="ide-container">
+                                    <div class="ide-header">
+                                        <span><i class="fas fa-file-code"></i> avaliacao_unidade2.c</span>
+                                        <strong>C + Judge0</strong>
+                                    </div>
+                                    <textarea id="editor-c"></textarea>
+                                </div>
+
+                                <div class="console-output" id="console-output">&gt; Terminal da avaliação pronto.
+&gt; Escreva o código e clique em Validar com Judge0.
+&gt; A avaliação aceitará "Maior" ou "Maior de idade", "Menor" ou "Menor de idade".</div>
+                            </div>
+                        </div>
+
+                        <div class="lab-actions">
+                            <button class="btn btn-outline" onclick="restaurarCodigoBase()">
+                                <i class="fas fa-rotate-left"></i>
+                                Restaurar código
+                            </button>
+
+                            <button class="btn btn-primary" id="btn-run" onclick="rodarTesteLivre()">
+                                <i class="fas fa-play"></i>
+                                Testar com idade 20
+                            </button>
+
+                            <button class="btn btn-green" id="btn-validar" onclick="validarPraticaJudge0()">
+                                <i class="fas fa-check"></i>
+                                Validar com Judge0
+                            </button>
+
+                            <button class="btn btn-danger" onclick="finalizarAvaliacao(false)">
+                                <i class="fas fa-flag-checkered"></i>
+                                Finalizar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="exam-screen screen-result" id="screen-resultado">
+                        <div class="result-box">
+                            <div class="result-icon" id="result-icon">
+                                <i class="fas fa-award"></i>
+                            </div>
+                            <h2 id="result-title">Resultado</h2>
+                            <p id="result-message">Calculando resultado...</p>
+
+                            <div class="score-grid">
+                                <div class="score-card">
+                                    <small>Questões</small>
+                                    <strong id="score-objetivas">0</strong>
+                                </div>
+                                <div class="score-card">
+                                    <small>Prática</small>
+                                    <strong id="score-pratica">0</strong>
+                                </div>
+                                <div class="score-card">
+                                    <small>Total</small>
+                                    <strong id="score-total">0</strong>
+                                </div>
+                            </div>
+
+                            <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+                                <button class="btn btn-primary" onclick="location.href='unidades.html'">
+                                    <i class="fas fa-map"></i>
+                                    Ir para Unidades
+                                </button>
+                                <button class="btn btn-outline" onclick="location.href='unidade-2-conteudo.html'">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Voltar para Unidade 2
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal-blocker active" id="modal-inicio">
+        <div class="modal-card">
+            <i class="fas fa-shield-halved big"></i>
+            <h3>Avaliação Final da Unidade 2</h3>
+            <p>
+                Você terá 60 minutos. Evite trocar de aba, minimizar a janela ou sair da tela.
+                Cada saída gera uma advertência. Com 3 advertências, a tentativa é encerrada.
+            </p>
+            <button class="btn btn-primary" onclick="iniciarAvaliacao()">
+                <i class="fas fa-play"></i>
+                Iniciar avaliação
+            </button>
+        </div>
+    </div>
+
+    <div class="modal-blocker" id="modal-advertencia">
+        <div class="modal-card">
+            <i class="fas fa-triangle-exclamation big"></i>
+            <h3>Advertência registrada</h3>
+            <p id="advertencia-texto">
+                Você saiu da tela da avaliação. Evite trocar de aba ou janela.
+            </p>
+            <button class="btn btn-primary" onclick="fecharAdvertencia()">
+                Entendi e vou continuar
+            </button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <i class="fas fa-circle-info"></i>
+        <span id="toast-text">Mensagem</span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+
+    <script>
+        const API_URL = `${window.location.origin}/api`;
+
+        const questoes = [
+            {
+                texto: 'Qual estrutura em C permite executar um bloco quando uma condição é verdadeira?',
+                opcoes: [
+                    'printf',
+                    'if',
+                    'scanf',
+                    'return'
+                ],
+                correta: 1
+            },
+            {
+                texto: 'Em C, qual operador deve ser usado para comparar igualdade?',
+                opcoes: [
+                    '=',
+                    '==',
+                    '=>',
+                    '<>'
+                ],
+                correta: 1
+            },
+            {
+                texto: 'O que acontece com o bloco else?',
+                opcoes: [
+                    'É executado quando a condição do if é falsa.',
+                    'É executado sempre antes do if.',
+                    'Serve apenas para imprimir textos.',
+                    'Serve para declarar uma variável.'
+                ],
+                correta: 0
+            },
+            {
+                texto: 'Qual operador lógico representa E em C?',
+                opcoes: [
+                    '||',
+                    '&&',
+                    '!',
+                    '=='
+                ],
+                correta: 1
+            },
+            {
+                texto: 'Qual alternativa representa uma condição válida?',
+                opcoes: [
+                    'if idade > 18',
+                    'if (idade >= 18)',
+                    'se (idade => 18)',
+                    'if idade = maior'
+                ],
+                correta: 1
+            }
+        ];
+
+        const codigoBase = `#include <stdio.h>
+
+int main() {
+    int idade;
+
+    scanf("%d", &idade);
+
+    // Complete a condição usando if e else
+
+
+    return 0;
+}
+`;
+
+        let usuario = null;
+        let editor = null;
+        let indiceQuestao = 0;
+        let respostas = new Array(questoes.length).fill(null);
+        let praticaAprovada = false;
+        let provaIniciada = false;
+        let provaFinalizada = false;
+        let advertencias = 0;
+        let segundosRestantes = 60 * 60;
+        let timerInterval = null;
+        let ignorarBlurTemporario = false;
+        let pontuacaoObjetivas = 0;
+        let pontuacaoPratica = 0;
+
+        function carregarUsuario() {
+            if (localStorage.getItem('userLogado') !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                usuario = JSON.parse(localStorage.getItem('userData'));
+            } catch (e) {
+                usuario = null;
+            }
+
+            if (!usuario) {
+                usuario = { nome: localStorage.getItem('userName') || 'Estudante', email: '', streak: 0 };
+            }
+
+            document.getElementById('user-name').innerText = usuario.nome || 'Estudante';
+            document.getElementById('user-streak').innerText = `${usuario.streak || 0} Dias`;
+
+            const avatar = document.getElementById('user-avatar');
+
+            if (usuario.foto) {
+                avatar.innerHTML = `<img src="${usuario.foto}" alt="Foto do usuário">`;
+            } else {
+                avatar.innerText = (usuario.nome || 'E').charAt(0).toUpperCase();
+            }
+        }
+
+        function iniciarAvaliacao() {
+            document.getElementById('modal-inicio').classList.remove('active');
+            provaIniciada = true;
+            atualizarStatusSync('Avaliação em andamento', 'load');
+            renderizarQuestao();
+            criarDots();
+            atualizarProgresso(5);
+            iniciarTimer();
+            entrarTelaCheia();
+        }
+
+        function iniciarTimer() {
+            atualizarTimer();
+
+            timerInterval = setInterval(() => {
+                if (!provaIniciada || provaFinalizada) return;
+
+                segundosRestantes--;
+                atualizarTimer();
+
+                if (segundosRestantes <= 0) {
+                    finalizarPorTempo();
+                }
+            }, 1000);
+        }
+
+        function atualizarTimer() {
+            const min = Math.floor(segundosRestantes / 60);
+            const sec = segundosRestantes % 60;
+            document.getElementById('timer').innerText =
+                `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+        }
+
+        function renderizarQuestao() {
+            const q = questoes[indiceQuestao];
+
+            document.getElementById('question-number').innerText = `Questão ${indiceQuestao + 1}`;
+            document.getElementById('q-indicator').innerText = `${indiceQuestao + 1}/${questoes.length}`;
+            document.getElementById('question-text').innerText = q.texto;
+
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+
+            q.opcoes.forEach((opcao, idx) => {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'option-btn' + (respostas[indiceQuestao] === idx ? ' selected' : '');
+                btn.innerText = String.fromCharCode(65 + idx) + ') ' + opcao;
+                btn.onclick = () => selecionarResposta(idx);
+                grid.appendChild(btn);
+            });
+
+            document.getElementById('btn-prev').disabled = indiceQuestao === 0;
+            document.getElementById('btn-next').innerHTML =
+                indiceQuestao === questoes.length - 1
+                    ? 'Ir para prática <i class="fas fa-code"></i>'
+                    : 'Próxima <i class="fas fa-chevron-right"></i>';
+
+            criarDots();
+        }
+
+        function selecionarResposta(idx) {
+            respostas[indiceQuestao] = idx;
+            renderizarQuestao();
+            atualizarProgresso(calcularProgressoParcial());
+        }
+
+        function criarDots() {
+            const dots = document.getElementById('question-dots');
+            dots.innerHTML = '';
+
+            respostas.forEach((resp, idx) => {
+                const dot = document.createElement('span');
+                dot.className = 'dot';
+
+                if (idx === indiceQuestao) dot.classList.add('active');
+                if (resp !== null) dot.classList.add('answered');
+
+                dots.appendChild(dot);
+            });
+        }
+
+        function voltarQuestao() {
+            if (indiceQuestao > 0) {
+                indiceQuestao--;
+                renderizarQuestao();
+            }
+        }
+
+        function avancarQuestao() {
+            if (respostas[indiceQuestao] === null) {
+                mostrarToast('Responda esta questão antes de continuar.', 'error');
+                return;
+            }
+
+            if (indiceQuestao < questoes.length - 1) {
+                indiceQuestao++;
+                renderizarQuestao();
+                return;
+            }
+
+            if (respostas.some(r => r === null)) {
+                mostrarToast('Ainda existem questões sem resposta.', 'error');
+                return;
+            }
+
+            abrirPratica();
+        }
+
+        function abrirPratica() {
+            document.getElementById('screen-questoes').classList.remove('active');
+            document.getElementById('screen-pratica').classList.add('active');
+
+            document.getElementById('step-questoes').classList.remove('active');
+            document.getElementById('step-questoes').classList.add('done');
+            document.getElementById('step-pratica').classList.add('active');
+
+            atualizarProgresso(55);
+
+            setTimeout(iniciarEditor, 100);
+        }
+
+        function iniciarEditor() {
+            if (!editor) {
+                editor = CodeMirror.fromTextArea(document.getElementById('editor-c'), {
+                    lineNumbers: true,
+                    mode: 'text/x-csrc',
+                    theme: 'dracula',
+                    indentUnit: 4,
+                    tabSize: 4,
+                    matchBrackets: true,
+                    lineWrapping: false,
+                    viewportMargin: Infinity
+                });
+
+                editor.setValue(codigoBase);
+            }
+
+            editor.refresh();
+            editor.focus();
+        }
+
+        function restaurarCodigoBase() {
+            if (!editor) return;
+            editor.setValue(codigoBase);
+            escreverConsole('> Código restaurado. Complete usando if e else.');
+        }
+
+        async function rodarTesteLivre() {
+            if (!editor) return;
+
+            const btn = document.getElementById('btn-run');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Rodando...';
+
+            escreverConsole('> Enviando teste livre para o Judge0...\n> Entrada: 20');
+
+            try {
+                const resultado = await executarCodigoC(editor.getValue(), '20\n');
+                mostrarResultadoExecucao(resultado);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-play"></i> Testar com idade 20';
+            }
+        }
+
+        async function validarPraticaJudge0() {
+            if (!editor) return;
+
+            const codigo = editor.getValue();
+            const btn = document.getElementById('btn-validar');
+
+            const estrutura = validarEstrutura(codigo);
+
+            if (!estrutura.ok) {
+                mostrarToast(estrutura.msg, 'error');
+                escreverConsole('> Validação interrompida.\n> ' + estrutura.msg, 'erro');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Validando...';
+
+            escreverConsole('> Validando desafio final no Judge0...\n> Testes: 20, 18 e 17.');
+
+            try {
+                const testes = [
+                    { entrada: '20\n', esperado: 'maior' },
+                    { entrada: '18\n', esperado: 'maior' },
+                    { entrada: '17\n', esperado: 'menor' }
+                ];
+
+                let aprovados = 0;
+                let relatorio = '> RESULTADO DOS TESTES NO JUDGE0\n';
+
+                for (const teste of testes) {
+                    const resultado = await executarCodigoC(codigo, teste.entrada);
+
+                    if (resultado.erro) {
+                        relatorio += `\nEntrada: ${teste.entrada.trim()}\nStatus: ERRO\n${resultado.saida}\n`;
+                        continue;
+                    }
+
+                    const saida = limparSaida(resultado.stdout);
+                    const ok = saida.includes(teste.esperado);
+
+                    if (ok) aprovados++;
+
+                    relatorio += `\nEntrada: ${teste.entrada.trim()}\nEsperado conter: ${teste.esperado}\nObtido: ${resultado.stdout.trim() || '(vazio)'}\nStatus: ${ok ? 'OK' : 'FALHOU'}\n`;
+                }
+
+                if (aprovados === testes.length) {
+                    praticaAprovada = true;
+                    pontuacaoPratica = 50;
+                    relatorio += '\n> Todos os testes passaram. Prática aprovada!';
+                    escreverConsole(relatorio, 'sucesso');
+                    mostrarToast('Prática aprovada no Judge0.', 'success');
+                    atualizarProgresso(86);
+                } else {
+                    praticaAprovada = false;
+                    pontuacaoPratica = 0;
+                    relatorio += `\n> ${aprovados}/${testes.length} testes passaram. Ajuste o código antes de finalizar.`;
+                    escreverConsole(relatorio, 'erro');
+                    mostrarToast('A prática ainda não passou em todos os testes.', 'error');
+                }
+
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check"></i> Validar com Judge0';
+            }
+        }
+
+        async function executarCodigoC(codigo, stdin = '') {
+            try {
+                const response = await fetch(`${API_URL}/executar-codigo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ codigo, stdin })
+                });
+
+                const texto = await response.text();
+                let data = {};
+
+                try {
+                    data = texto ? JSON.parse(texto) : {};
+                } catch (error) {
+                    data = { error: 'Resposta inválida do servidor.', details: texto };
+                }
+
+                if (!response.ok) {
+                    return {
+                        erro: true,
+                        stdout: '',
+                        saida:
+                            `> ERRO AO CHAMAR O SERVIDOR\n` +
+                            `> Status HTTP: ${response.status}\n` +
+                            `> ${data.error || 'Falha ao executar código.'}\n` +
+                            `${data.details ? '> Detalhes: ' + data.details : ''}`
+                    };
+                }
+
+                const stdout = data.stdout || '';
+                const stderr = data.stderr || '';
+                const compileOutput = data.compile_output || '';
+                const message = data.message || '';
+                const status = data.status || 'Status desconhecido';
+
+                if (data.erro) {
+                    return {
+                        erro: true,
+                        stdout,
+                        saida:
+                            `> JUDGE0 RETORNOU: ${status}\n` +
+                            `${compileOutput ? '> COMPILAÇÃO:\n' + compileOutput + '\n' : ''}` +
+                            `${stderr ? '> ERRO:\n' + stderr + '\n' : ''}` +
+                            `${message ? '> MENSAGEM:\n' + message + '\n' : ''}` +
+                            `${stdout ? '> SAÍDA:\n' + stdout : ''}`
+                    };
+                }
+
+                return {
+                    erro: false,
+                    stdout,
+                    saida:
+                        `> PROGRAMA EXECUTADO NO JUDGE0\n` +
+                        `> Status: ${status}\n` +
+                        `${data.time ? '> Tempo: ' + data.time + 's\n' : ''}` +
+                        `${data.memory ? '> Memória: ' + data.memory + ' KB\n' : ''}` +
+                        `> SAÍDA:\n${stdout || '(sem saída)'}`
+                };
+
+            } catch (error) {
+                return {
+                    erro: true,
+                    stdout: '',
+                    saida:
+                        `> ERRO DE CONEXÃO\n` +
+                        `> Não foi possível chamar ${API_URL}/executar-codigo\n` +
+                        `> Confira se a rota Judge0 está no server.js e se o Render está online.\n` +
+                        `> Detalhes: ${error.message}`
+                };
+            }
+        }
+
+        function validarEstrutura(codigo) {
+            const texto = codigo.toLowerCase();
+
+            if (!texto.includes('#include') || !texto.includes('stdio.h')) {
+                return { ok: false, msg: 'Inclua #include <stdio.h>.' };
+            }
+
+            if (!texto.includes('int main')) {
+                return { ok: false, msg: 'O programa precisa ter int main().' };
+            }
+
+            if (!texto.includes('scanf')) {
+                return { ok: false, msg: 'Use scanf para ler a idade.' };
+            }
+
+            if (!texto.includes('printf')) {
+                return { ok: false, msg: 'Use printf para mostrar Maior ou Menor.' };
+            }
+
+            if (!texto.includes('if')) {
+                return { ok: false, msg: 'Use if para testar a idade.' };
+            }
+
+            if (!texto.includes('else')) {
+                return { ok: false, msg: 'Use else para o caso contrário.' };
+            }
+
+            if (!texto.includes('>=') && !texto.includes('> 17') && !texto.includes('>17')) {
+                return { ok: false, msg: 'Use uma comparação para verificar idade maior ou igual a 18.' };
+            }
+
+            return { ok: true, msg: 'Estrutura válida.' };
+        }
+
+        function mostrarResultadoExecucao(resultado) {
+            if (resultado.erro) {
+                escreverConsole(resultado.saida, 'erro');
+                mostrarToast('O código rodou com erro. Veja o terminal.', 'error');
+            } else {
+                escreverConsole(resultado.saida, 'sucesso');
+                mostrarToast('Código executado no Judge0.', 'info');
+            }
+        }
+
+        function escreverConsole(texto, tipo = 'info') {
+            const consoleOut = document.getElementById('console-output');
+            const safe = escaparHTML(texto);
+
+            let color = '#a9d8ff';
+            if (tipo === 'erro') color = '#ff7a92';
+            if (tipo === 'sucesso') color = '#50fa7b';
+
+            consoleOut.innerHTML = `<span style="color:${color}; font-family:'Fira Code', monospace;">${safe}</span>`;
+        }
+
+        function finalizarAvaliacao(forcar = false) {
+            if (!forcar && !praticaAprovada) {
+                const ok = confirm('A prática ainda não foi aprovada no Judge0. Deseja finalizar mesmo assim?');
+                if (!ok) return;
+            }
+
+            calcularPontuacao();
+            mostrarResultado(false);
+        }
+
+        function calcularPontuacao() {
+            let acertos = 0;
+
+            questoes.forEach((q, idx) => {
+                if (respostas[idx] === q.correta) acertos++;
+            });
+
+            pontuacaoObjetivas = acertos * 10;
+            pontuacaoPratica = praticaAprovada ? 50 : 0;
+        }
+
+        async function mostrarResultado(encerradoPorAdvertencia) {
+            provaFinalizada = true;
+            clearInterval(timerInterval);
+            atualizarProgresso(100);
+
+            document.getElementById('screen-questoes').classList.remove('active');
+            document.getElementById('screen-pratica').classList.remove('active');
+            document.getElementById('screen-resultado').classList.add('active');
+
+            document.getElementById('step-pratica').classList.remove('active');
+            document.getElementById('step-pratica').classList.add('done');
+            document.getElementById('step-resultado').classList.add('active');
+
+            const total = pontuacaoObjetivas + pontuacaoPratica;
+
+            document.getElementById('score-objetivas').innerText = pontuacaoObjetivas;
+            document.getElementById('score-pratica').innerText = pontuacaoPratica;
+            document.getElementById('score-total').innerText = total;
+
+            if (encerradoPorAdvertencia) {
+                document.getElementById('result-icon').classList.add('fail');
+                document.getElementById('result-icon').innerHTML = '<i class="fas fa-ban"></i>';
+                document.getElementById('result-title').innerText = 'Tentativa encerrada por advertências';
+                document.getElementById('result-message').innerText = 'A avaliação foi encerrada porque o limite de advertências foi atingido.';
+                atualizarStatusSync('Encerrada por advertência', 'erro');
+                return;
+            }
+
+            if (total >= 80) {
+                document.getElementById('result-icon').classList.remove('fail');
+                document.getElementById('result-icon').innerHTML = '<i class="fas fa-trophy"></i>';
+                document.getElementById('result-title').innerText = 'Unidade 2 concluída!';
+                document.getElementById('result-message').innerText = 'Você atingiu a nota mínima. O progresso será salvo no banco e a Unidade 3 ficará liberada.';
+                atualizarStatusSync('Salvando aprovação...', 'load');
+
+                localStorage.setItem('u2_avaliacao_concluida', 'true');
+                localStorage.setItem('unidade2_concluida', 'true');
+
+                await salvarAprovacaoBanco();
+
+            } else {
+                document.getElementById('result-icon').classList.add('fail');
+                document.getElementById('result-icon').innerHTML = '<i class="fas fa-rotate-left"></i>';
+                document.getElementById('result-title').innerText = 'Continue praticando';
+                document.getElementById('result-message').innerText = 'A nota mínima é 80 pontos. Revise o material, pratique novamente e refaça a avaliação.';
+                atualizarStatusSync('Tentativa não aprovada', 'erro');
+            }
+        }
+
+        async function salvarAprovacaoBanco() {
+            if (!usuario || !usuario.email) {
+                atualizarStatusSync('Usuário sem e-mail', 'erro');
+                mostrarToast('Usuário sem e-mail. Não foi possível salvar no banco.', 'error');
+                return false;
+            }
+
+            try {
+                const respostaUnidade = await fetch(`${API_URL}/modulos/salvar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: usuario.email,
+                        modulo: 'unidade2',
+                        concluido: true
+                    })
+                });
+
+                const textoUnidade = await respostaUnidade.text();
+
+                if (!respostaUnidade.ok) {
+                    console.error('Erro ao salvar unidade2:', textoUnidade);
+                    atualizarStatusSync('Erro ao salvar unidade2', 'erro');
+                    mostrarToast('Erro ao salvar unidade2 no banco.', 'error');
+                    return false;
+                }
+
+                const respostaMod = await fetch(`${API_URL}/modulos/salvar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: usuario.email,
+                        modulo: 'mod2',
+                        concluido: true
+                    })
+                });
+
+                const textoMod = await respostaMod.text();
+
+                if (!respostaMod.ok) {
+                    console.error('Erro ao salvar mod2:', textoMod);
+                    atualizarStatusSync('Erro ao salvar mod2', 'erro');
+                    mostrarToast('Erro ao salvar mod2 no banco.', 'error');
+                    return false;
+                }
+
+                if (usuario) {
+                    usuario.progresso = usuario.progresso || {};
+                    usuario.progresso.unidade2_concluida = true;
+                    usuario.progresso.mod2_concluido = true;
+                    localStorage.setItem('userData', JSON.stringify(usuario));
+                }
+
+                atualizarStatusSync('Aprovação salva no banco', 'ok');
+                mostrarToast('Progresso salvo. Unidade 3 liberada.', 'success');
+                return true;
+
+            } catch (error) {
+                console.error('Erro de conexão ao salvar aprovação:', error);
+                atualizarStatusSync('Erro de conexão', 'erro');
+                mostrarToast('Erro de conexão ao salvar aprovação no banco.', 'error');
+                return false;
+            }
+        }
+
+        function finalizarPorTempo() {
+            segundosRestantes = 0;
+            calcularPontuacao();
+            mostrarToast('O tempo acabou. A avaliação será finalizada.', 'error');
+            mostrarResultado(false);
+        }
+
+        function registrarAdvertencia() {
+            if (!provaIniciada || provaFinalizada || ignorarBlurTemporario) return;
+
+            advertencias++;
+            document.getElementById('warning-count').innerText = advertencias;
+
+            const box = document.getElementById('warning-box');
+
+            if (advertencias >= 2) {
+                box.classList.add('danger');
+            }
+
+            if (advertencias >= 3) {
+                calcularPontuacao();
+                mostrarResultado(true);
+                return;
+            }
+
+            document.getElementById('advertencia-texto').innerText =
+                `Você saiu da tela da avaliação. Advertência ${advertencias}/3 registrada. Na terceira advertência, a tentativa será encerrada.`;
+
+            document.getElementById('modal-advertencia').classList.add('active');
+        }
+
+        function fecharAdvertencia() {
+            document.getElementById('modal-advertencia').classList.remove('active');
+            entrarTelaCheia();
+        }
+
+        function entrarTelaCheia() {
+            const el = document.documentElement;
+
+            if (!document.fullscreenElement && el.requestFullscreen) {
+                el.requestFullscreen().catch(() => {});
+            }
+        }
+
+        function confirmarSaida() {
+            const sair = confirm('Deseja sair da avaliação? A tentativa atual não será salva como concluída.');
+            if (sair) {
+                window.location.href = 'unidade-2-conteudo.html';
+            }
+        }
+
+        function atualizarProgresso(valor) {
+            document.getElementById('progress-fill').style.width = `${valor}%`;
+            document.getElementById('progress-percent').innerText = `${valor}%`;
+        }
+
+        function calcularProgressoParcial() {
+            const respondidas = respostas.filter(r => r !== null).length;
+            return Math.min(50, Math.round((respondidas / questoes.length) * 50));
+        }
+
+        function limparSaida(saida) {
+            return String(saida || '')
+                .trim()
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '')
+                .replace(/\s+/g, ' ');
+        }
+
+        function escaparHTML(texto) {
+            return String(texto || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function atualizarStatusSync(texto, tipo = 'ok') {
+            const status = document.getElementById('sync-status');
+
+            const icones = {
+                ok: 'fa-database',
+                erro: 'fa-triangle-exclamation',
+                load: 'fa-cloud-arrow-down'
+            };
+
+            const cores = {
+                ok: 'rgba(66, 211, 146, .10)',
+                erro: 'rgba(255, 92, 122, .12)',
+                load: 'rgba(35, 183, 217, .10)'
+            };
+
+            status.style.background = cores[tipo] || cores.ok;
+            status.innerHTML = `<i class="fas ${icones[tipo] || icones.ok}"></i> ${texto}`;
+        }
+
+        function mostrarToast(mensagem, tipo = 'info') {
+            const toast = document.getElementById('toast');
+            const text = document.getElementById('toast-text');
+            const icon = toast.querySelector('i');
+
+            text.innerText = mensagem;
+            toast.className = `toast ${tipo}`;
+
+            if (tipo === 'success') icon.className = 'fas fa-circle-check';
+            else if (tipo === 'error') icon.className = 'fas fa-triangle-exclamation';
+            else icon.className = 'fas fa-circle-info';
+
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3600);
+        }
+
+        window.addEventListener('blur', () => {
+            setTimeout(() => registrarAdvertencia(), 250);
+        });
+
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) registrarAdvertencia();
+        });
+
+        document.addEventListener('fullscreenchange', () => {
+            if (provaIniciada && !provaFinalizada && !document.fullscreenElement) {
+                registrarAdvertencia();
+            }
+        });
+
+        window.onload = () => {
+            carregarUsuario();
+
+            if (localStorage.getItem('acess_alto') === 'true') {
+                document.body.classList.add('high-contrast');
+            }
+
+            const savedScale = localStorage.getItem('acess_escala_fonte');
+            if (savedScale) {
+                document.documentElement.style.setProperty('--font-scale', `${savedScale}%`);
+            }
+        };
+    </script>
+</body>
+</html>
