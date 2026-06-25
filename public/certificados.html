@@ -3,269 +3,1731 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ALGORITMOLAB - Certificados</title>
+    <title>Cynix - Certificados</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <style>
-        /* ==========================================
-           1. ESTILOS BASE (IDENTIDADE VISUAL)
-           ========================================== */
         :root {
-            --primary-blue: #1c3d5a;
-            --accent-teal: #2b6cb0;
-            --bg-color: #f4f7f6;
-            --card-bg: #ffffff;
-            --text-main: #333333;
-            --text-muted: #718096;
-            --border-color: #e2e8f0;
-            --fire-color: #ff9f43;
-            --gold: #d4af37;
+            --bg-color: #07111f;
+            --bg-soft: #0b1b31;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-strong: rgba(255, 255, 255, 0.12);
+            --text-main: #f8fafc;
+            --text-muted: #aab7ca;
+            --primary-blue: #72e7ff;
+            --accent-teal: #5f7cff;
+            --accent-purple: #a855f7;
+            --success-green: #40d97a;
+            --warning: #ffcd4d;
+            --danger: #ff6b6b;
+            --gold: #f7c948;
+            --gold-soft: #ffe9a8;
+            --border-color: rgba(255, 255, 255, 0.14);
+            --shadow: 0 22px 60px rgba(0, 0, 0, 0.35);
             --font-scale: 100%;
         }
 
         .high-contrast {
+            --bg-color: #000000;
+            --bg-soft: #111111;
+            --card-bg: #1b1b1b;
+            --card-strong: #222222;
+            --text-main: #ffffff;
+            --text-muted: #d6d6d6;
             --primary-blue: #00ebff;
             --accent-teal: #ffff00;
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --text-main: #ffffff;
-            --text-muted: #a0aec0;
-            --border-color: #4a5568;
-            --fire-color: #ff3f34;
+            --accent-purple: #ffffff;
+            --success-green: #00ff88;
+            --warning: #ffff00;
+            --danger: #ff4d4d;
             --gold: #ffff00;
+            --gold-soft: #ffffff;
+            --border-color: #ffffff;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; transition: all 0.3s ease; }
-        html { font-size: var(--font-scale); }
-        body { background: var(--bg-color); color: var(--text-main); min-height: 100vh; padding-bottom: 60px; }
-
-        @keyframes fadeInUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-        /* ==========================================
-           2. NAVBAR (PADRÃO ALGORITMOLAB)
-           ========================================== */
-        .navbar { 
-            background: var(--card-bg); padding: 15px 5%; display: flex; 
-            justify-content: space-between; align-items: center; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border-bottom: 1px solid var(--border-color);
-        }
-        .nav-profile { display: flex; align-items: center; gap: 15px; text-decoration: none; color: inherit; cursor: pointer; }
-        .avatar { 
-            width: 50px; height: 50px; background: var(--accent-teal); color: white; 
-            border-radius: 50%; display: flex; justify-content: center; align-items: center; 
-            font-weight: 700; border: 2px solid var(--border-color); overflow: hidden;
-        }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; }
-        .streak-badge { 
-            display: inline-flex; align-items: center; gap: 5px; 
-            background: rgba(255, 159, 67, 0.1); color: var(--fire-color); 
-            padding: 2px 8px; border-radius: 12px; font-size: 0.8rem; font-weight: 700;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
-        /* ==========================================
-           3. CONTEÚDO PRINCIPAL
-           ========================================== */
-        .container { max-width: 1000px; margin: 0 auto; padding: 40px 20px; }
-        
-        .header-page { margin-bottom: 40px; text-align: center; }
-        .header-page h2 { color: var(--primary-blue); font-size: 2.2rem; margin-top: 10px; }
-        .header-page p { color: var(--text-muted); }
+        html {
+            font-size: var(--font-scale);
+            scroll-behavior: smooth;
+        }
 
-        /* Grade de Certificados */
-        .cert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; }
+        body {
+            min-height: 100vh;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at 15% 5%, rgba(114, 231, 255, .18), transparent 32%),
+                radial-gradient(circle at 88% 18%, rgba(168, 85, 247, .18), transparent 34%),
+                radial-gradient(circle at 65% 95%, rgba(247, 201, 72, .11), transparent 30%),
+                linear-gradient(135deg, #07111f 0%, #0a1830 55%, #070d18 100%);
+            overflow-x: hidden;
+            padding-bottom: 96px;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,.82), transparent 85%);
+            z-index: -2;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 999px;
+            filter: blur(4px);
+            opacity: .55;
+            z-index: -1;
+            animation: floatOrb 8s ease-in-out infinite;
+        }
+
+        .orb.one { width: 160px; height: 160px; background: rgba(95, 124, 255, .22); top: 17%; left: -50px; }
+        .orb.two { width: 120px; height: 120px; background: rgba(114, 231, 255, .18); bottom: 14%; right: 6%; animation-delay: -2s; }
+        .orb.three { width: 110px; height: 110px; background: rgba(247, 201, 72, .16); top: 54%; left: 7%; animation-delay: -4s; }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            50% { transform: translateY(-22px) translateX(14px); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(26px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-22px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 0 rgba(114, 231, 255, .0); }
+            50% { box-shadow: 0 0 28px rgba(114, 231, 255, .22); }
+        }
+
+        @keyframes goldGlow {
+            0%, 100% { box-shadow: 0 0 0 rgba(247, 201, 72, 0); }
+            50% { box-shadow: 0 0 38px rgba(247, 201, 72, .25); }
+        }
+
+        @keyframes pulseDot {
+            0% { transform: scale(.92); opacity: .7; }
+            50% { transform: scale(1.12); opacity: 1; }
+            100% { transform: scale(.92); opacity: .7; }
+        }
+
+        @keyframes shine {
+            from { transform: translateX(-120%) rotate(15deg); }
+            to { transform: translateX(170%) rotate(15deg); }
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 30;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            padding: 16px 6%;
+            background: rgba(7, 17, 31, .76);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border-color);
+            animation: fadeDown .55s ease both;
+        }
+
+        .brand, .nav-profile, .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand {
+            text-decoration: none;
+            color: var(--text-main);
+        }
+
+        .brand-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 15px;
+            display: grid;
+            place-items: center;
+            color: #07111f;
+            background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+            box-shadow: 0 12px 28px rgba(247, 201, 72, .22);
+            animation: goldGlow 3.2s ease-in-out infinite;
+        }
+
+        .brand strong {
+            display: block;
+            font-size: 1.1rem;
+            letter-spacing: .3px;
+        }
+
+        .brand span {
+            color: var(--text-muted);
+            font-size: .78rem;
+        }
+
+        .nav-profile {
+            padding: 8px 11px;
+            border-radius: 18px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            border: 2px solid rgba(247, 201, 72, .38);
+            background: linear-gradient(135deg, var(--accent-teal), var(--primary-blue));
+            color: white;
+            font-weight: 800;
+            box-shadow: 0 12px 26px rgba(0,0,0,.25);
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-name {
+            max-width: 160px;
+            display: block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: .95rem;
+            font-weight: 800;
+        }
+
+        .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 2px;
+            color: var(--warning);
+            font-size: .78rem;
+            font-weight: 800;
+        }
+
+        .btn {
+            border: 0;
+            outline: 0;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 11px 16px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: .9rem;
+            transition: .25s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            color: #07111f;
+            background: linear-gradient(135deg, var(--primary-blue), #8fffd2);
+            box-shadow: 0 14px 30px rgba(114, 231, 255, .22);
+        }
+
+        .btn-gold {
+            color: #241a00;
+            background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+            box-shadow: 0 14px 30px rgba(247, 201, 72, .18);
+        }
+
+        .btn-primary:hover, .btn-gold:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.07);
+        }
+
+        .btn-outline {
+            background: rgba(255,255,255,.07);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            border-color: rgba(114, 231, 255, .48);
+            background: rgba(114, 231, 255, .10);
+            transform: translateY(-2px);
+        }
+
+        .btn-locked {
+            background: rgba(255,255,255,.08);
+            color: var(--text-muted);
+            border: 1px solid var(--border-color);
+            cursor: not-allowed;
+        }
+
+        .btn-danger {
+            color: #ffe5e5;
+            background: rgba(255,107,107,.14);
+            border: 1px solid rgba(255,107,107,.32);
+        }
+
+        .container {
+            width: min(1180px, 92%);
+            margin: 0 auto;
+            padding: 34px 0;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 800;
+            margin-bottom: 18px;
+            opacity: .92;
+        }
+
+        .back-link:hover {
+            transform: translateX(-3px);
+            opacity: 1;
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: minmax(0, 1.25fr) minmax(310px, .75fr);
+            gap: 24px;
+            align-items: stretch;
+            background: linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+            border: 1px solid var(--border-color);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: var(--shadow);
+            animation: fadeUp .6s ease both;
+        }
+
+        .hero::after {
+            content: "★";
+            position: absolute;
+            right: 32px;
+            top: 12px;
+            font-size: 7rem;
+            line-height: 1;
+            color: rgba(247, 201, 72, .065);
+            font-weight: 800;
+            pointer-events: none;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.14), transparent);
+            transform: translateX(-120%) rotate(15deg);
+            animation: shine 5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .hero > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            width: fit-content;
+            margin-bottom: 12px;
+            padding: 7px 12px;
+            border-radius: 999px;
+            color: var(--gold-soft);
+            background: rgba(247, 201, 72, .10);
+            border: 1px solid rgba(247, 201, 72, .22);
+            font-size: .82rem;
+            font-weight: 800;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 4vw, 3.1rem);
+            line-height: 1.06;
+            margin-bottom: 12px;
+        }
+
+        .hero h1 span {
+            color: var(--gold);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 700px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 22px;
+        }
+
+        .mini-card {
+            padding: 14px;
+            border-radius: 18px;
+            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,.06);
+            color: var(--text-muted);
+        }
+
+        .mini-card strong {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-main);
+            margin-bottom: 4px;
+            font-size: .9rem;
+        }
+
+        .progress-card {
+            position: relative;
+            display: grid;
+            place-items: center;
+            padding: 22px;
+            border-radius: 24px;
+            border: 1px solid rgba(247, 201, 72, .20);
+            background: rgba(7, 17, 31, .42);
+            overflow: hidden;
+        }
+
+        .ring {
+            --percent: 0%;
+            width: 190px;
+            height: 190px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: conic-gradient(var(--gold) var(--percent), rgba(255,255,255,.10) 0);
+            animation: goldGlow 3s ease-in-out infinite;
+        }
+
+        .ring::before {
+            content: "";
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: var(--bg-soft);
+            border: 1px solid var(--border-color);
+        }
+
+        .ring-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+        }
+
+        .ring-content strong {
+            display: block;
+            font-size: 2.8rem;
+            line-height: 1;
+            color: var(--gold);
+        }
+
+        .ring-content span {
+            color: var(--text-muted);
+            font-size: .82rem;
+            font-weight: 800;
+        }
+
+        .sync-status {
+            margin-top: 18px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: .82rem;
+            text-align: center;
+        }
+
+        .sync-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--success-green);
+            animation: pulseDot 1.8s ease-in-out infinite;
+            flex: 0 0 auto;
+        }
+
+        .sync-dot.loading { background: var(--primary-blue); }
+        .sync-dot.error { background: var(--danger); }
+
+        .section-head {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 18px;
+            margin: 34px 0 18px;
+            animation: fadeUp .7s ease both;
+        }
+
+        .section-head h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            margin-bottom: 4px;
+        }
+
+        .section-head p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            max-width: 720px;
+        }
+
+        .cert-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 18px;
+        }
 
         .cert-card {
-            background: var(--card-bg); border-radius: 20px; padding: 30px;
-            border: 2px solid var(--border-color); position: relative;
-            display: flex; flex-direction: column; align-items: center; text-align: center;
-            animation: fadeInUp 0.6s ease-out backwards;
+            position: relative;
+            min-height: 345px;
+            border-radius: 28px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 16px 35px rgba(0,0,0,.18);
+            overflow: hidden;
+            animation: fadeUp .6s ease backwards;
         }
-        .cert-card.locked { opacity: 0.7; filter: grayscale(1); }
-        .cert-card i.main-icon { font-size: 4rem; color: var(--gold); margin-bottom: 20px; }
-        .cert-card h3 { color: var(--primary-blue); margin-bottom: 10px; }
-        .cert-card .status-tag { 
-            padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; 
-            margin-bottom: 20px; background: #e2e8f0; color: #4a5568;
+
+        .cert-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 15% 0%, rgba(247,201,72,.16), transparent 28%),
+                radial-gradient(circle at 100% 0%, rgba(114,231,255,.11), transparent 30%);
+            opacity: .95;
+            pointer-events: none;
         }
-        .cert-card.unlocked .status-tag { background: #c6f6d5; color: #22543d; }
 
-        /* Botão */
-        .btn { padding: 12px 25px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; font-size: 1rem; width: 100%; }
-        .btn-primary { background: var(--accent-teal); color: white; }
-        .btn-locked { background: #cbd5e0; color: #718096; cursor: not-allowed; }
-        .btn-logout { background: transparent; color: var(--text-muted); border: 2px solid var(--border-color); width: auto; }
+        .cert-card::after {
+            content: "";
+            position: absolute;
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            right: -70px;
+            bottom: -70px;
+            background: rgba(255,255,255,.075);
+            pointer-events: none;
+        }
 
-        /* ==========================================
-           4. MODAL DO CERTIFICADO (O DOCUMENTO)
-           ========================================== */
+        .cert-card.unlocked {
+            border-color: rgba(247,201,72,.42);
+        }
+
+        .cert-card.unlocked:hover {
+            transform: translateY(-7px);
+            animation: goldGlow 2.3s ease-in-out infinite;
+        }
+
+        .cert-card.locked {
+            opacity: .56;
+            filter: grayscale(.75);
+        }
+
+        .cert-card > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cert-top {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: flex-start;
+            margin-bottom: 22px;
+        }
+
+        .cert-icon {
+            width: 74px;
+            height: 74px;
+            border-radius: 24px;
+            display: grid;
+            place-items: center;
+            color: #241a00;
+            background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+            font-size: 2.3rem;
+            box-shadow: 0 18px 34px rgba(247,201,72,.18);
+        }
+
+        .cert-card.locked .cert-icon {
+            background: rgba(255,255,255,.12);
+            color: var(--text-muted);
+            box-shadow: none;
+        }
+
+        .status-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 11px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            white-space: nowrap;
+            font-size: .76rem;
+            font-weight: 800;
+        }
+
+        .status-tag.ok {
+            color: #fff1bd;
+            border-color: rgba(247,201,72,.32);
+            background: rgba(247,201,72,.12);
+        }
+
+        .status-tag.lock {
+            color: var(--text-muted);
+        }
+
+        .cert-card h3 {
+            font-size: 1.18rem;
+            margin-bottom: 8px;
+            line-height: 1.35;
+        }
+
+        .cert-card p {
+            color: var(--text-muted);
+            line-height: 1.55;
+            font-size: .88rem;
+        }
+
+        .requirement {
+            margin-top: 14px;
+            padding: 12px;
+            border-radius: 16px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid rgba(255,255,255,.08);
+            color: var(--text-muted);
+            font-size: .8rem;
+            line-height: 1.45;
+        }
+
+        .cert-actions {
+            margin-top: auto;
+            display: grid;
+            gap: 9px;
+            padding-top: 18px;
+        }
+
+        .auth-code {
+            color: var(--text-muted);
+            font-size: .72rem;
+            font-weight: 800;
+            letter-spacing: .04em;
+            word-break: break-all;
+        }
+
         .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(8px);
-            display: none; justify-content: center; align-items: center; z-index: 1000;
+            position: fixed;
+            inset: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 22px;
+            background: rgba(0,0,0,.76);
+            backdrop-filter: blur(9px);
         }
-        .cert-document {
-            background: white; width: 90%; max-width: 800px; padding: 50px;
-            border: 15px solid var(--primary-blue); position: relative;
-            color: #333; text-align: center; box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            background-image: radial-gradient(#f0f0f0 1px, transparent 1px); background-size: 20px 20px;
-        }
-        .cert-document h1 { font-family: 'Times New Roman', serif; font-size: 3rem; color: var(--primary-blue); }
-        .cert-document .user-name { font-size: 2.5rem; font-weight: 700; color: var(--accent-teal); margin: 20px 0; border-bottom: 2px solid #ddd; display: inline-block; padding: 0 30px; }
-        .cert-document .date { margin-top: 40px; font-style: italic; }
-        .cert-document .seal { width: 100px; margin-top: 30px; }
 
-        /* ==========================================
-           5. ACESSIBILIDADE
-           ========================================== */
-        .floating-actions { position: fixed; bottom: 25px; right: 25px; display: flex; flex-direction: column; gap: 10px; z-index: 99; }
-        .btn-floating { width: 50px; height: 50px; border-radius: 50%; background: var(--primary-blue); color: white; border: none; cursor: pointer; }
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-shell {
+            width: min(980px, 100%);
+            max-height: calc(100vh - 44px);
+            display: grid;
+            gap: 14px;
+            animation: fadeUp .3s ease both;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .cert-document {
+            position: relative;
+            width: 100%;
+            min-height: 620px;
+            padding: 46px;
+            color: #132033;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(247,201,72,.14), transparent 28%),
+                radial-gradient(circle at 92% 15%, rgba(114,231,255,.15), transparent 30%),
+                linear-gradient(135deg, #fffdf6, #f7fbff);
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,.42);
+            border: 12px solid #132033;
+        }
+
+        .cert-document::before {
+            content: "";
+            position: absolute;
+            inset: 16px;
+            border: 3px solid #d6a932;
+            border-radius: 10px;
+            pointer-events: none;
+        }
+
+        .cert-document::after {
+            content: "CYNIX";
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) rotate(-18deg);
+            font-size: 8rem;
+            font-weight: 800;
+            color: rgba(19,32,51,.045);
+            pointer-events: none;
+        }
+
+        .cert-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            display: grid;
+            place-items: center;
+            min-height: 520px;
+        }
+
+        .cert-brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: #132033;
+            font-weight: 800;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+        }
+
+        .cert-brand i {
+            width: 46px;
+            height: 46px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            color: #241a00;
+            background: linear-gradient(135deg, #d6a932, #ffec9d);
+            box-shadow: 0 12px 28px rgba(214,169,50,.22);
+        }
+
+        .cert-document h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.3rem, 5vw, 4.2rem);
+            line-height: 1;
+            color: #132033;
+            margin-bottom: 10px;
+        }
+
+        .cert-subtitle {
+            text-transform: uppercase;
+            letter-spacing: .20em;
+            color: #7a6217;
+            font-weight: 800;
+            font-size: .82rem;
+            margin-bottom: 28px;
+        }
+
+        .cert-content p {
+            color: #506070;
+            line-height: 1.65;
+            max-width: 740px;
+        }
+
+        .cert-student {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            color: #255e7a;
+            margin: 14px 0;
+            border-bottom: 2px solid rgba(37,94,122,.25);
+            padding: 0 36px 8px;
+            line-height: 1.1;
+        }
+
+        .cert-course {
+            color: #132033;
+            font-size: clamp(1.2rem, 3vw, 1.9rem);
+            margin: 12px 0 4px;
+            max-width: 760px;
+            line-height: 1.3;
+        }
+
+        .cert-footer {
+            display: grid;
+            grid-template-columns: 1fr 150px 1fr;
+            gap: 20px;
+            align-items: end;
+            width: 100%;
+            max-width: 800px;
+            margin-top: 34px;
+        }
+
+        .signature {
+            border-top: 2px solid rgba(19,32,51,.35);
+            padding-top: 8px;
+            font-size: .78rem;
+            color: #506070;
+            font-weight: 700;
+        }
+
+        .seal {
+            width: 126px;
+            height: 126px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            margin: 0 auto;
+            background:
+                radial-gradient(circle, #ffec9d 0 42%, #d6a932 43% 64%, #132033 65% 100%);
+            color: white;
+            text-align: center;
+            font-weight: 800;
+            box-shadow: 0 14px 34px rgba(214,169,50,.25);
+        }
+
+        .seal i {
+            font-size: 2.2rem;
+            display: block;
+            margin-bottom: 4px;
+            color: #132033;
+        }
+
+        .small-print {
+            margin-top: 20px;
+            font-size: .72rem;
+            color: #728090;
+            font-weight: 700;
+        }
+
+        .floating-actions {
+            position: fixed;
+            right: 22px;
+            bottom: 22px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .btn-floating {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: 1px solid rgba(247,201,72,.34);
+            background: linear-gradient(135deg, var(--gold), var(--primary-blue));
+            color: #07111f;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            font-size: 1.3rem;
+            box-shadow: 0 18px 40px rgba(0,0,0,.32);
+            transition: .25s ease;
+        }
+
+        .btn-floating:hover {
+            transform: translateY(-3px) rotate(4deg);
+        }
+
         .menu-acessibilidade {
-            position: absolute; bottom: 60px; right: 0; background: var(--card-bg); border: 1px solid var(--border-color);
-            padding: 15px; border-radius: 15px; display: none; flex-direction: column; gap: 10px; width: 180px;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            width: 230px;
+            padding: 14px;
+            border-radius: 20px;
+            background: rgba(7,17,31,.90);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .menu-acessibilidade.active {
+            display: flex;
+            animation: fadeUp .25s ease both;
+        }
+
+        .menu-title {
+            color: var(--text-muted);
+            font-size: .78rem;
+            font-weight: 800;
+            text-align: center;
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 24px;
+            transform: translateX(-50%) translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+            padding: 12px 16px;
+            border-radius: 14px;
+            background: rgba(7,17,31,.94);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            z-index: 1200;
+            font-weight: 800;
+            max-width: calc(100% - 32px);
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.ok { border-color: rgba(64,217,122,.45); }
+        .toast.err { border-color: rgba(255,107,107,.45); }
+
+        @media (max-width: 1050px) {
+            .cert-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 880px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cert-footer {
+                grid-template-columns: 1fr;
+            }
+
+            .cert-document {
+                padding: 32px 22px;
+                min-height: auto;
+            }
+
+            .cert-content {
+                min-height: auto;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .navbar {
+                padding: 14px 4%;
+                flex-wrap: wrap;
+            }
+
+            .brand span {
+                display: none;
+            }
+
+            .nav-profile {
+                width: 100%;
+                justify-content: flex-start;
+                order: 3;
+            }
+
+            .nav-actions {
+                margin-left: auto;
+            }
+
+            .hero {
+                padding: 22px;
+            }
+
+            .cert-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-actions {
+                justify-content: stretch;
+            }
+
+            .modal-actions .btn {
+                width: 100%;
+            }
+
+            .floating-actions {
+                right: 16px;
+                bottom: 16px;
+            }
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #cert-document,
+            #cert-document * {
+                visibility: visible;
+            }
+
+            #cert-document {
+                position: fixed;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                box-shadow: none;
+                border-radius: 0;
+            }
         }
     </style>
 </head>
+
 <body>
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
 
     <header class="navbar">
-        <div class="nav-profile" onclick="window.location.href='home.html'">
-            <div class="avatar" id="user-avatar">A</div>
+        <a href="home.html" class="brand" aria-label="Ir para a página inicial">
+            <div class="brand-icon"><i class="fas fa-award"></i></div>
             <div>
-                <strong id="user-name">Carregando...</strong>
-                <div><div class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></div></div>
+                <strong>Cynix</strong>
+                <span>Certificados e conquistas</span>
             </div>
+        </a>
+
+        <div class="nav-actions">
+            <button class="btn btn-outline" onclick="buscarProgressoBanco()">
+                <i class="fas fa-rotate"></i>
+                Atualizar
+            </button>
         </div>
-        <div style="display: flex; gap: 10px;">
-            <button class="btn btn-logout" onclick="alert('Configurações em breve!')"><i class="fas fa-cog"></i></button>
-            <button class="btn btn-logout" onclick="fazerLogout()">Sair</button>
+
+        <div class="nav-profile">
+            <div class="avatar" id="user-avatar">...</div>
+            <div>
+                <span class="user-name" id="user-name">Carregando...</span>
+                <span class="streak-badge"><i class="fas fa-fire"></i> <span id="user-streak">0 Dias</span></span>
+            </div>
         </div>
     </header>
 
     <main class="container">
-        <div class="header-page">
-            <i class="fas fa-award" style="font-size: 3rem; color: var(--gold);"></i>
-            <h2>Minhas Conquistas</h2>
-            <p>Conclua os módulos para desbloquear seus certificados oficiais.</p>
-        </div>
+        <a href="home.html" class="back-link"><i class="fas fa-arrow-left"></i> Voltar ao Painel</a>
 
-        <div class="cert-grid">
-            <div class="cert-card unlocked" style="animation-delay: 0.1s;">
-                <i class="fas fa-certificate main-icon"></i>
-                <div class="status-tag">DISPONÍVEL</div>
-                <h3>Fundamentos de C</h3>
-                <p class="text-muted" style="margin-bottom: 20px;">Concluído em: 25/05/2026</p>
-                <button class="btn btn-primary" onclick="abrirCertificado('Fundamentos de Programação em C')">Visualizar Certificado</button>
+        <section class="hero">
+            <div>
+                <span class="hero-kicker"><i class="fas fa-medal"></i> Central de certificados</span>
+                <h1>Suas conquistas liberadas conforme seu <span>progresso real</span></h1>
+                <p>
+                    Os certificados são desbloqueados de acordo com o progresso salvo no banco de dados e,
+                    quando necessário, com os dados locais do navegador. Cada unidade, módulo e o curso completo
+                    possuem seu próprio certificado.
+                </p>
+
+                <div class="summary-grid">
+                    <div class="mini-card">
+                        <strong><i class="fas fa-certificate"></i> Certificados liberados</strong>
+                        <span id="summary-liberados">0/6 disponíveis</span>
+                    </div>
+                    <div class="mini-card">
+                        <strong><i class="fas fa-layer-group"></i> Última conquista</strong>
+                        <span id="summary-ultima">Sincronizando...</span>
+                    </div>
+                    <div class="mini-card">
+                        <strong><i class="fas fa-database"></i> Sincronia</strong>
+                        <span id="summary-sync">Banco de dados</span>
+                    </div>
+                </div>
             </div>
 
-            <div class="cert-card locked" style="animation-delay: 0.2s;">
-                <i class="fas fa-lock main-icon"></i>
-                <div class="status-tag">BLOQUEADO</div>
-                <h3>Estruturas de Decisão</h3>
-                <p class="text-muted" style="margin-bottom: 20px;">Complete o Módulo 2 para liberar.</p>
-                <button class="btn btn-locked">Bloqueado</button>
-            </div>
+            <aside class="progress-card">
+                <div class="ring" id="ring-certificados">
+                    <div class="ring-content">
+                        <strong id="total-percent">0%</strong>
+                        <span>certificados</span>
+                    </div>
+                </div>
 
-            <div class="cert-card locked" style="animation-delay: 0.3s;">
-                <i class="fas fa-graduation-cap main-icon"></i>
-                <div class="status-tag">BLOQUEADO</div>
-                <h3>Mestre em Algoritmos</h3>
-                <p class="text-muted" style="margin-bottom: 20px;">Complete todos os módulos da trilha.</p>
-                <button class="btn btn-locked">Bloqueado</button>
+                <div class="sync-status">
+                    <span class="sync-dot loading" id="sync-dot"></span>
+                    <span id="sync-text">Buscando progresso no banco...</span>
+                </div>
+            </aside>
+        </section>
+
+        <section class="section-head">
+            <div>
+                <h2><i class="fas fa-award"></i> Certificados disponíveis</h2>
+                <p>
+                    Visualize, imprima ou baixe em PDF. Os bloqueados mostram exatamente o que falta para liberar.
+                </p>
             </div>
-        </div>
+        </section>
+
+        <section class="cert-grid" id="cert-grid"></section>
     </main>
 
-    <div class="modal-overlay" id="cert-modal" onclick="fecharCertificado()">
-        <div class="cert-document" onclick="event.stopPropagation()">
-            <button onclick="fecharCertificado()" style="position: absolute; top: 10px; right: 10px; border: none; background: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
-            <p style="text-transform: uppercase; letter-spacing: 2px;">Certificado de Conclusão</p>
-            <h1>ALGORITMOLAB</h1>
-            <p style="margin-top: 30px;">Certificamos que o(a) estudante</p>
-            <div class="user-name" id="cert-user-name">NOME DO ALUNO</div>
-            <p style="margin-top: 20px;">concluiu com êxito o módulo de</p>
-            <h2 id="cert-module-name" style="color: var(--primary-blue); margin: 10px 0;">NOME DO MÓDULO</h2>
-            <p>com carga horária de 20 horas e aproveitamento superior a 80%.</p>
-            
-            <div class="date">Emitido em: <span id="cert-date">--/--/----</span></div>
-            <img src="https://cdn-icons-png.flaticon.com/512/625/625393.png" class="seal" alt="Selo de Qualidade">
-            <p style="margin-top: 10px; font-size: 0.8rem; opacity: 0.6;">Código de Autenticidade: ALGO-7782-X9</p>
+    <div class="modal-overlay" id="cert-modal">
+        <div class="modal-shell">
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="fecharCertificado()">
+                    <i class="fas fa-xmark"></i>
+                    Fechar
+                </button>
+                <button class="btn btn-primary" onclick="imprimirCertificado()">
+                    <i class="fas fa-print"></i>
+                    Imprimir
+                </button>
+                <button class="btn btn-gold" onclick="baixarCertificadoPDF()">
+                    <i class="fas fa-file-pdf"></i>
+                    Baixar PDF
+                </button>
+            </div>
+
+            <article class="cert-document" id="cert-document">
+                <div class="cert-content">
+                    <div>
+                        <div class="cert-brand">
+                            <i class="fas fa-code"></i>
+                            Cynix
+                        </div>
+
+                        <div class="cert-subtitle" id="cert-type">Certificado de Conclusão</div>
+                        <h1>Certificado</h1>
+
+                        <p>Certificamos que o(a) estudante</p>
+                        <div class="cert-student" id="cert-user-name">Nome do Estudante</div>
+
+                        <p>concluiu com êxito</p>
+                        <h2 class="cert-course" id="cert-course-name">Nome do certificado</h2>
+
+                        <p id="cert-description">
+                            Com aproveitamento satisfatório dentro da trilha de desenvolvimento do letramento digital e lógica de programação.
+                        </p>
+
+                        <div class="cert-footer">
+                            <div class="signature">
+                                Coordenação Cynix<br>
+                                Plataforma Educacional
+                            </div>
+
+                            <div class="seal">
+                                <div>
+                                    <i class="fas fa-award"></i>
+                                    CYNIX
+                                </div>
+                            </div>
+
+                            <div class="signature">
+                                Emitido em <span id="cert-date">--/--/----</span><br>
+                                Carga horária: <span id="cert-hours">-- horas</span>
+                            </div>
+                        </div>
+
+                        <div class="small-print">
+                            Código de autenticidade: <span id="cert-code">CYNIX-0000</span>
+                        </div>
+                    </div>
+                </div>
+            </article>
         </div>
     </div>
 
     <div class="floating-actions">
         <div class="menu-acessibilidade" id="menu-acess">
-            <button class="btn btn-primary" onclick="toggleAltoContraste()"><i class="fas fa-adjust"></i> Contraste</button>
-            <button class="btn btn-logout" onclick="mudarFonte(2)" style="width: 100%;"><i class="fas fa-plus"></i> Texto</button>
-            <button class="btn btn-logout" onclick="mudarFonte(-2)" style="width: 100%;"><i class="fas fa-minus"></i> Texto</button>
+            <div class="menu-title">Acessibilidade</div>
+            <button class="btn btn-primary" onclick="toggleAltoContraste()"><i class="fas fa-adjust"></i> Alto Contraste</button>
+            <button class="btn btn-outline" onclick="mudarFonte(2)"><i class="fas fa-font"></i><i class="fas fa-plus"></i> Aumentar Texto</button>
+            <button class="btn btn-outline" onclick="mudarFonte(-2)"><i class="fas fa-font"></i><i class="fas fa-minus"></i> Diminuir Texto</button>
         </div>
-        <button class="btn btn-floating" onclick="toggleMenuAcessibilidade()">
+
+        <button class="btn-floating" onclick="toggleMenuAcessibilidade()" title="Acessibilidade">
             <i class="fas fa-universal-access"></i>
         </button>
     </div>
 
-    <script>
-        let usuarioAtivo = null;
+    <div class="toast" id="toast"></div>
 
-        function checkAuth() {
+    <script>
+        const API_URL = `${window.location.origin}/api`;
+
+        let userData = null;
+        let progressoBanco = {};
+        let escalaFonte = 100;
+        let certificadosAtuais = [];
+        let certificadoSelecionado = null;
+
+        function normalizarBoolean(valor) {
+            return valor === true || valor === 1 || valor === '1' || valor === 'true';
+        }
+
+        function valorBanco(keys) {
+            return keys.some(k => normalizarBoolean(progressoBanco[k]));
+        }
+
+        function valorLocal(keys) {
+            return keys.some(k => localStorage.getItem(k) === 'true');
+        }
+
+        function unidadeConcluida(num) {
+            if (num === 1) {
+                return valorBanco(['unidade1_concluida', 'unidade1', 'mod1_concluido', 'mod1']) ||
+                       valorLocal(['u1_avaliacao_concluida', 'unidade1_concluida']);
+            }
+
+            if (num === 2) {
+                return valorBanco(['unidade2_concluida', 'unidade2', 'mod2_concluido', 'mod2']) ||
+                       valorLocal(['u2_avaliacao_concluida', 'unidade2_concluida']);
+            }
+
+            if (num === 3) {
+                return valorBanco(['unidade3_concluida', 'unidade3', 'mod3_concluido', 'mod3']) ||
+                       valorLocal(['u3_avaliacao_concluida', 'unidade3_concluida']);
+            }
+
+            return false;
+        }
+
+        function modulo1Completo() {
+            return unidadeConcluida(1) && unidadeConcluida(2) && unidadeConcluida(3);
+        }
+
+        function modulo2Completo() {
+            /*
+                Não uso mod2_concluido para o Módulo 2 porque no fluxo atual ele representa a Unidade 2.
+                Para o módulo "Variáveis e Tipos", use modulo2_concluido/modulo2.
+            */
+            return valorBanco(['modulo2_concluido', 'modulo2']) || valorLocal(['modulo2_concluido']);
+        }
+
+        function cursoCompleto() {
+            return modulo1Completo() && modulo2Completo();
+        }
+
+        function certificadoJaEmitido(id) {
+            const emitidos = JSON.parse(localStorage.getItem('cynix_certificados_emitidos') || '{}');
+            return !!emitidos[id];
+        }
+
+        function marcarCertificadoEmitido(cert) {
+            const emitidos = JSON.parse(localStorage.getItem('cynix_certificados_emitidos') || '{}');
+
+            emitidos[cert.id] = {
+                id: cert.id,
+                titulo: cert.titulo,
+                data: new Date().toISOString(),
+                codigo: gerarCodigoAutenticidade(cert)
+            };
+
+            localStorage.setItem('cynix_certificados_emitidos', JSON.stringify(emitidos));
+        }
+
+        function carregarPerfil() {
             if (localStorage.getItem('userLogado') !== 'true') {
-                window.location.href = 'index.html';
+                window.location.replace('index.html');
                 return;
             }
-            const nomeLogado = localStorage.getItem('userName');
-            const usuarios = JSON.parse(localStorage.getItem('algoritmolab_usuarios')) || [];
-            usuarioAtivo = usuarios.find(u => u.nome === nomeLogado);
-            if (usuarioAtivo) renderizarNav();
+
+            const cacheUsuario = localStorage.getItem('userData');
+
+            if (!cacheUsuario) {
+                window.location.replace('index.html');
+                return;
+            }
+
+            try {
+                userData = JSON.parse(cacheUsuario);
+            } catch (error) {
+                localStorage.removeItem('userData');
+                localStorage.removeItem('userLogado');
+                window.location.replace('index.html');
+                return;
+            }
+
+            if (!userData || !userData.email) {
+                window.location.replace('index.html');
+                return;
+            }
+
+            renderizarPerfil();
+            buscarProgressoBanco();
         }
 
-        function renderizarNav() {
-            document.getElementById('user-name').innerText = usuarioAtivo.nome;
-            document.getElementById('user-streak').innerText = `${usuarioAtivo.streak || 0} Dias`;
+        function renderizarPerfil() {
+            document.getElementById('user-name').innerText = userData.nome || 'Estudante';
+            document.getElementById('user-streak').innerText = `${userData.streak || 0} Dias`;
+
             const avatarDiv = document.getElementById('user-avatar');
-            if (usuarioAtivo.foto) {
-                avatarDiv.innerHTML = `<img src="${usuarioAtivo.foto}">`;
+
+            if (userData.foto) {
+                avatarDiv.innerHTML = `<img src="${userData.foto}" alt="Avatar do usuário">`;
             } else {
-                avatarDiv.innerText = usuarioAtivo.nome.charAt(0).toUpperCase();
+                avatarDiv.innerText = (userData.nome || 'C').charAt(0).toUpperCase();
             }
         }
 
-        /* LÓGICA DO CERTIFICADO */
-        function abrirCertificado(modulo) {
-            document.getElementById('cert-user-name').innerText = usuarioAtivo.nome;
-            document.getElementById('cert-module-name').innerText = modulo;
-            document.getElementById('cert-date').innerText = new Date().toLocaleDateString();
-            document.getElementById('cert-modal').style.display = 'flex';
+        async function buscarProgressoBanco() {
+            atualizarSync('Buscando progresso no banco...', 'loading');
+
+            try {
+                const response = await fetch(`${API_URL}/modulos/progresso?email=${encodeURIComponent(userData.email)}`);
+                const texto = await response.text();
+
+                let data = {};
+
+                try {
+                    data = texto ? JSON.parse(texto) : {};
+                } catch (error) {
+                    throw new Error('Resposta inválida do servidor.');
+                }
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Não foi possível buscar o progresso.');
+                }
+
+                progressoBanco = data.progresso || {};
+                userData.progresso = progressoBanco;
+                localStorage.setItem('userData', JSON.stringify(userData));
+
+                atualizarSync('Progresso sincronizado com o banco', 'ok');
+                document.getElementById('summary-sync').innerText = 'Banco sincronizado';
+                renderizarCertificados();
+
+                if (cursoCompleto()) {
+                    salvarCertificadoFinalBanco();
+                }
+
+            } catch (error) {
+                console.error('Erro ao buscar progresso:', error);
+
+                const progressoLocal = userData.progresso || {};
+
+                progressoBanco = {
+                    unidade1_concluida: progressoLocal.unidade1_concluida,
+                    unidade2_concluida: progressoLocal.unidade2_concluida,
+                    unidade3_concluida: progressoLocal.unidade3_concluida,
+                    modulo2_concluido: progressoLocal.modulo2_concluido,
+                    certificado_liberado: progressoLocal.certificado_liberado
+                };
+
+                atualizarSync('Erro ao sincronizar. Usando dados locais.', 'error');
+                document.getElementById('summary-sync').innerText = 'Dados locais';
+                renderizarCertificados();
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> Não consegui buscar o banco. Usei dados locais.', 'err');
+            }
+        }
+
+        async function salvarCertificadoFinalBanco() {
+            if (!userData || !userData.email) return;
+
+            if (normalizarBoolean(progressoBanco.certificado_liberado)) return;
+
+            try {
+                const response = await fetch(`${API_URL}/modulos/salvar`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: userData.email,
+                        modulo: 'certificado',
+                        concluido: true
+                    })
+                });
+
+                if (response.ok) {
+                    progressoBanco.certificado_liberado = true;
+                    if (userData) {
+                        userData.progresso = progressoBanco;
+                        localStorage.setItem('userData', JSON.stringify(userData));
+                    }
+                }
+            } catch (error) {
+                console.warn('Não foi possível salvar certificado final no banco:', error);
+            }
+        }
+
+        function montarListaCertificados() {
+            const u1 = unidadeConcluida(1);
+            const u2 = unidadeConcluida(2);
+            const u3 = unidadeConcluida(3);
+            const m1 = modulo1Completo();
+            const m2 = modulo2Completo();
+            const curso = cursoCompleto();
+
+            return [
+                {
+                    id: 'unidade-1',
+                    tipo: 'Certificado de Unidade',
+                    titulo: 'Unidade 1: Introdução e Algoritmos',
+                    descricao: 'Concedido pela conclusão da primeira unidade da trilha, envolvendo sequência lógica, conceito de algoritmo e primeiros passos em programação.',
+                    carga: '8 horas',
+                    liberado: u1,
+                    requisito: 'Conclua a avaliação final da Unidade 1.',
+                    icon: 'fa-scroll'
+                },
+                {
+                    id: 'unidade-2',
+                    tipo: 'Certificado de Unidade',
+                    titulo: 'Unidade 2: Estruturas Condicionais',
+                    descricao: 'Concedido pela conclusão da unidade sobre decisões, if, else, operadores relacionais e operadores lógicos em C.',
+                    carga: '8 horas',
+                    liberado: u2,
+                    requisito: 'Conclua a avaliação final da Unidade 2.',
+                    icon: 'fa-code-branch'
+                },
+                {
+                    id: 'unidade-3',
+                    tipo: 'Certificado de Unidade',
+                    titulo: 'Unidade 3: Laços de Repetição',
+                    descricao: 'Concedido pela conclusão da unidade sobre repetição de ações, contadores e controle de fluxo.',
+                    carga: '8 horas',
+                    liberado: u3,
+                    requisito: 'Conclua a avaliação final da Unidade 3.',
+                    icon: 'fa-rotate'
+                },
+                {
+                    id: 'modulo-1',
+                    tipo: 'Certificado de Módulo',
+                    titulo: 'Módulo 1: Lógica de Programação',
+                    descricao: 'Concedido pela conclusão das três unidades internas do Módulo 1, consolidando conceitos fundamentais de algoritmos e programação.',
+                    carga: '30 horas',
+                    liberado: m1,
+                    requisito: 'Conclua as Unidades 1, 2 e 3.',
+                    icon: 'fa-layer-group'
+                },
+                {
+                    id: 'modulo-2',
+                    tipo: 'Certificado de Módulo',
+                    titulo: 'Módulo 2: Variáveis e Tipos',
+                    descricao: 'Concedido pela conclusão do módulo sobre tipos de dados, variáveis e manipulação de informações em C.',
+                    carga: '20 horas',
+                    liberado: m2,
+                    requisito: 'Conclua o Módulo 2: Variáveis e Tipos.',
+                    icon: 'fa-cubes'
+                },
+                {
+                    id: 'curso-completo',
+                    tipo: 'Certificado Final',
+                    titulo: 'Curso Completo: Cynix',
+                    descricao: 'Concedido pela conclusão de toda a trilha de desenvolvimento do letramento digital, lógica de programação e fundamentos em C.',
+                    carga: '60 horas',
+                    liberado: curso,
+                    requisito: 'Conclua todos os módulos principais da trilha.',
+                    icon: 'fa-graduation-cap'
+                }
+            ];
+        }
+
+        function renderizarCertificados() {
+            certificadosAtuais = montarListaCertificados();
+
+            const liberados = certificadosAtuais.filter(c => c.liberado);
+            const percentual = Math.round((liberados.length / certificadosAtuais.length) * 100);
+
+            document.getElementById('summary-liberados').innerText = `${liberados.length}/${certificadosAtuais.length} disponíveis`;
+            document.getElementById('total-percent').innerText = `${percentual}%`;
+            document.getElementById('ring-certificados').style.setProperty('--percent', `${percentual}%`);
+
+            const ultima = liberados.length ? liberados[liberados.length - 1].titulo : 'Nenhum certificado liberado ainda';
+            document.getElementById('summary-ultima').innerText = ultima;
+
+            const grid = document.getElementById('cert-grid');
+            grid.innerHTML = '';
+
+            certificadosAtuais.forEach((cert, index) => {
+                const emitido = certificadoJaEmitido(cert.id);
+                const card = document.createElement('article');
+
+                card.className = `cert-card ${cert.liberado ? 'unlocked' : 'locked'}`;
+                card.style.animationDelay = `${index * 0.08}s`;
+
+                card.innerHTML = `
+                    <div class="cert-top">
+                        <div class="cert-icon">
+                            <i class="fas ${cert.liberado ? cert.icon : 'fa-lock'}"></i>
+                        </div>
+                        <span class="status-tag ${cert.liberado ? 'ok' : 'lock'}">
+                            <i class="fas ${cert.liberado ? 'fa-unlock' : 'fa-lock'}"></i>
+                            ${cert.liberado ? (emitido ? 'EMITIDO' : 'DISPONÍVEL') : 'BLOQUEADO'}
+                        </span>
+                    </div>
+
+                    <h3>${cert.titulo}</h3>
+                    <p>${cert.descricao}</p>
+
+                    <div class="requirement">
+                        <strong><i class="fas ${cert.liberado ? 'fa-check-circle' : 'fa-triangle-exclamation'}"></i>
+                        ${cert.liberado ? 'Requisito concluído' : 'Para liberar:'}</strong><br>
+                        ${cert.liberado ? `Carga horária: ${cert.carga}.` : cert.requisito}
+                    </div>
+
+                    <div class="cert-actions">
+                        ${
+                            cert.liberado
+                            ? `<button class="btn btn-gold" onclick="abrirCertificado('${cert.id}')">
+                                   <i class="fas fa-award"></i>
+                                   Visualizar certificado
+                               </button>
+                               <button class="btn btn-outline" onclick="baixarCertificadoDireto('${cert.id}')">
+                                   <i class="fas fa-file-pdf"></i>
+                                   Baixar PDF
+                               </button>`
+                            : `<button class="btn btn-locked">
+                                   <i class="fas fa-lock"></i>
+                                   Bloqueado
+                               </button>`
+                        }
+                        <span class="auth-code">
+                            ${cert.liberado ? `Código: ${gerarCodigoAutenticidade(cert)}` : 'Aguardando conclusão'}
+                        </span>
+                    </div>
+                `;
+
+                grid.appendChild(card);
+            });
+        }
+
+        function abrirCertificado(id) {
+            const cert = certificadosAtuais.find(c => c.id === id);
+
+            if (!cert || !cert.liberado) {
+                mostrarToast('<i class="fas fa-lock"></i> Este certificado ainda está bloqueado.', 'err');
+                return;
+            }
+
+            certificadoSelecionado = cert;
+            marcarCertificadoEmitido(cert);
+
+            const hoje = new Date().toLocaleDateString('pt-BR');
+
+            document.getElementById('cert-type').innerText = cert.tipo;
+            document.getElementById('cert-user-name').innerText = userData.nome || 'Estudante';
+            document.getElementById('cert-course-name').innerText = cert.titulo;
+            document.getElementById('cert-description').innerText = cert.descricao;
+            document.getElementById('cert-date').innerText = hoje;
+            document.getElementById('cert-hours').innerText = cert.carga;
+            document.getElementById('cert-code').innerText = gerarCodigoAutenticidade(cert);
+
+            document.getElementById('cert-modal').classList.add('active');
+            renderizarCertificados();
         }
 
         function fecharCertificado() {
-            document.getElementById('cert-modal').style.display = 'none';
+            document.getElementById('cert-modal').classList.remove('active');
         }
 
-        /* ACESSIBILIDADE E LOGOUT */
+        function imprimirCertificado() {
+            window.print();
+        }
+
+        function baixarCertificadoDireto(id) {
+            abrirCertificado(id);
+            setTimeout(() => baixarCertificadoPDF(), 250);
+        }
+
+        function baixarCertificadoPDF() {
+            if (!certificadoSelecionado) {
+                mostrarToast('<i class="fas fa-triangle-exclamation"></i> Abra um certificado primeiro.', 'err');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({
+                orientation: 'landscape',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            const cert = certificadoSelecionado;
+            const nome = userData.nome || 'Estudante';
+            const data = new Date().toLocaleDateString('pt-BR');
+            const codigo = gerarCodigoAutenticidade(cert);
+
+            doc.setFillColor(255, 253, 246);
+            doc.rect(0, 0, 297, 210, 'F');
+
+            doc.setDrawColor(19, 32, 51);
+            doc.setLineWidth(5);
+            doc.rect(8, 8, 281, 194);
+
+            doc.setDrawColor(214, 169, 50);
+            doc.setLineWidth(1.5);
+            doc.rect(16, 16, 265, 178);
+
+            doc.setTextColor(19, 32, 51);
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(16);
+            doc.text('CYNIX', 148.5, 31, { align: 'center' });
+
+            doc.setTextColor(122, 98, 23);
+            doc.setFontSize(10);
+            doc.text(cert.tipo.toUpperCase(), 148.5, 43, { align: 'center' });
+
+            doc.setTextColor(19, 32, 51);
+            doc.setFont('times', 'bold');
+            doc.setFontSize(42);
+            doc.text('Certificado', 148.5, 65, { align: 'center' });
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(13);
+            doc.setTextColor(80, 96, 112);
+            doc.text('Certificamos que o(a) estudante', 148.5, 82, { align: 'center' });
+
+            doc.setFont('times', 'bold');
+            doc.setFontSize(30);
+            doc.setTextColor(37, 94, 122);
+            doc.text(quebrarTexto(doc, nome, 230), 148.5, 101, { align: 'center' });
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(13);
+            doc.setTextColor(80, 96, 112);
+            doc.text('concluiu com êxito', 148.5, 120, { align: 'center' });
+
+            doc.setFont('helvetica', 'bold');
+            doc.setFontSize(18);
+            doc.setTextColor(19, 32, 51);
+            const tituloLinhas = doc.splitTextToSize(cert.titulo, 230);
+            doc.text(tituloLinhas, 148.5, 134, { align: 'center' });
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(11);
+            doc.setTextColor(80, 96, 112);
+            const desc = doc.splitTextToSize(cert.descricao, 230);
+            doc.text(desc, 148.5, 152, { align: 'center' });
+
+            doc.setDrawColor(19, 32, 51);
+            doc.setLineWidth(0.6);
+            doc.line(46, 178, 112, 178);
+            doc.line(185, 178, 251, 178);
+
+            doc.setFontSize(9);
+            doc.setTextColor(80, 96, 112);
+            doc.text('Coordenação Cynix', 79, 184, { align: 'center' });
+            doc.text(`Emitido em ${data}`, 218, 184, { align: 'center' });
+
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(122, 98, 23);
+            doc.text(`Carga horária: ${cert.carga}`, 148.5, 184, { align: 'center' });
+
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(8);
+            doc.setTextColor(114, 128, 144);
+            doc.text(`Código de autenticidade: ${codigo}`, 148.5, 196, { align: 'center' });
+
+            const nomeArquivo = `Certificado_Cynix_${cert.id}_${nome.replace(/\s+/g, '_')}.pdf`;
+            doc.save(nomeArquivo);
+
+            mostrarToast('<i class="fas fa-check-circle"></i> PDF do certificado gerado com sucesso.');
+        }
+
+        function quebrarTexto(doc, texto, largura) {
+            const linhas = doc.splitTextToSize(texto, largura);
+            return linhas.slice(0, 2);
+        }
+
+        function gerarCodigoAutenticidade(cert) {
+            const base = `${userData.email || 'sem-email'}-${cert.id}-CYNIX`;
+            let hash = 0;
+
+            for (let i = 0; i < base.length; i++) {
+                hash = ((hash << 5) - hash) + base.charCodeAt(i);
+                hash |= 0;
+            }
+
+            const positivo = Math.abs(hash).toString(36).toUpperCase().padStart(6, '0');
+            return `CYNIX-${cert.id.toUpperCase()}-${positivo}`;
+        }
+
+        function atualizarSync(texto, tipo) {
+            const dot = document.getElementById('sync-dot');
+            const sync = document.getElementById('sync-text');
+
+            sync.innerText = texto;
+            dot.className = 'sync-dot';
+
+            if (tipo === 'loading') dot.classList.add('loading');
+            if (tipo === 'error') dot.classList.add('error');
+        }
+
+        function mostrarToast(msg, tipo = 'ok') {
+            const toast = document.getElementById('toast');
+            toast.className = `toast show ${tipo}`;
+            toast.innerHTML = msg;
+            setTimeout(() => { toast.className = 'toast'; }, 3200);
+        }
+
         function toggleMenuAcessibilidade() {
-            const menu = document.getElementById('menu-acess');
-            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            document.getElementById('menu-acess').classList.toggle('active');
         }
 
         function toggleAltoContraste() {
             document.body.classList.toggle('high-contrast');
-            localStorage.setItem('acess_alto_contraste', document.body.classList.contains('high-contrast'));
+            localStorage.setItem('acess_alto', document.body.classList.contains('high-contrast'));
         }
 
-        let currentScale = 100;
         function mudarFonte(delta) {
-            currentScale += delta;
-            document.documentElement.style.setProperty('--font-scale', `${currentScale}%`);
+            escalaFonte += delta;
+            if (escalaFonte < 84) escalaFonte = 84;
+            if (escalaFonte > 140) escalaFonte = 140;
+            document.documentElement.style.setProperty('--font-scale', `${escalaFonte}%`);
+            localStorage.setItem('acess_escala_fonte', escalaFonte);
         }
 
-        function fazerLogout() {
-            localStorage.setItem('userLogado', 'false');
-            window.location.href = 'index.html';
+        function restaurarAcessibilidade() {
+            if (localStorage.getItem('acess_alto') === 'true') {
+                document.body.classList.add('high-contrast');
+            }
+
+            const escalaSalva = localStorage.getItem('acess_escala_fonte');
+            if (escalaSalva) {
+                escalaFonte = parseInt(escalaSalva, 10);
+                document.documentElement.style.setProperty('--font-scale', `${escalaFonte}%`);
+            }
         }
+
+        document.getElementById('cert-modal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                fecharCertificado();
+            }
+        });
 
         window.onload = () => {
-            checkAuth();
-            if (localStorage.getItem('acess_alto_contraste') === 'true') document.body.classList.add('high-contrast');
+            restaurarAcessibilidade();
+            carregarPerfil();
         };
     </script>
 </body>
