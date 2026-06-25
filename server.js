@@ -817,6 +817,164 @@ app.post('/api/modulos/zerar', async (req, res) => {
         res.status(500).json({ error: 'Erro ao zerar progresso no banco.' });
     }
 });
+// ==========================================
+// ROTA PARA EXECUTAR CÓDIGO C COM JUDGE0
+// ==========================================
+
+const JUDGE0_BASE_URL = process.env.JUDGE0_BASE_URL || 'https://judge0-ce.p.rapidapi.com';
+const JUDGE0_HOST = process.env.JUDGE0_HOST || 'judge0-ce.p.rapidapi.com';
+const JUDGE0_C_LANGUAGE_ID = Number(process.env.JUDGE0_C_LANGUAGE_ID || 50);
+
+function encodeBase64(valor) {
+    return Buffer.from(String(valor || ''), 'utf8').toString('base64');
+}
+
+function decodeBase64(valor) {
+    if (!valor) return '';
+    try {
+        return Buffer.from(valor, 'base64').toString('utf8');
+    } catch (error) {
+        return String(valor || '');
+    }
+}
+
+function judge0Headers() {
+    const headers = {
+        'Content-Type': 'application/json'
+    };
+
+    if (process.env.JUDGE0_API_KEY) {
+        headers['X-RapidAPI-Key'] = process.env.JUDGE0_API_KEY;
+        headers['X-RapidAPI-Host'] = JUDGE0_HOST;
+    }
+
+    return headers;
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+app.post('/api/executar-codigo', async (req, res) => {
+    const { codigo, stdin } = req.body;
+
+    if (!codigo || typeof codigo !== 'string') {
+        return res.status(400).json({
+            error: 'Código não enviado.'
+        });
+    }
+
+    if (codigo.length > 12000) {
+        return res.status(400).json({
+            error: 'Código muito grande para este exercício.'
+        });
+    }
+
+    try {
+        const criarResposta = await fetch(
+            `${JUDGE0_BASE_URL}/submissions?base64_encoded=true&wait=false&fields=*`,
+            {
+                method: 'POST',
+                headers: judge0Headers(),
+                body: JSON.stringify({
+                    language_id: JUDGE0_C_LANGUAGE_ID,
+                    source_code: encodeBase64(codigo),
+                    stdin: encodeBase64(stdin || ''),
+                    cpu_time_limit: 3,
+                    wall_time_limit: 6,
+                    memory_limit: 128000
+                })
+            }
+        );
+
+        if (!criarResposta.ok) {
+            const erroTexto = await criarResposta.text();
+
+            console.error('Erro ao criar submissão no Judge0:', erroTexto);
+
+            return res.status(criarResposta.status).json({
+                error: 'Erro ao enviar código para o Judge0.',
+                details: erroTexto
+            });
+        }
+
+        const criado = await criarResposta.json();
+
+        if (!criado.token) {
+            return res.status(500).json({
+                error: 'Judge0 não retornou token da submissão.'
+            });
+        }
+
+        let resultado = null;
+
+        for (let tentativa = 0; tentativa < 12; tentativa++) {
+            await sleep(1000);
+
+            const consultaResposta = await fetch(
+                `${JUDGE0_BASE_URL}/submissions/${criado.token}?base64_encoded=true&fields=*`,
+                {
+                    method: 'GET',
+                    headers: judge0Headers()
+                }
+            );
+
+            if (!consultaResposta.ok) {
+                const erroTexto = await consultaResposta.text();
+
+                console.error('Erro ao consultar submissão no Judge0:', erroTexto);
+
+                return res.status(consultaResposta.status).json({
+                    error: 'Erro ao buscar resultado no Judge0.',
+                    details: erroTexto
+                });
+            }
+
+            resultado = await consultaResposta.json();
+
+            const statusId = resultado.status ? resultado.status.id : null;
+
+            if (statusId !== 1 && statusId !== 2) {
+                break;
+            }
+        }
+
+        if (!resultado) {
+            return res.status(504).json({
+                error: 'Judge0 não retornou resultado.'
+            });
+        }
+
+        const statusId = resultado.status ? resultado.status.id : null;
+        const statusDescricao = resultado.status ? resultado.status.description : 'Status desconhecido';
+
+        const stdout = decodeBase64(resultado.stdout);
+        const stderr = decodeBase64(resultado.stderr);
+        const compileOutput = decodeBase64(resultado.compile_output);
+        const message = decodeBase64(resultado.message);
+
+        return res.status(200).json({
+            token: criado.token,
+            status_id: statusId,
+            status: statusDescricao,
+            erro: statusId !== 3,
+            stdout,
+            stderr,
+            compile_output: compileOutput,
+            message,
+            time: resultado.time || null,
+            memory: resultado.memory || null
+        });
+
+    } catch (error) {
+        console.error('Erro geral ao executar código com Judge0:', error);
+
+        return res.status(500).json({
+            error: 'Erro interno ao executar código.',
+            details: error.message
+        });
+    }
+});
 
 const PORT = process.env.PORT || 10000;
 
