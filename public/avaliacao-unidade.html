@@ -1633,71 +1633,65 @@
         }
 
         async function salvarAprovacaoBanco() {
-            if (!usuario || !usuario.email) {
-                mostrarToast('Aprovação salva localmente, mas não encontrei e-mail para salvar no banco.', 'error');
-                return;
-            }
+    if (!usuario || !usuario.email) {
+        alert("Usuário sem e-mail. Não foi possível salvar no banco.");
+        return false;
+    }
 
-            try {
-                await fetch(`${API_URL}/modulos/salvar`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email: usuario.email,
-                        modulo: 'unidade1',
-                        concluido: true
-                    })
-                });
-
-                await fetch(`${API_URL}/modulos/salvar`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        email: usuario.email,
-                        modulo: 'mod1',
-                        concluido: true
-                    })
-                });
-
-                mostrarToast('Aprovação salva no banco com sucesso.', 'success');
-            } catch (error) {
-                console.error('Erro ao salvar aprovação no banco:', error);
-                mostrarToast('Não consegui salvar no banco. Verifique o servidor.', 'error');
-            }
-        }
-
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden && provaEmAndamento && !provaFinalizada) {
-                registrarAdvertencia();
-            }
+    try {
+        const respostaUnidade1 = await fetch(`${API_URL}/modulos/salvar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: usuario.email,
+                modulo: 'unidade1',
+                concluido: true
+            })
         });
 
-        window.addEventListener('blur', () => {
-            if (provaEmAndamento && !provaFinalizada) {
-                setTimeout(() => {
-                    if (document.hidden) return;
-                    registrarAdvertencia();
-                }, 250);
-            }
+        const textoUnidade1 = await respostaUnidade1.text();
+
+        if (!respostaUnidade1.ok) {
+            console.error("Erro ao salvar unidade1:", textoUnidade1);
+            alert("Erro ao salvar unidade1 no banco.");
+            return false;
+        }
+
+        const respostaMod1 = await fetch(`${API_URL}/modulos/salvar`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: usuario.email,
+                modulo: 'mod1',
+                concluido: true
+            })
         });
 
-        function registrarAdvertencia() {
-            if (!provaEmAndamento || provaFinalizada) return;
+        const textoMod1 = await respostaMod1.text();
 
-            advertencias++;
-            atualizarAdvertencias();
-
-            if (advertencias >= 3) {
-                finalizarPorAdvertencia();
-                return;
-            }
-
-            document.getElementById('warning-modal-text').innerText =
-                `Você saiu da aba durante a prova. Advertência ${advertencias}/3. Se atingir 3 advertências, a tentativa será encerrada.`;
-
-            document.getElementById('warning-modal').classList.add('show');
-            mostrarToast(`Advertência ${advertencias}/3 registrada.`, 'error');
+        if (!respostaMod1.ok) {
+            console.error("Erro ao salvar mod1:", textoMod1);
+            alert("Erro ao salvar mod1 no banco.");
+            return false;
         }
+
+        localStorage.setItem('u1_avaliacao_concluida', 'true');
+        localStorage.setItem('unidade1_concluida', 'true');
+        localStorage.setItem('unidade2Liberada', 'true');
+
+        console.log("Unidade 1 e módulo 1 salvos no banco.");
+        return true;
+
+    } catch (error) {
+        console.error("Erro de conexão ao salvar aprovação:", error);
+        alert("Erro de conexão ao salvar aprovação no banco.");
+        return false;
+    }
+}
 
         function finalizarPorAdvertencia() {
             provaFinalizada = true;
