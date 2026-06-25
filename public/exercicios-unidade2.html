@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cynix - Exercícios da Unidade 2</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+
+    <style>
+        :root {
+            --primary-blue: #10243b;
+            --accent-teal: #23b7d9;
+            --accent-purple: #7c5cff;
+            --bg-color: #07111f;
+            --card-bg: rgba(255, 255, 255, 0.08);
+            --card-solid: #10243b;
+            --text-main: #f8fafc;
+            --text-muted: #9fb0c8;
+            --border-color: rgba(255,255,255,0.13);
+            --fire-color: #ffb547;
+            --success-green: #42d392;
+            --warning-yellow: #f6c35b;
+            --danger-red: #ff5c7a;
+            --console-bg: #050915;
+            --font-scale: 100%;
+            --shadow: 0 24px 70px rgba(0,0,0,0.35);
+        }
+
+        .high-contrast {
+            --primary-blue: #000000;
+            --accent-teal: #ffff00;
+            --accent-purple: #00ebff;
+            --bg-color: #000000;
+            --card-bg: #1e1e1e;
+            --card-solid: #1e1e1e;
+            --text-main: #ffffff;
+            --text-muted: #e2e8f0;
+            --border-color: #ffff00;
+            --success-green: #00ff7f;
+            --warning-yellow: #ffff00;
+            --danger-red: #ff4d4d;
+            --console-bg: #000000;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        html {
+            font-size: var(--font-scale);
+            scroll-behavior: smooth;
+        }
+
+        body {
+            min-height: 100vh;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at 12% 10%, rgba(35,183,217,.22), transparent 26%),
+                radial-gradient(circle at 88% 16%, rgba(124,92,255,.22), transparent 28%),
+                radial-gradient(circle at 55% 96%, rgba(66,211,146,.13), transparent 30%),
+                linear-gradient(135deg, #060d18 0%, var(--bg-color) 48%, #0b1829 100%);
+            overflow-x: hidden;
+            padding-bottom: 90px;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            width: 390px;
+            height: 390px;
+            border-radius: 50%;
+            filter: blur(25px);
+            opacity: .22;
+            pointer-events: none;
+            z-index: -1;
+            animation: floatGlow 9s ease-in-out infinite alternate;
+        }
+
+        body::before {
+            background: var(--accent-teal);
+            left: -190px;
+            top: 120px;
+        }
+
+        body::after {
+            background: var(--accent-purple);
+            right: -160px;
+            bottom: 40px;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes floatGlow {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(40px, -32px) scale(1.08); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideLeft {
+            from { opacity: 0; transform: translateX(48px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-18px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseGlow {
+            0%,100% { transform: scale(1); box-shadow: 0 0 0 rgba(35,183,217,0); }
+            50% { transform: scale(1.04); box-shadow: 0 0 28px rgba(35,183,217,.30); }
+        }
+
+        @keyframes shine {
+            from { transform: translateX(-130%) rotate(15deg); }
+            to { transform: translateX(170%) rotate(15deg); }
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 18px;
+            padding: 15px 5%;
+            background: rgba(7, 17, 31, .76);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: 0 12px 40px rgba(0,0,0,.18);
+            animation: slideDown .55s ease both;
+        }
+
+        .brand-area,
+        .nav-profile,
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 46px;
+            height: 46px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: white;
+            font-size: 1.35rem;
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .brand-text strong {
+            display: block;
+            font-weight: 800;
+            letter-spacing: .5px;
+        }
+
+        .brand-text span {
+            display: block;
+            color: var(--text-muted);
+            font-size: .78rem;
+        }
+
+        .nav-profile {
+            padding: 8px 10px;
+            border-radius: 18px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 800;
+            border: 2px solid rgba(255,255,255,.18);
+            overflow: hidden;
+            flex: 0 0 auto;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        #user-name {
+            display: block;
+            max-width: 180px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 800;
+            font-size: .95rem;
+        }
+
+        .streak-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--fire-color);
+            font-weight: 800;
+            font-size: .78rem;
+        }
+
+        .btn {
+            border: none;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 14px;
+            padding: 11px 17px;
+            font-size: .9rem;
+            font-weight: 800;
+            transition: .25s ease;
+            color: var(--text-main);
+        }
+
+        .btn-outline {
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-outline:hover {
+            transform: translateY(-2px);
+            border-color: rgba(35,183,217,.75);
+            background: rgba(35,183,217,.12);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: white;
+            box-shadow: 0 14px 35px rgba(35,183,217,.22);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.08);
+        }
+
+        .btn-green {
+            background: linear-gradient(135deg, var(--success-green), #20b987);
+            color: white;
+        }
+
+        .btn-dark {
+            background: rgba(255,255,255,.08);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-danger {
+            background: rgba(255,92,122,.16);
+            border: 1px solid rgba(255,92,122,.34);
+            color: #ffd6dd;
+        }
+
+        .btn:disabled {
+            opacity: .58;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .container {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 32px 22px 0;
+        }
+
+        .top-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 800;
+            margin-bottom: 18px;
+            transition: .25s ease;
+        }
+
+        .top-link:hover {
+            color: var(--accent-teal);
+            transform: translateX(-4px);
+        }
+
+        .hero {
+            position: relative;
+            padding: 30px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background:
+                linear-gradient(135deg, rgba(255,255,255,.10), rgba(255,255,255,.04)),
+                radial-gradient(circle at 90% 12%, rgba(35,183,217,.22), transparent 28%),
+                radial-gradient(circle at 8% 100%, rgba(124,92,255,.19), transparent 30%);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: slideUp .65s ease both;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+            transform: translateX(-130%) rotate(15deg);
+            animation: shine 5s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: minmax(0, 1.42fr) minmax(270px, .75fr);
+            gap: 28px;
+            align-items: center;
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #c7f5ff;
+            background: rgba(35,183,217,.12);
+            border: 1px solid rgba(35,183,217,.28);
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: .82rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            color: var(--text-main);
+            font-size: clamp(2rem, 5vw, 3.35rem);
+            line-height: 1.04;
+            letter-spacing: -1px;
+            margin-bottom: 14px;
+        }
+
+        .hero h1 span {
+            color: var(--accent-teal);
+        }
+
+        .hero p {
+            color: var(--text-muted);
+            line-height: 1.7;
+            max-width: 760px;
+            font-size: 1rem;
+        }
+
+        .progress-panel {
+            margin-top: 22px;
+            padding: 18px;
+            border-radius: 22px;
+            background: rgba(0,0,0,.18);
+            border: 1px solid var(--border-color);
+        }
+
+        .progress-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        #progress-percent {
+            color: var(--accent-teal);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 11px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.08);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--accent-teal), var(--success-green));
+            box-shadow: 0 0 20px rgba(35,183,217,.40);
+            transition: width .55s ease;
+        }
+
+        .hero-stats {
+            display: grid;
+            gap: 14px;
+        }
+
+        .stat-card {
+            padding: 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.07);
+            border: 1px solid var(--border-color);
+        }
+
+        .stat-card small {
+            display: block;
+            color: var(--text-muted);
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .stat-card strong {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.02rem;
+        }
+
+        .fase-card {
+            position: relative;
+            display: none;
+            margin-top: 26px;
+            padding: 26px;
+            border-radius: 30px;
+            border: 1px solid var(--border-color);
+            background: var(--card-bg);
+            box-shadow: 0 18px 45px rgba(0,0,0,.23);
+            overflow: hidden;
+            animation: slideLeft .48s ease-out;
+        }
+
+        .fase-card.active {
+            display: block;
+        }
+
+        .fase-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(35,183,217,.12), transparent 28%),
+                radial-gradient(circle at 96% 0%, rgba(124,92,255,.13), transparent 26%);
+            pointer-events: none;
+        }
+
+        .fase-card > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .fase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 22px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .fase-header h3 {
+            font-size: 1.35rem;
+            line-height: 1.35;
+        }
+
+        .fase-header h3 i {
+            color: var(--accent-teal);
+            margin-right: 8px;
+        }
+
+        .phase-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(35,183,217,.12);
+            color: #c7f5ff;
+            border: 1px solid rgba(35,183,217,.25);
+            font-size: .78rem;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .quiz-grid {
+            display: grid;
+            gap: 16px;
+        }
+
+        .quiz-item {
+            padding: 17px;
+            border-radius: 20px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .quiz-item p {
+            line-height: 1.55;
+        }
+
+        .quiz-item strong {
+            color: var(--text-main);
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .option-btn {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            cursor: pointer;
+            background: rgba(255,255,255,.06);
+            color: var(--text-main);
+            text-align: left;
+            font-size: .92rem;
+            line-height: 1.4;
+            transition: .22s ease;
+        }
+
+        .option-btn:hover {
+            border-color: rgba(35,183,217,.7);
+            background: rgba(35,183,217,.12);
+            transform: translateX(4px);
+        }
+
+        .option-btn.selected {
+            background: linear-gradient(135deg, rgba(35,183,217,.85), rgba(124,92,255,.85));
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 12px 28px rgba(35,183,217,.18);
+        }
+
+        .option-btn.correct {
+            border-color: rgba(66,211,146,.55);
+            background: rgba(66,211,146,.16);
+        }
+
+        .option-btn.wrong {
+            border-color: rgba(255,92,122,.55);
+            background: rgba(255,92,122,.14);
+        }
+
+        .feedback-box {
+            display: none;
+            margin-top: 18px;
+            padding: 15px;
+            border-radius: 18px;
+            background: rgba(255,183,71,.12);
+            border: 1px solid rgba(255,183,71,.28);
+            color: #ffe9bd;
+            line-height: 1.6;
+            font-size: .92rem;
+        }
+
+        .lab-layout {
+            display: grid;
+            grid-template-columns: minmax(280px, .9fr) minmax(0, 1.35fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        .mission-card {
+            padding: 20px;
+            border-radius: 24px;
+            background: rgba(255,255,255,.06);
+            border: 1px solid var(--border-color);
+        }
+
+        .mission-card h4 {
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .mission-card p,
+        .mission-card li {
+            color: var(--text-muted);
+            line-height: 1.65;
+            font-size: .92rem;
+        }
+
+        .mission-card ul {
+            margin: 12px 0 0 18px;
+        }
+
+        .hint-card {
+            margin-top: 14px;
+            padding: 14px;
+            border-radius: 18px;
+            background: rgba(35,183,217,.10);
+            border: 1px solid rgba(35,183,217,.24);
+            color: #d8f8ff;
+            line-height: 1.55;
+            font-size: .88rem;
+        }
+
+        .input-card {
+            margin-top: 14px;
+            padding: 14px;
+            border-radius: 18px;
+            background: rgba(0,0,0,.18);
+            border: 1px solid var(--border-color);
+        }
+
+        .input-card label {
+            display: block;
+            color: var(--text-muted);
+            font-weight: 800;
+            font-size: .85rem;
+            margin-bottom: 8px;
+        }
+
+        .stdin-input {
+            width: 100%;
+            min-height: 94px;
+            resize: vertical;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            background: rgba(255,255,255,.07);
+            color: var(--text-main);
+            padding: 12px;
+            font-family: 'Fira Code', monospace;
+            outline: none;
+        }
+
+        .stdin-input:focus {
+            border-color: rgba(35,183,217,.65);
+            box-shadow: 0 0 0 4px rgba(35,183,217,.10);
+        }
+
+        .ide-container {
+            border-radius: 22px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,.12);
+            background: #282a36;
+            box-shadow: 0 22px 50px rgba(0,0,0,.35);
+        }
+
+        .ide-header {
+            background: #1e2030;
+            padding: 12px 15px;
+            color: #f8f8f2;
+            font-size: .86rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Fira Code', monospace;
+            border-bottom: 1px solid rgba(255,255,255,.10);
+        }
+
+        .ide-header span,
+        .ide-header strong {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .ide-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #50fa7b;
+            font-size: .75rem;
+        }
+
+        .CodeMirror {
+            height: 430px !important;
+            min-height: 430px;
+            font-family: 'Fira Code', monospace;
+            font-size: .95rem;
+            line-height: 1.55;
+        }
+
+        .CodeMirror-scroll {
+            min-height: 430px;
+        }
+
+        .console-output {
+            min-height: 170px;
+            max-height: 285px;
+            overflow: auto;
+            background: var(--console-bg);
+            color: #9fffbf;
+            padding: 16px;
+            font-family: 'Fira Code', monospace;
+            font-size: .86rem;
+            line-height: 1.55;
+            border-top: 1px solid rgba(255,255,255,.12);
+            white-space: pre-wrap;
+        }
+
+        .console-output span,
+        .console-output strong {
+            font-family: 'Fira Code', monospace;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .editor-actions .btn {
+            flex: 1;
+            min-width: 190px;
+        }
+
+        .code-chip {
+            display: inline-flex;
+            padding: 2px 7px;
+            border-radius: 8px;
+            background: rgba(0,0,0,.24);
+            border: 1px solid rgba(255,255,255,.10);
+            font-family: 'Fira Code', monospace;
+            color: #f8f8f2;
+        }
+
+        .success-overlay {
+            text-align: center;
+            padding: 36px 20px;
+        }
+
+        .success-icon {
+            width: 105px;
+            height: 105px;
+            display: grid;
+            place-items: center;
+            border-radius: 32px;
+            margin: 0 auto 22px;
+            font-size: 4.3rem;
+            color: white;
+            background: linear-gradient(135deg, var(--success-green), var(--accent-teal));
+            box-shadow: 0 26px 60px rgba(66,211,146,.28);
+            animation: pulseGlow 2.5s ease-in-out infinite;
+        }
+
+        .success-overlay h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .success-overlay p {
+            color: var(--text-muted);
+            line-height: 1.65;
+            max-width: 640px;
+            margin: 0 auto 26px;
+        }
+
+        .floating-actions {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            z-index: 99;
+        }
+
+        .floating-back {
+            background: rgba(255,255,255,.09);
+            border: 1px solid var(--border-color);
+            backdrop-filter: blur(14px);
+            box-shadow: 0 14px 35px rgba(0,0,0,.25);
+        }
+
+        .btn-floating {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: white;
+            border: none;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            font-size: 1.28rem;
+            box-shadow: 0 18px 40px rgba(35,183,217,.28);
+            animation: pulseGlow 3s ease-in-out infinite;
+        }
+
+        .menu-acessibilidade {
+            position: absolute;
+            bottom: 68px;
+            right: 0;
+            width: 230px;
+            padding: 14px;
+            border-radius: 20px;
+            background: rgba(16,36,59,.96);
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(18px);
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .menu-acessibilidade .btn {
+            width: 100%;
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 26px;
+            transform: translateX(-50%) translateY(30px);
+            min-width: min(460px, calc(100% - 40px));
+            padding: 14px 16px;
+            border-radius: 18px;
+            background: rgba(16,36,59,.97);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            box-shadow: var(--shadow);
+            display: none;
+            align-items: center;
+            gap: 10px;
+            z-index: 180;
+            opacity: 0;
+            transition: .35s ease;
+            line-height: 1.45;
+        }
+
+        .toast.show {
+            display: flex;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.success i { color: var(--success-green); }
+        .toast.error i { color: var(--danger-red); }
+        .toast.info i { color: var(--accent-teal); }
+
+        @media (max-width: 980px) {
+            .hero-content,
+            .lab-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .CodeMirror,
+            .CodeMirror-scroll {
+                height: 360px !important;
+                min-height: 360px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .navbar {
+                flex-wrap: wrap;
+                padding: 14px 18px;
+            }
+
+            .brand-text span {
+                display: none;
+            }
+
+            .nav-profile {
+                width: 100%;
+                order: 3;
+            }
+
+            .container {
+                padding-inline: 16px;
+            }
+
+            .hero,
+            .fase-card {
+                padding: 22px;
+            }
+
+            .fase-header {
+                flex-direction: column;
+            }
+
+            .floating-actions {
+                left: 16px;
+                right: 16px;
+                justify-content: space-between;
+            }
+
+            .floating-back span {
+                display: none;
+            }
+
+            .editor-actions .btn {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="brand-area">
+            <div class="brand-logo">
+                <i class="fas fa-code-branch"></i>
+            </div>
+            <div class="brand-text">
+                <strong>Cynix</strong>
+                <span>exercícios • estruturas condicionais</span>
+            </div>
+        </div>
+
+        <div class="nav-profile">
+            <div class="avatar" id="user-avatar">A</div>
+            <div>
+                <strong id="user-name">Carregando...</strong>
+                <div class="streak-badge">
+                    <i class="fas fa-fire"></i>
+                    <span id="user-streak">0 Dias</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-actions">
+            <a class="btn btn-outline" href="unidade-2-conteudo.html">
+                <i class="fas fa-times"></i>
+                Sair
+            </a>
+        </div>
+    </header>
+
+    <main class="container">
+        <a href="unidade-2-conteudo.html" class="top-link">
+            <i class="fas fa-chevron-left"></i>
+            Voltar para Unidade 2
+        </a>
+
+        <section class="hero">
+            <div class="hero-content">
+                <div>
+                    <div class="eyebrow">
+                        <i class="fas fa-dumbbell"></i>
+                        Exercícios • Unidade 2
+                    </div>
+
+                    <h1>Pratique decisões e rode <span>código C no Judge0</span></h1>
+
+                    <p>
+                        Responda questões sobre estruturas condicionais e depois programe um desafio real em C.
+                        O código será enviado ao seu servidor, executado no Judge0 e validado automaticamente.
+                    </p>
+
+                    <div class="progress-panel">
+                        <div class="progress-head">
+                            <strong>Progresso da trilha</strong>
+                            <span id="progress-percent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progresso-trilha"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hero-stats">
+                    <div class="stat-card">
+                        <small>Fase 1</small>
+                        <strong><i class="fas fa-brain"></i> 5 questões</strong>
+                    </div>
+                    <div class="stat-card">
+                        <small>Fase 2</small>
+                        <strong><i class="fas fa-code"></i> Desafio if/else</strong>
+                    </div>
+                    <div class="stat-card">
+                        <small>Execução</small>
+                        <strong><i class="fas fa-server"></i> Judge0 conectado</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="fase-card active" id="fase1">
+            <div class="fase-header">
+                <h3><i class="fas fa-brain"></i> Fase 1: Revisão objetiva</h3>
+                <span class="phase-badge"><i class="fas fa-list-check"></i> 5 questões</span>
+            </div>
+
+            <div class="quiz-grid">
+                <div class="quiz-item">
+                    <p><strong>1. Qual comando em C é usado para testar uma condição?</strong></p>
+                    <div class="options-grid">
+                        <button type="button" class="option-btn" onclick="selectOption(this, 1, 'a')">a) printf</button>
+                        <button type="button" class="option-btn" onclick="selectOption(this, 1, 'b')">b) if</button>
+                        <button type="button" class="option-btn" onclick="selectOption(this, 1, 'c')">c) scanf</button>
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p><strong>2. Em C, qual operador compara se dois valores são iguais?</strong></p>
+                    <div class="options-grid">
+                        <button type="button" class="option-btn" onclick="selectOption(this, 2, 'a')">a) =</button>
+                        <button type="button" class="option-btn" onclick="selectOption(this, 2, 'b')">b) ==</button>
+                        <button type="button" class="option-btn" onclick="selectOption(this, 2, 'c')">c) !=</button>
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p><strong>3. Qual alternativa representa corretamente o significado do else?</strong></p>
+                    <div class="options-grid">
+                        <button type="button" class="option-btn" onclick="selectOption(this, 3, 'a')">a) Executa quando a condição do if é falsa.</button>
+                        <button type="button" class="option-btn" onclick="selectOption(this, 3, 'b')">b) Lê um valor do teclado.</button>
+                        <button type="button" class="option-btn" onclick="selectOption(this, 3, 'c')">c) Finaliza obrigatoriamente o programa.</button>
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p><strong>4. Qual operador lógico representa “E” em C?</strong></p>
+                    <div class="options-grid">
+                        <button type="button" class="option-btn" onclick="selectOption(this, 4, 'a')">a) ||</button>
+                        <button type="button" class="option-btn" onclick="selectOption(this, 4, 'b')">b) &&</button>
+                        <button type="button" class="option-btn" onclick="selectOption(this, 4, 'c')">c) !</button>
+                    </div>
+                </div>
+
+                <div class="quiz-item">
+                    <p><strong>5. Qual código verifica se a idade é maior ou igual a 18?</strong></p>
+                    <div class="options-grid">
+                        <button type="button" class="option-btn" onclick="selectOption(this, 5, 'a')">a) if (idade >= 18)</button>
+                        <button type="button" class="option-btn" onclick="selectOption(this, 5, 'b')">b) if idade => 18</button>
+                        <button type="button" class="option-btn" onclick="selectOption(this, 5, 'c')">c) if (idade = 18)</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feedback-box" id="feedback-fase1"></div>
+
+            <button type="button" class="btn btn-primary" style="width:100%; margin-top:18px;" onclick="validarFase1()">
+                Validar respostas
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <div class="fase-card" id="fase2">
+            <div class="fase-header">
+                <h3><i class="fas fa-code"></i> Fase 2: Laboratório de programação em C</h3>
+                <span class="phase-badge"><i class="fas fa-server"></i> Judge0 + testes automáticos</span>
+            </div>
+
+            <div class="lab-layout">
+                <aside class="mission-card">
+                    <h4><i class="fas fa-bullseye"></i> Missão prática</h4>
+                    <p>
+                        Escreva um programa em C que leia uma média e mostre a situação do aluno.
+                    </p>
+
+                    <ul>
+                        <li>Se a média for maior ou igual a <span class="code-chip">7</span>, exiba <span class="code-chip">Aprovado</span>.</li>
+                        <li>Se a média for maior ou igual a <span class="code-chip">5</span> e menor que <span class="code-chip">7</span>, exiba <span class="code-chip">Recuperacao</span>.</li>
+                        <li>Se a média for menor que <span class="code-chip">5</span>, exiba <span class="code-chip">Reprovado</span>.</li>
+                    </ul>
+
+                    <div class="hint-card">
+                        <strong>Dica:</strong> use <span class="code-chip">if</span>,
+                        <span class="code-chip">else if</span> e <span class="code-chip">else</span>.
+                        Leia o valor com <span class="code-chip">scanf</span>.
+                    </div>
+
+                    <div class="input-card">
+                        <label for="stdin-livre">Entrada para testar livremente:</label>
+                        <textarea id="stdin-livre" class="stdin-input">7.5</textarea>
+                    </div>
+                </aside>
+
+                <section>
+                    <div class="ide-container">
+                        <div class="ide-header">
+                            <span><i class="fas fa-file-code"></i> exercicio_unidade2.c</span>
+                            <strong class="ide-status"><i class="fas fa-circle"></i> C + Judge0</strong>
+                        </div>
+
+                        <textarea id="editor-c"></textarea>
+
+                        <div class="console-output" id="console-fase2">&gt; Terminal Judge0 pronto.
+&gt; Escreva seu código e clique em "Rodar código" ou "Validar desafio".
+&gt; O desafio será testado com entradas 8.0, 6.0 e 3.0.</div>
+                    </div>
+
+                    <div class="editor-actions">
+                        <button type="button" class="btn btn-dark" onclick="restaurarCodigoBase()">
+                            <i class="fas fa-rotate-left"></i>
+                            Restaurar código
+                        </button>
+
+                        <button type="button" class="btn btn-primary" id="btn-rodar" onclick="rodarCodigoLivre()">
+                            <i class="fas fa-play"></i>
+                            Rodar código
+                        </button>
+
+                        <button type="button" class="btn btn-green" id="btn-validar" onclick="validarDesafioC()">
+                            <i class="fas fa-check"></i>
+                            Validar desafio
+                        </button>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+        <div class="fase-card" id="fase3">
+            <div class="fase-header">
+                <h3><i class="fas fa-trophy"></i> Fase 3: Fechamento rápido</h3>
+                <span class="phase-badge"><i class="fas fa-award"></i> Última pergunta</span>
+            </div>
+
+            <p style="color:var(--text-muted); line-height:1.7; margin-bottom:18px;">
+                Para encerrar, responda: qual operador lógico significa “OU” em C?
+            </p>
+
+            <div class="options-grid" style="margin-bottom:20px;">
+                <button type="button" class="option-btn" onclick="selectOption(this, 6, 'a')">a) <span class="code-chip">&&</span></button>
+                <button type="button" class="option-btn" onclick="selectOption(this, 6, 'b')">b) <span class="code-chip">||</span></button>
+                <button type="button" class="option-btn" onclick="selectOption(this, 6, 'c')">c) <span class="code-chip">!=</span></button>
+            </div>
+
+            <button type="button" class="btn btn-primary" style="width:100%;" onclick="finalizarTrilha()">
+                Concluir Trilha de Exercícios
+                <i class="fas fa-flag-checkered"></i>
+            </button>
+        </div>
+
+        <div class="fase-card" id="fase-sucesso">
+            <div class="success-overlay">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+
+                <h2>Excelente trabalho!</h2>
+                <p>
+                    Você revisou estruturas condicionais, respondeu questões objetivas e programou um desafio real
+                    executado pelo Judge0. Agora a avaliação final da Unidade 2 está liberada.
+                </p>
+
+                <button type="button" class="btn btn-primary" onclick="location.href='unidade-2-conteudo.html'">
+                    Voltar para a Unidade 2
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <div class="floating-actions">
+        <a href="unidade-2-conteudo.html" class="btn floating-back">
+            <i class="fas fa-arrow-left"></i>
+            <span>Voltar</span>
+        </a>
+
+        <div style="position:relative;">
+            <div class="menu-acessibilidade" id="menu-acess">
+                <button class="btn btn-outline" onclick="toggleAltoContraste()">
+                    <i class="fas fa-adjust"></i>
+                    Alto Contraste
+                </button>
+                <button class="btn btn-outline" onclick="mudarFonte(2)">
+                    <i class="fas fa-font"></i>
+                    Aumentar Texto
+                </button>
+                <button class="btn btn-outline" onclick="mudarFonte(-2)">
+                    <i class="fas fa-text-height"></i>
+                    Diminuir Texto
+                </button>
+            </div>
+
+            <button class="btn-floating" onclick="toggleMenuAcessibilidade()" title="Acessibilidade">
+                <i class="fas fa-universal-access"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">
+        <i class="fas fa-circle-info"></i>
+        <span id="toast-text">Mensagem</span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/clike/clike.min.js"></script>
+
+    <script>
+        const API_URL = `${window.location.origin}/api`;
+
+        const respostas = { q1: '', q2: '', q3: '', q4: '', q5: '', q6: '' };
+        const gabaritoFase1 = { q1: 'b', q2: 'b', q3: 'a', q4: 'b', q5: 'a' };
+
+        let usuario = null;
+        let editorCodeMirror = null;
+
+        const codigoBase = `#include <stdio.h>
+
+int main() {
+    float media;
+
+    scanf("%f", &media);
+
+    // Complete usando if, else if e else
+
+
+    return 0;
+}
+`;
+
+        function inicializar() {
+            carregarUsuario();
+            atualizarProgresso(12);
+
+            if (localStorage.getItem('acess_alto') === 'true') {
+                document.body.classList.add('high-contrast');
+            }
+
+            const savedScale = localStorage.getItem('acess_escala_fonte');
+            if (savedScale) {
+                document.documentElement.style.setProperty('--font-scale', `${savedScale}%`);
+            }
+        }
+
+        function carregarUsuario() {
+            if (localStorage.getItem('userLogado') !== 'true') {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            try {
+                usuario = JSON.parse(localStorage.getItem('userData'));
+            } catch (e) {
+                usuario = null;
+            }
+
+            if (!usuario) {
+                const nomeLogado = localStorage.getItem('userName');
+                usuario = { nome: nomeLogado || 'Estudante', streak: 0 };
+            }
+
+            document.getElementById('user-name').innerText = usuario.nome || 'Estudante';
+            document.getElementById('user-streak').innerText = `${usuario.streak || 0} Dias`;
+
+            const avatar = document.getElementById('user-avatar');
+            if (usuario.foto) {
+                avatar.innerHTML = `<img src="${usuario.foto}" alt="Foto do usuário">`;
+            } else {
+                avatar.innerText = (usuario.nome || 'E').charAt(0).toUpperCase();
+            }
+        }
+
+        function selectOption(btn, questao, valor) {
+            const parent = btn.parentElement;
+            parent.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('selected', 'correct', 'wrong');
+            });
+
+            btn.classList.add('selected');
+            respostas['q' + questao] = valor;
+        }
+
+        function validarFase1() {
+            const feedback = document.getElementById('feedback-fase1');
+            const faltando = Object.keys(gabaritoFase1).filter(q => !respostas[q]);
+
+            if (faltando.length > 0) {
+                feedback.style.display = 'block';
+                feedback.innerHTML = `<strong>Atenção:</strong> responda todas as 5 questões antes de continuar.`;
+                mostrarToast('Ainda faltam questões para responder.', 'error');
+                return;
+            }
+
+            let acertos = 0;
+
+            Object.keys(gabaritoFase1).forEach((q, index) => {
+                const numeroQuestao = index + 1;
+                const correto = gabaritoFase1[q];
+
+                if (respostas[q] === correto) acertos++;
+
+                const botoes = document.querySelectorAll(`button[onclick*=", ${numeroQuestao},"]`);
+
+                botoes.forEach(btn => {
+                    const onclick = btn.getAttribute('onclick') || '';
+
+                    if (onclick.includes(`'${correto}'`)) {
+                        btn.classList.add('correct');
+                    }
+
+                    if (onclick.includes(`'${respostas[q]}'`) && respostas[q] !== correto) {
+                        btn.classList.add('wrong');
+                    }
+                });
+            });
+
+            if (acertos >= 4) {
+                feedback.style.display = 'block';
+                feedback.innerHTML = `<strong>Muito bom!</strong> Você acertou ${acertos}/5. Agora vamos para o laboratório com Judge0.`;
+                mostrarToast(`Você acertou ${acertos}/5. Laboratório liberado!`, 'success');
+
+                setTimeout(() => {
+                    mudarFase('fase1', 'fase2', 48);
+                }, 900);
+            } else {
+                feedback.style.display = 'block';
+                feedback.innerHTML = `<strong>Revise um pouco mais.</strong> Você acertou ${acertos}/5. O ideal é acertar pelo menos 4 para ir ao laboratório.`;
+                mostrarToast(`Você acertou ${acertos}/5. Revise o material e tente novamente.`, 'error');
+            }
+        }
+
+        function mudarFase(atual, proxima, progresso) {
+            document.getElementById(atual).classList.remove('active');
+            document.getElementById(proxima).classList.add('active');
+            atualizarProgresso(progresso);
+
+            if (proxima === 'fase2') {
+                setTimeout(iniciarEditor, 80);
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function iniciarEditor() {
+            if (!editorCodeMirror) {
+                editorCodeMirror = CodeMirror.fromTextArea(document.getElementById('editor-c'), {
+                    lineNumbers: true,
+                    mode: 'text/x-csrc',
+                    theme: 'dracula',
+                    indentUnit: 4,
+                    tabSize: 4,
+                    matchBrackets: true,
+                    lineWrapping: false,
+                    viewportMargin: Infinity
+                });
+
+                editorCodeMirror.setValue(codigoBase);
+            }
+
+            editorCodeMirror.refresh();
+            editorCodeMirror.focus();
+        }
+
+        function restaurarCodigoBase() {
+            if (!editorCodeMirror) return;
+
+            editorCodeMirror.setValue(codigoBase);
+            escreverConsole('> Código restaurado.\\n> Complete usando if, else if e else.', 'info');
+        }
+
+        async function rodarCodigoLivre() {
+            if (!editorCodeMirror) return;
+
+            const codigo = editorCodeMirror.getValue();
+            const stdin = document.getElementById('stdin-livre').value || '';
+            const botao = document.getElementById('btn-rodar');
+
+            botao.disabled = true;
+            botao.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Rodando...';
+            escreverConsole('> Enviando código para o Judge0...\\n> Aguarde o resultado do terminal.', 'info');
+
+            try {
+                const resultado = await executarCodigoC(codigo, stdin);
+                mostrarResultadoExecucao(resultado);
+            } finally {
+                botao.disabled = false;
+                botao.innerHTML = '<i class="fas fa-play"></i> Rodar código';
+            }
+        }
+
+        async function validarDesafioC() {
+            if (!editorCodeMirror) return;
+
+            const codigo = editorCodeMirror.getValue();
+            const botao = document.getElementById('btn-validar');
+
+            botao.disabled = true;
+            botao.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Validando...';
+            escreverConsole('> Validando no Judge0...\\n> Testes: 8.0, 6.0 e 3.0.', 'info');
+
+            try {
+                const estruturaOK = validarEstruturaDoCodigo(codigo);
+
+                if (!estruturaOK.ok) {
+                    escreverConsole(`> Validação interrompida.\\n> ${estruturaOK.msg}`, 'erro');
+                    mostrarToast(estruturaOK.msg, 'error');
+                    return;
+                }
+
+                const testes = [
+                    { entrada: '8.0\\n', esperado: 'Aprovado' },
+                    { entrada: '6.0\\n', esperado: 'Recuperacao' },
+                    { entrada: '3.0\\n', esperado: 'Reprovado' }
+                ];
+
+                let relatorio = '> RESULTADO DOS TESTES NO JUDGE0\\n';
+                let aprovados = 0;
+
+                for (const teste of testes) {
+                    const resultado = await executarCodigoC(codigo, teste.entrada);
+
+                    if (resultado.erro) {
+                        relatorio += `\\nEntrada: ${teste.entrada.trim()}\\nStatus: ERRO\\n${resultado.saida}\\n`;
+                        continue;
+                    }
+
+                    const saida = limparSaida(resultado.stdout);
+                    const ok = saida === teste.esperado.toLowerCase();
+
+                    if (ok) aprovados++;
+
+                    relatorio += `\\nEntrada: ${teste.entrada.trim()}\\nEsperado: ${teste.esperado}\\nObtido: ${resultado.stdout.trim() || '(vazio)'}\\nStatus: ${ok ? 'OK' : 'FALHOU'}\\n`;
+                }
+
+                if (aprovados === testes.length) {
+                    relatorio += '\\n> Todos os testes passaram. Desafio aprovado!';
+                    escreverConsole(relatorio, 'sucesso');
+                    mostrarToast('Código aprovado no Judge0! Você acertou o desafio.', 'success');
+
+                    setTimeout(() => {
+                        mudarFase('fase2', 'fase3', 78);
+                    }, 1600);
+                } else {
+                    relatorio += `\\n> ${aprovados}/${testes.length} testes passaram. Ajuste as condições e tente novamente.`;
+                    escreverConsole(relatorio, 'erro');
+                    mostrarToast('Ainda há testes falhando. Veja o terminal.', 'error');
+                }
+
+            } finally {
+                botao.disabled = false;
+                botao.innerHTML = '<i class="fas fa-check"></i> Validar desafio';
+            }
+        }
+
+        async function executarCodigoC(codigo, stdin = '') {
+            try {
+                const response = await fetch(`${API_URL}/executar-codigo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        codigo,
+                        stdin
+                    })
+                });
+
+                const texto = await response.text();
+                let data = {};
+
+                try {
+                    data = texto ? JSON.parse(texto) : {};
+                } catch (error) {
+                    data = {
+                        error: 'Resposta inválida do servidor.',
+                        details: texto
+                    };
+                }
+
+                if (!response.ok) {
+                    return {
+                        erro: true,
+                        stdout: '',
+                        saida:
+                            `> ERRO AO CHAMAR O SERVIDOR\\n` +
+                            `> Status HTTP: ${response.status}\\n` +
+                            `> ${data.error || 'Falha ao executar código.'}\\n` +
+                            `${data.details ? '> Detalhes: ' + data.details : ''}`
+                    };
+                }
+
+                const stdout = data.stdout || '';
+                const stderr = data.stderr || '';
+                const compileOutput = data.compile_output || '';
+                const message = data.message || '';
+                const status = data.status || 'Status desconhecido';
+
+                if (data.erro) {
+                    return {
+                        erro: true,
+                        stdout,
+                        saida:
+                            `> JUDGE0 RETORNOU: ${status}\\n` +
+                            `${compileOutput ? '> COMPILAÇÃO:\\n' + compileOutput + '\\n' : ''}` +
+                            `${stderr ? '> ERRO:\\n' + stderr + '\\n' : ''}` +
+                            `${message ? '> MENSAGEM:\\n' + message + '\\n' : ''}` +
+                            `${stdout ? '> SAÍDA:\\n' + stdout : ''}`
+                    };
+                }
+
+                return {
+                    erro: false,
+                    stdout,
+                    saida:
+                        `> PROGRAMA EXECUTADO NO JUDGE0\\n` +
+                        `> Status: ${status}\\n` +
+                        `${data.time ? '> Tempo: ' + data.time + 's\\n' : ''}` +
+                        `${data.memory ? '> Memória: ' + data.memory + ' KB\\n' : ''}` +
+                        `> SAÍDA:\\n${stdout || '(sem saída)'}`
+                };
+
+            } catch (error) {
+                return {
+                    erro: true,
+                    stdout: '',
+                    saida:
+                        `> ERRO DE CONEXÃO\\n` +
+                        `> Não foi possível chamar ${API_URL}/executar-codigo\\n` +
+                        `> Confira se a rota Judge0 está no server.js e se o Render está online.\\n` +
+                        `> Detalhes: ${error.message}`
+                };
+            }
+        }
+
+        function validarEstruturaDoCodigo(codigo) {
+            const texto = codigo.toLowerCase();
+
+            if (!texto.includes('#include') || !texto.includes('stdio.h')) {
+                return { ok: false, msg: 'Inclua #include <stdio.h> para usar printf e scanf.' };
+            }
+
+            if (!texto.includes('int main')) {
+                return { ok: false, msg: 'O programa precisa ter a função int main().' };
+            }
+
+            if (!texto.includes('scanf')) {
+                return { ok: false, msg: 'Use scanf para ler a média digitada.' };
+            }
+
+            if (!texto.includes('printf')) {
+                return { ok: false, msg: 'Use printf para mostrar a situação na tela.' };
+            }
+
+            if (!texto.includes('if')) {
+                return { ok: false, msg: 'Use if para testar a média.' };
+            }
+
+            if (!texto.includes('else')) {
+                return { ok: false, msg: 'Use else ou else if para tratar os outros casos.' };
+            }
+
+            if (!texto.includes('>=')) {
+                return { ok: false, msg: 'Use o operador >= para comparar a média.' };
+            }
+
+            return { ok: true, msg: 'Estrutura básica válida.' };
+        }
+
+        function limparSaida(saida) {
+            return String(saida || '')
+                .trim()
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\\u0300-\\u036f]/g, '')
+                .replace(/\\s+/g, ' ');
+        }
+
+        function mostrarResultadoExecucao(resultado) {
+            if (resultado.erro) {
+                escreverConsole(resultado.saida, 'erro');
+                mostrarToast('O código rodou com erro. Veja o terminal.', 'error');
+            } else {
+                escreverConsole(resultado.saida, 'sucesso');
+                mostrarToast('Código executado no Judge0. Confira a saída.', 'info');
+            }
+        }
+
+        function escreverConsole(texto, tipo = 'info') {
+            const consoleOut = document.getElementById('console-fase2');
+            const safe = escaparHTML(texto);
+
+            let color = '#9fffbf';
+            if (tipo === 'erro') color = '#ff7a92';
+            if (tipo === 'sucesso') color = '#50fa7b';
+            if (tipo === 'info') color = '#a9d8ff';
+
+            consoleOut.innerHTML = `<span style="color:${color};">${safe}</span>`;
+        }
+
+        function escaparHTML(texto) {
+            return String(texto)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function finalizarTrilha() {
+            if (respostas.q6 === 'b') {
+                localStorage.setItem('u2_exercicios_concluidos', 'true');
+
+                if (usuario) {
+                    usuario.progresso = usuario.progresso || {};
+                    usuario.progresso.u2_exercicios_concluidos = true;
+                    localStorage.setItem('userData', JSON.stringify(usuario));
+                }
+
+                atualizarProgresso(100);
+                mudarFase('fase3', 'fase-sucesso', 100);
+                mostrarToast('Trilha concluída! Avaliação final da Unidade 2 liberada.', 'success');
+            } else {
+                mostrarToast('Ainda não. Em C, o operador OU é ||.', 'error');
+            }
+        }
+
+        function atualizarProgresso(valor) {
+            document.getElementById('progresso-trilha').style.width = valor + '%';
+            document.getElementById('progress-percent').innerText = valor + '%';
+        }
+
+        function toggleMenuAcessibilidade() {
+            const menu = document.getElementById('menu-acess');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function toggleAltoContraste() {
+            document.body.classList.toggle('high-contrast');
+            localStorage.setItem('acess_alto', document.body.classList.contains('high-contrast'));
+        }
+
+        function mudarFonte(delta) {
+            let scale = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--font-scale')) || 100;
+            scale += delta;
+            if (scale < 80) scale = 80;
+            if (scale > 140) scale = 140;
+            document.documentElement.style.setProperty('--font-scale', `${scale}%`);
+            localStorage.setItem('acess_escala_fonte', scale);
+        }
+
+        function mostrarToast(mensagem, tipo = 'info') {
+            const toast = document.getElementById('toast');
+            const text = document.getElementById('toast-text');
+            const icon = toast.querySelector('i');
+
+            text.innerText = mensagem;
+            toast.className = `toast ${tipo}`;
+
+            if (tipo === 'success') icon.className = 'fas fa-circle-check';
+            else if (tipo === 'error') icon.className = 'fas fa-triangle-exclamation';
+            else icon.className = 'fas fa-circle-info';
+
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3800);
+        }
+
+        window.onload = inicializar;
+    </script>
+</body>
+</html>
