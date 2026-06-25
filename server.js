@@ -796,6 +796,194 @@ app.post('/api/update-progress', async (req, res) => {
         });
     }
 });
+// ==========================================
+// ROTAS DE PROGRESSO DOS MÓDULOS E UNIDADES
+// ==========================================
+
+// Buscar progresso do usuário no banco
+app.get('/api/modulos/progresso', async (req, res) => {
+    const { email } = req.query;
+
+    if (!email) {
+        return res.status(400).json({ error: 'E-mail é obrigatório.' });
+    }
+
+    try {
+        const [rows] = await db.promise().query(
+            `SELECT 
+                nota_diagnostica,
+                avaliacao_concluida,
+                mod1_concluido,
+                mod2_concluido,
+                progresso_modulos
+             FROM usuarios 
+             WHERE email = ?`,
+            [email]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Usuário não encontrado.' });
+        }
+
+        const user = rows[0];
+
+        let progressoExtra = {};
+        try {
+            progressoExtra = user.progresso_modulos ? JSON.parse(user.progresso_modulos) : {};
+        } catch (e) {
+            progressoExtra = {};
+        }
+
+        res.status(200).json({
+            progresso: {
+                nota_diagnostica: user.nota_diagnostica,
+
+                avaliacao_concluida:
+                    user.avaliacao_concluida === 1 ||
+                    user.avaliacao_concluida === true ||
+                    progressoExtra.avaliacao === true,
+
+                mod1_concluido:
+                    user.mod1_concluido === 1 ||
+                    user.mod1_concluido === true ||
+                    progressoExtra.mod1 === true,
+
+                mod2_concluido:
+                    user.mod2_concluido === 1 ||
+                    user.mod2_concluido === true ||
+                    progressoExtra.mod2 === true,
+
+                unidade1_concluida: progressoExtra.unidade1 === true,
+                unidade2_concluida: progressoExtra.unidade2 === true,
+                unidade3_concluida: progressoExtra.unidade3 === true
+            }
+        });
+
+    } catch (error) {
+        console.error('Erro ao buscar progresso:', error);
+        res.status(500).json({ error: 'Erro ao buscar progresso no banco.' });
+    }
+});
+
+
+// Salvar progresso de módulo ou unidade
+app.post('/api/modulos/salvar', async (req, res) => {
+    const { email, modulo, concluido } = req.body;
+
+    if (!email || !modulo) {
+        return res.status(400).json({ error: 'E-mail e módulo são obrigatórios.' });
+    }
+
+    const modulosPermitidos = [
+        'avaliacao',
+        'mod1',
+        'mod2',
+        'unidade1',
+        'unidade2',
+        'unidade3',
+        'certificado'
+    ];
+
+    if (!modulosPermitidos.includes(modulo)) {
+        return res.status(400).json({ error: 'Módulo inválido.' });
+    }
+
+    try {
+        const [rows] = await db.promise().query(
+            `SELECT progresso_modulos FROM usuarios WHERE email = ?`,
+            [email]
+        );
+
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Usuário não encontrado.' });
+        }
+
+        let progresso = {};
+        try {
+            progresso = rows[0].progresso_modulos ? JSON.parse(rows[0].progresso_modulos) : {};
+        } catch (e) {
+            progresso = {};
+        }
+
+        progresso[modulo] = concluido === false ? false : true;
+        progresso.atualizado_em = new Date().toISOString();
+
+        let sql = `UPDATE usuarios SET progresso_modulos = ?`;
+        const valores = [JSON.stringify(progresso)];
+
+        if (modulo === 'avaliacao') {
+            sql += `, avaliacao_concluida = ?`;
+            valores.push(progresso[modulo] ? 1 : 0);
+        }
+
+        if (modulo === 'mod1') {
+            sql += `, mod1_concluido = ?`;
+            valores.push(progresso[modulo] ? 1 : 0);
+        }
+
+        if (modulo === 'mod2') {
+            sql += `, mod2_concluido = ?`;
+            valores.push(progresso[modulo] ? 1 : 0);
+        }
+
+        sql += ` WHERE email = ?`;
+        valores.push(email);
+
+        await db.promise().query(sql, valores);
+
+        res.status(200).json({
+            message: 'Progresso salvo no banco com sucesso!',
+            progresso
+        });
+
+    } catch (error) {
+        console.error('Erro ao salvar progresso:', error);
+        res.status(500).json({ error: 'Erro ao salvar progresso no banco.' });
+    }
+});
+
+
+// Zerar progresso
+app.post('/api/modulos/zerar', async (req, res) => {
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(400).json({ error: 'E-mail é obrigatório.' });
+    }
+
+    try {
+        const progressoZerado = {
+            avaliacao: false,
+            mod1: false,
+            mod2: false,
+            unidade1: false,
+            unidade2: false,
+            unidade3: false,
+            certificado: false,
+            atualizado_em: new Date().toISOString()
+        };
+
+        await db.promise().query(
+            `UPDATE usuarios
+             SET nota_diagnostica = NULL,
+                 avaliacao_concluida = 0,
+                 mod1_concluido = 0,
+                 mod2_concluido = 0,
+                 progresso_modulos = ?
+             WHERE email = ?`,
+            [JSON.stringify(progressoZerado), email]
+        );
+
+        res.status(200).json({
+            message: 'Progresso zerado com sucesso!',
+            progresso: progressoZerado
+        });
+
+    } catch (error) {
+        console.error('Erro ao zerar progresso:', error);
+        res.status(500).json({ error: 'Erro ao zerar progresso no banco.' });
+    }
+});
 
 const PORT = process.env.PORT || 10000;
 
